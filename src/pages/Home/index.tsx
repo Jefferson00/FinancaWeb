@@ -1,87 +1,18 @@
-import React, { useState } from 'react';
 import Header from '../../components/Header';
 import MainSide from '../../components/MainSide';
 import MenuItem from '../../components/MenuItem';
+import { observer } from 'mobx-react-lite';
 
-import { MdArrowUpward, MdArrowDownward, MdCreditCard, MdSecurity } from 'react-icons/md';
+import { MdArrowUpward, MdArrowDownward, MdCreditCard, MdHome } from 'react-icons/md';
 
 import * as S from './styles';
-import Estimates from '../../components/EstimatesView';
-import Transactions from '../../components/Transactions';
-import RemindView from '../../components/RemindView';
 
-interface RemindItemProps {
-  day: Date;
-  items: {
-    id: string;
-    category: string;
-    name: string;
-    value: number;
-    date: Date;
-    type: 'EXPANSE' | 'INCOME';
-    received: boolean;
-  }[]
-}
+import { useStores } from '../../store';
+import HomeContent from '../../components/HomeContent';
 
-export default function Home() {
-  const [itemSelected, setItemSelected] = useState('');
-
-  const lateItems: RemindItemProps[] = [
-    {
-      day: new Date(),
-      items: [
-        {
-          id: 'f015df05d',
-          category: 'Casa',
-          name: 'Conta de coisa',
-          value: 58590,
-          date: new Date(),
-          type: 'EXPANSE',
-          received: false,
-        },
-      ]
-    }
-  ]
-
-  const nextDaysItems: RemindItemProps[] = [
-    {
-      day: new Date(),
-      items: [
-        {
-          id: 'f015df05d',
-          category: 'Casa',
-          name: 'Conta de coisa',
-          value: 58590,
-          date: new Date(),
-          type: 'EXPANSE',
-          received: false,
-        },
-      ]
-    },
-    {
-      day: new Date(),
-      items: [
-        {
-          id: 'f015df05d',
-          category: 'Casa',
-          name: 'Conta de coisa',
-          value: 58590,
-          date: new Date(),
-          type: 'INCOME',
-          received: false,
-        },
-        {
-          id: 'f015df05d',
-          category: 'Casa',
-          name: 'Conta de coisa',
-          value: 58590,
-          date: new Date(),
-          type: 'EXPANSE',
-          received: false,
-        },
-      ]
-    }
-  ]
+const Home = observer(() => {
+  const { menuStore } = useStores();
+  const { selectItem, menu } = menuStore;
 
   return (
     <div>
@@ -92,41 +23,38 @@ export default function Home() {
         </S.Aside>
         <S.MenuList>
           <MenuItem
-            onClick={() => setItemSelected('Entradas')}
+            icon={MdHome}
+            title="Inicio"
+            selected={menu.item === 'Home'}
+            onClick={() => selectItem('Home')}
+          />
+          <MenuItem
+            onClick={() => selectItem('Entradas')}
             icon={MdArrowUpward}
-            selected={itemSelected === 'Entradas'}
+            selected={menu.item === 'Entradas'}
             title="Entradas"
           />
           <MenuItem
             icon={MdArrowDownward}
             title="Despesas"
-            selected={itemSelected === 'Despesas'}
-            onClick={() => setItemSelected('Despesas')}
+            selected={menu.item === 'Despesas'}
+            onClick={() => selectItem('Despesas')}
           />
           <MenuItem
             icon={MdCreditCard}
             title="Cartões"
-            selected={itemSelected === 'Cartões'}
-            onClick={() => setItemSelected('Cartões')}
+            selected={menu.item === 'Cartões'}
+            onClick={() => selectItem('Cartões')}
           />
-          <MenuItem
-            icon={MdSecurity}
-            title="Segurança"
-            selected={itemSelected === 'Segurança'}
-            onClick={() => setItemSelected('Segurança')}
-          />
+
         </S.MenuList>
 
         <S.Content>
-          <Estimates />
-
-          <Transactions />
-
-          <RemindView type="LATE" items={lateItems} />
-
-          <RemindView type="NEXTDAYS" items={nextDaysItems} />
+          {menu.item === 'Home' && <HomeContent />}
         </S.Content>
       </S.Container>
     </div>
   )
-}
+});
+
+export default Home
