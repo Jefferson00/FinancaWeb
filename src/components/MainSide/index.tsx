@@ -4,6 +4,7 @@ import { FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash, FaPlus } from 'react-
 import Card from '../AccountCard';
 import Button from '../Button';
 import { useState } from 'react';
+import { getMounthAndYear } from '../../utils/dateFormats';
 
 export default function MainSide() {
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
@@ -45,7 +46,7 @@ export default function MainSide() {
             <FaChevronLeft color="#fff" />
           </S.Prev>
           <S.Month>
-            Nov 2020
+            {getMounthAndYear(new Date())}
           </S.Month>
           <S.Next>
             <FaChevronRight color="#fff" />

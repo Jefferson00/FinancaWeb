@@ -7,9 +7,81 @@ import { MdArrowUpward, MdArrowDownward, MdCreditCard, MdSecurity } from 'react-
 
 import * as S from './styles';
 import Estimates from '../../components/EstimatesView';
+import Transactions from '../../components/Transactions';
+import RemindView from '../../components/RemindView';
+
+interface RemindItemProps {
+  day: Date;
+  items: {
+    id: string;
+    category: string;
+    name: string;
+    value: number;
+    date: Date;
+    type: 'EXPANSE' | 'INCOME';
+    received: boolean;
+  }[]
+}
 
 export default function Home() {
   const [itemSelected, setItemSelected] = useState('');
+
+  const lateItems: RemindItemProps[] = [
+    {
+      day: new Date(),
+      items: [
+        {
+          id: 'f015df05d',
+          category: 'Casa',
+          name: 'Conta de coisa',
+          value: 58590,
+          date: new Date(),
+          type: 'EXPANSE',
+          received: false,
+        },
+      ]
+    }
+  ]
+
+  const nextDaysItems: RemindItemProps[] = [
+    {
+      day: new Date(),
+      items: [
+        {
+          id: 'f015df05d',
+          category: 'Casa',
+          name: 'Conta de coisa',
+          value: 58590,
+          date: new Date(),
+          type: 'EXPANSE',
+          received: false,
+        },
+      ]
+    },
+    {
+      day: new Date(),
+      items: [
+        {
+          id: 'f015df05d',
+          category: 'Casa',
+          name: 'Conta de coisa',
+          value: 58590,
+          date: new Date(),
+          type: 'INCOME',
+          received: false,
+        },
+        {
+          id: 'f015df05d',
+          category: 'Casa',
+          name: 'Conta de coisa',
+          value: 58590,
+          date: new Date(),
+          type: 'EXPANSE',
+          received: false,
+        },
+      ]
+    }
+  ]
 
   return (
     <div>
@@ -47,6 +119,12 @@ export default function Home() {
 
         <S.Content>
           <Estimates />
+
+          <Transactions />
+
+          <RemindView type="LATE" items={lateItems} />
+
+          <RemindView type="NEXTDAYS" items={nextDaysItems} />
         </S.Content>
       </S.Container>
     </div>

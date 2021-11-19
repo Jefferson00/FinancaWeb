@@ -23,4 +23,7 @@ export const Aside = styled.section`
 
 export const Content = styled.section`
   grid-area: content;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
 `

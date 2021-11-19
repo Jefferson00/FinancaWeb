@@ -3,6 +3,7 @@ import * as S from './styles';
 
 import { Colors } from '../../styles/global';
 import { FaEye, FaEyeSlash, FaBan } from 'react-icons/fa';
+import { getMounthAndYear } from '../../utils/dateFormats';
 
 export default function Estimates() {
   const [censored, setCensored] = useState(false);
@@ -34,37 +35,49 @@ export default function Estimates() {
           :
           <>
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
-              <strong>Nov 20</strong>
+              <strong>
+                {getMounthAndYear(new Date(), true)}
+              </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="50" color={graphColor} />
             </S.GraphItem>
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
-              <strong>Nov 20</strong>
+              <strong>
+                {getMounthAndYear(new Date(), true)}
+              </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="80" color={graphColor} />
             </S.GraphItem>
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
-              <strong>Nov 20</strong>
+              <strong>
+                {getMounthAndYear(new Date(), true)}
+              </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="50" color={graphColor} />
             </S.GraphItem>
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
-              <strong>Nov 20</strong>
+              <strong>
+                {getMounthAndYear(new Date(), true)}
+              </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="50" color={graphColor} />
             </S.GraphItem>
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
-              <strong>Nov 20</strong>
+              <strong>
+                {getMounthAndYear(new Date(), true)}
+              </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="30" color={graphColor} />
             </S.GraphItem>
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
-              <strong>Nov 20</strong>
+              <strong>
+                {getMounthAndYear(new Date(), true)}
+              </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="20" color={graphColor} />
             </S.GraphItem>
