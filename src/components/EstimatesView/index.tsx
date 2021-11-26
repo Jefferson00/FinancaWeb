@@ -4,8 +4,14 @@ import * as S from './styles';
 import { Colors } from '../../styles/global';
 import { FaEye, FaEyeSlash, FaBan } from 'react-icons/fa';
 import { getMounthAndYear } from '../../utils/dateFormats';
+import { observer } from 'mobx-react-lite';
+import { useStores } from '../../store';
 
-export default function Estimates() {
+const Estimates = observer(() => {
+  const { financeStore } = useStores();
+  const { financeData } = financeStore;
+  const { month } = financeData;
+
   const [censored, setCensored] = useState(false);
 
   const backgroundColor = Colors.BLUE_SOFT_LIGHTER;
@@ -36,7 +42,7 @@ export default function Estimates() {
           <>
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
               <strong>
-                {getMounthAndYear(new Date(), true)}
+                {getMounthAndYear(month, true)}
               </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="50" color={graphColor} />
@@ -44,7 +50,7 @@ export default function Estimates() {
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
               <strong>
-                {getMounthAndYear(new Date(), true)}
+                {getMounthAndYear(month, true)}
               </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="80" color={graphColor} />
@@ -52,7 +58,7 @@ export default function Estimates() {
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
               <strong>
-                {getMounthAndYear(new Date(), true)}
+                {getMounthAndYear(month, true)}
               </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="50" color={graphColor} />
@@ -60,7 +66,7 @@ export default function Estimates() {
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
               <strong>
-                {getMounthAndYear(new Date(), true)}
+                {getMounthAndYear(month, true)}
               </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="50" color={graphColor} />
@@ -68,7 +74,7 @@ export default function Estimates() {
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
               <strong>
-                {getMounthAndYear(new Date(), true)}
+                {getMounthAndYear(month, true)}
               </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="30" color={graphColor} />
@@ -76,7 +82,7 @@ export default function Estimates() {
 
             <S.GraphItem strongColor={textColor} regularColor={regularColor}>
               <strong>
-                {getMounthAndYear(new Date(), true)}
+                {getMounthAndYear(month, true)}
               </strong>
               <p>R$ 1.000,00</p>
               <S.GraphIndicator heightIndicator="20" color={graphColor} />
@@ -86,4 +92,6 @@ export default function Estimates() {
       </S.GraphContainer>
     </S.Container>
   )
-}
+})
+
+export default Estimates

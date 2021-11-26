@@ -1,12 +1,18 @@
+import { useState, useEffect } from 'react';
 import { Colors } from '../../styles/global';
 import * as S from './styles';
-import { FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash, FaPlus } from 'react-icons/fa';
 import Card from '../AccountCard';
 import Button from '../Button';
-import { useState } from 'react';
+import { useStores } from '../../store';
 import { getMounthAndYear } from '../../utils/dateFormats';
+import { observer } from 'mobx-react-lite';
+import { FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash, FaPlus } from 'react-icons/fa';
 
-export default function MainSide() {
+const MainSide = observer(() => {
+  const { financeStore } = useStores();
+  const { financeData, handleNextMonth, handlePrevMonth } = financeStore;
+  const { month, accounts } = financeData;
+
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
@@ -17,23 +23,17 @@ export default function MainSide() {
   const [accountSelected, setAccountSelected] = useState(0);
   const [censored, setCensored] = useState(false);
 
-  const accounts = [
-    {
-      name: 'Banco do Brasil',
-      type: 'Corrente',
-      balance: 100000,
-    },
-    {
-      name: 'Nubank',
-      type: 'Corrente',
-      balance: 1000000,
-    },
-    {
-      name: 'Carteira',
-      type: 'Carteira',
-      balance: 200000,
-    },
-  ]
+  useEffect(() => {
+    const censoredStatusStoraged = localStorage.getItem('financaWeb.censored.mainside');
+
+    setCensored(censoredStatusStoraged === 'true' ? true : false);
+  }, []);
+
+  const handleToggleCensored = () => {
+    setCensored(!censored);
+
+    localStorage.setItem('financaWeb.censored.mainside', String(!censored));
+  }
 
   return (
     <S.Container linearGradient={{
@@ -42,18 +42,18 @@ export default function MainSide() {
     }}>
       <S.Header>
         <S.MonthSelector>
-          <S.Prev>
+          <S.Prev onClick={handlePrevMonth}>
             <FaChevronLeft color="#fff" />
           </S.Prev>
           <S.Month>
-            {getMounthAndYear(new Date())}
+            {getMounthAndYear(month)}
           </S.Month>
-          <S.Next>
+          <S.Next onClick={handleNextMonth}>
             <FaChevronRight color="#fff" />
           </S.Next>
         </S.MonthSelector>
 
-        <S.ViewButton onClick={() => setCensored(!censored)}>
+        <S.ViewButton onClick={handleToggleCensored}>
           {censored ?
             <FaEye color="#fff" size={26} />
             :
@@ -138,4 +138,6 @@ export default function MainSide() {
 
     </S.Container>
   )
-}
+})
+
+export default MainSide
