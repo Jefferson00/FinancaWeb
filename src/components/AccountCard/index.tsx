@@ -1,19 +1,28 @@
 import * as S from './styles';
 
 import { MdAccountBalance, MdAccountBalanceWallet } from 'react-icons/md';
+import { IAccount } from '../../store/interfaces';
+import { observer } from 'mobx-react-lite';
+import { useStores } from '../../store';
+import { useEffect, useCallback, useState } from 'react';
 
-interface Account {
-  name: string,
-  type: string,
-  balance: number,
-}
 
 interface CardProps {
-  account: Account;
+  account: IAccount;
   censored?: boolean;
 }
 
-export default function Card({ account, censored }: CardProps) {
+const Card = observer(({ account, censored }: CardProps) => {
+  const { financeStore } = useStores();
+  const { financeData, handleAccountBalance } = financeStore;
+  const { accountsCurrentBalance } = financeData;
+  const [balance, setBalance] = useState(accountsCurrentBalance.find(balance => balance.account_id === account.id))
+
+  useEffect(() => {
+    const calcBalance = handleAccountBalance();
+    setBalance(calcBalance.find(balance => balance.account_id === account.id))
+  }, [account.id, accountsCurrentBalance, handleAccountBalance]);
+
   return (
     <S.Container>
       <S.Header>
@@ -36,7 +45,7 @@ export default function Card({ account, censored }: CardProps) {
               style: 'currency',
               currency: 'BRL',
               minimumFractionDigits: 2,
-            }).format(account.balance / 100)
+            }).format(balance?.balance ? balance?.balance / 100 : 0)
         }</S.Text>
         <S.Text fontSize="0.875rem" fontWeight={400}>
           Previsto {censored ? '**********' : 'R$ 800,00'}
@@ -44,4 +53,6 @@ export default function Card({ account, censored }: CardProps) {
       </S.Main>
     </S.Container>
   )
-}
+})
+
+export default Card

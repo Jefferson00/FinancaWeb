@@ -1,5 +1,8 @@
 export interface IAccount {
+  id?: string;
   name: string;
   type: string;
-  balance: number;
+  status: string;
+  created_at: string;
+  initial_value: number;
 }
