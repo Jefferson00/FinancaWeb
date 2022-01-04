@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './styles';
 import { Colors } from '../../styles/global';
 import { FaEye, FaEyeSlash, FaExclamationCircle, FaCalendarAlt, FaBan } from 'react-icons/fa';
@@ -29,6 +29,18 @@ export default function RemindView({ type, items }: RemindViewProps) {
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
   const redAlert = Colors.RED_PRIMARY_LIGHTER;
 
+  useEffect(() => {
+    const censoredStatusStoraged = localStorage.getItem(`financaWeb.censored.remind.${type}`);
+
+    setCensored(censoredStatusStoraged === 'true' ? true : false);
+  }, [type]);
+
+  const handleToggleCensored = () => {
+    setCensored(!censored);
+
+    localStorage.setItem(`financaWeb.censored.remind.${type}`, String(!censored));
+  }
+
   return (
     <S.Container>
       <S.Header>
@@ -49,7 +61,7 @@ export default function RemindView({ type, items }: RemindViewProps) {
           </div>
         }
 
-        <S.ViewButton onClick={() => setCensored(!censored)}>
+        <S.ViewButton onClick={handleToggleCensored}>
           {censored ?
             <FaEye color={titleColor} size={26} />
             :

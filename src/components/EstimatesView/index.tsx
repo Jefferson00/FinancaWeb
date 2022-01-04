@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as S from './styles';
 
 import { Colors } from '../../styles/global';
@@ -20,13 +20,25 @@ const Estimates = observer(() => {
   const textColor = Colors.MAIN_TEXT_LIGHTER;
   const regularColor = Colors.BLUE_SECONDARY_LIGHTER;
 
+  useEffect(() => {
+    const censoredStatusStoraged = localStorage.getItem('financaWeb.censored.estimates');
+
+    setCensored(censoredStatusStoraged === 'true' ? true : false);
+  }, []);
+
+  const handleToggleCensored = () => {
+    setCensored(!censored);
+
+    localStorage.setItem('financaWeb.censored.estimates', String(!censored));
+  }
+
 
   return (
     <S.Container>
       <S.Header>
         <S.Title color={titleColor}>Estimativas</S.Title>
 
-        <S.ViewButton onClick={() => setCensored(!censored)}>
+        <S.ViewButton onClick={handleToggleCensored}>
           {censored ?
             <FaEye color={titleColor} size={26} />
             :

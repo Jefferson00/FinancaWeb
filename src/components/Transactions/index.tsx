@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as S from './styles';
 
 import { Colors } from '../../styles/global';
@@ -16,6 +16,18 @@ export default function Transactions() {
   const strongColor = Colors.MAIN_TEXT_LIGHTER;
   const expanseColor = Colors.RED_PRIMARY_LIGHTER;
   const incomeColor = Colors.GREEN_PRIMARY_LIGHTER;
+
+  useEffect(() => {
+    const censoredStatusStoraged = localStorage.getItem('financaWeb.censored.transactions');
+
+    setCensored(censoredStatusStoraged === 'true' ? true : false);
+  }, []);
+
+  const handleToggleCensored = () => {
+    setCensored(!censored);
+
+    localStorage.setItem('financaWeb.censored.transactions', String(!censored));
+  }
 
   const latestTransactions = [
     {
@@ -49,7 +61,7 @@ export default function Transactions() {
       <S.Header>
         <S.Title color={titleColor}>Últimas Transações</S.Title>
 
-        <S.ViewButton onClick={() => setCensored(!censored)}>
+        <S.ViewButton onClick={handleToggleCensored}>
           {censored ?
             <FaEye color={titleColor} size={26} />
             :
