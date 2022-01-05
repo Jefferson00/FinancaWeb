@@ -9,6 +9,9 @@ import * as S from './styles';
 
 import { useStores } from '../../store';
 import HomeContent from '../../components/HomeContent';
+import IncomeView from '../../components/IncomeView';
+import ExpansesView from '../../components/ExpansesView';
+import CardsView from '../../components/CardsView';
 
 const Home = observer(() => {
   const { menuStore } = useStores();
@@ -51,6 +54,12 @@ const Home = observer(() => {
 
         <S.Content>
           {menu.item === 'Home' && <HomeContent />}
+
+          {menu.item === 'Entradas' && <IncomeView />}
+
+          {menu.item === 'Despesas' && <ExpansesView />}
+
+          {menu.item === 'Cartões' && <CardsView />}
         </S.Content>
       </S.Container>
     </div>

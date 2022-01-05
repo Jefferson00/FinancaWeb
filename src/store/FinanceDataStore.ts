@@ -1,10 +1,18 @@
 import { makeObservable, observable } from "mobx";
-import { accounts, expansesAccount, incomesAccount } from "./fakeDatas";
-import { IAccount } from './interfaces';
+import { accounts, expansesAccount, incomesAccount, incomes } from "./fakeDatas";
+import { IAccount, IIncomes } from './interfaces';
 
 export interface IFinanceData {
   month: Date;
   accounts: IAccount[];
+  incomes: {
+    day: Date;
+    items: IIncomes[];
+  }[];
+  expanses: {
+    day: Date;
+    items: IIncomes[];
+  }[];
   accountsCurrentBalance: {
     account_id: string;
     balance: number;
@@ -15,6 +23,8 @@ export class FinanceDataStore {
   public financeData: IFinanceData = {
     month: new Date(),
     accounts,
+    incomes,
+    expanses: incomes,
     accountsCurrentBalance: [],
   }
 

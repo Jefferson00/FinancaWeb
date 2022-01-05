@@ -9,6 +9,7 @@ export const Container = styled.div`
   gap: 3.37rem;
   transform: translateY(-3.5rem);
   padding: 0 6.56rem;
+  grid-template-columns:max-content;
 `
 
 export const MenuList = styled.section`

@@ -6,3 +6,11 @@ export interface IAccount {
   created_at: string;
   initial_value: number;
 }
+
+export interface IIncomes {
+  id?: string;
+  name: string;
+  category: string;
+  value: number;
+  received: boolean;
+}

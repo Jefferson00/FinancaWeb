@@ -30,23 +30,81 @@ export const accounts: IAccount[] = [
 
 export const incomes = [
   {
-    id: 'Assd4515fs1f5vw58e',
-    name: 'Recebimento 1',
-    value: 100000,
-    category: 'Outro',
-    receivement_day: 20,
-    frequency: '3',
-    created_at: '2021-10-25 20:53:46'
+    day: new Date(),
+    items: [
+      {
+        id: 'Assd4515fs1f5vw58e',
+        name: 'Recebimento 1',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      },
+      {
+        id: 'gjftykyk5685685',
+        name: 'Recebimento 2',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      }
+    ]
   },
   {
-    id: 'Assd4sdgdfjdtjtw58e',
-    name: 'Dinheiro',
-    value: 50000,
-    category: 'Outro',
-    receivement_day: 20,
-    frequency: '1',
-    created_at: '2021-10-25 20:53:46'
-  }
+    day: new Date(),
+    items: [
+      {
+        id: 'Assd4sdgdfjdtjtw58e',
+        name: 'Dinheiro',
+        value: 50000,
+        category: 'Outro',
+        received: false,
+      }
+    ]
+  },
+  {
+    day: new Date(),
+    items: [
+      {
+        id: 'Assd4515fs1f5vw58e',
+        name: 'Recebimento 1',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      },
+      {
+        id: 'gjftykyk5685685',
+        name: 'Recebimento 2',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      }
+    ]
+  },
+  {
+    day: new Date(),
+    items: [
+      {
+        id: 'Assd4515fs1f5vw58e',
+        name: 'Recebimento 1',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      },
+      {
+        id: 'gjftykyk5685685',
+        name: 'Recebimento 2',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      },
+      {
+        id: 'gjftykyk5685685',
+        name: 'Recebimento 2',
+        value: 100000,
+        category: 'Outro',
+        received: true,
+      }
+    ]
+  },
 ]
 
 export const incomesAccount = [

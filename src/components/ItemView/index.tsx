@@ -4,18 +4,11 @@ import { FaDollarSign } from 'react-icons/fa';
 import { getCurrencyFormat } from '../../utils/getCurrencyFormat';
 import Switch from "react-switch";
 import { useState } from 'react';
+import { IIncomes } from '../../store/interfaces';
 
 interface ItemViewProps {
   type: 'EXPANSE' | 'INCOME';
-  item: {
-    id: string;
-    category: string;
-    name: string;
-    value: number;
-    date: Date;
-    type: string;
-    received: boolean;
-  }
+  item: IIncomes;
 }
 
 export default function ItemView({ type, item }: ItemViewProps) {
