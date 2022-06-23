@@ -1,12 +1,8 @@
-import { createContext, useContext } from "react";
-import { FinanceDataStore } from "./FinanceDataStore";
-import { MenuStore } from "./MenuStore";
-import { AuthStore } from "./AuthStore";
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./modules/Auth";
 
-export const rootStoreContext = createContext({
-  menuStore: new MenuStore(),
-  financeStore: new FinanceDataStore(),
-  authStore: new AuthStore(),
+export default configureStore({
+  reducer: {
+    auth: authReducer,
+  },
 });
-
-export const useStores = () => useContext(rootStoreContext);

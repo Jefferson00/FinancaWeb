@@ -5,12 +5,12 @@ import * as S from "./styles";
 import Button from "../../components/Button";
 import { FaGoogle } from "react-icons/fa";
 
-import { useStores } from "../../store";
-
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../../config/firebase";
 import api from "../../config/api";
 import { HeadersDefaults } from "axios";
+import { useDispatch } from "react-redux";
+import { signIn } from "../../store/modules/Auth";
 
 interface CommonHeaderProperties extends HeadersDefaults {
   authorization: string;
@@ -21,9 +21,7 @@ const Login = observer(() => {
   const googlePrimary = Colors.ORANGE_PRIMARY_LIGHTER;
   const googleSecondary = Colors.ORANGE_SECONDARY_LIGHTER;
 
-  const { authStore } = useStores();
-  const { auth: StateAuth, setUser } = authStore;
-  const { user } = StateAuth;
+  const dispatch = useDispatch();
 
   async function signInWithGoogle() {
     const auth = getAuth(app);
@@ -59,21 +57,36 @@ const Login = observer(() => {
             api
               .post("users", userInput)
               .then(({ data: dataCreated }) => {
-                setUser({
+                dispatch(
+                  signIn({
+                    ...dataCreated,
+                    phone: dataCreated.phone
+                      ? dataCreated.phone.replace("+55", "")
+                      : null,
+                  })
+                );
+                /*                 setUser({
                   ...dataCreated,
                   phone: dataCreated.phone
                     ? dataCreated.phone.replace("+55", "")
                     : null,
-                });
+                }); */
                 return;
               })
               .catch((err) => console.log("erro ao criar usuário:", err));
           } else {
-            setUser({
+            dispatch(
+              signIn({
+                ...data,
+                phone: data.phone ? data.phone.replace("+55", "") : null,
+                avatar: data.avatar ? data.avatar : photoURL,
+              })
+            );
+            /* setUser({
               ...data,
               phone: data.phone ? data.phone.replace("+55", "") : null,
               avatar: data.avatar ? data.avatar : photoURL,
-            });
+            }); */
             return;
           }
         })

@@ -4,22 +4,21 @@ import * as S from "./styles";
 import LogoImg from "../../assets/logo.svg";
 import DefaultAvatar from "../../assets/icons/user.svg";
 import { Link } from "react-router-dom";
-import { observer } from "mobx-react-lite";
-import { useStores } from "../../store";
 
 import { getAuth } from "firebase/auth";
 import { app } from "../../config/firebase";
 import { FaSignOutAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import State from "../../store/interfaces";
 
-const Header = observer(() => {
-  const { authStore } = useStores();
-  const { auth, setUser } = authStore;
-  const { user } = auth;
+const Header = () => {
+  const { user } = useSelector((state: State) => state.auth);
+  const dispatch = useDispatch();
 
   const backgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
 
   const signOut = async () => {
-    setUser(null);
+    //dispatch(signOutAction());
     const firebaseAuth = getAuth(app);
     await firebaseAuth.signOut();
   };
@@ -46,6 +45,6 @@ const Header = observer(() => {
       </S.UserContainer>
     </S.Container>
   );
-});
+};
 
 export default Header;

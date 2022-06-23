@@ -14,3 +14,12 @@ export interface IIncomes {
   value: number;
   received: boolean;
 }
+
+export interface IAuthState {
+  isAuthenticated: boolean;
+  user: any;
+}
+export default interface State {
+  auth: IAuthState;
+  account: IAccount[];
+}

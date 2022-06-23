@@ -1,21 +1,25 @@
-import Header from '../../components/Header';
-import MainSide from '../../components/MainSide';
-import MenuItem from '../../components/MenuItem';
-import { observer } from 'mobx-react-lite';
+import Header from "../../components/Header";
+import MainSide from "../../components/MainSide";
+import MenuItem from "../../components/MenuItem";
 
-import { MdArrowUpward, MdArrowDownward, MdCreditCard, MdHome } from 'react-icons/md';
+import {
+  MdArrowUpward,
+  MdArrowDownward,
+  MdCreditCard,
+  MdHome,
+} from "react-icons/md";
 
-import * as S from './styles';
+import * as S from "./styles";
 
-import { useStores } from '../../store';
-import HomeContent from '../../components/HomeContent';
-import IncomeView from '../../components/IncomeView';
-import ExpansesView from '../../components/ExpansesView';
-import CardsView from '../../components/CardsView';
+import HomeContent from "../../components/HomeContent";
+import IncomeView from "../../components/IncomeView";
+import ExpansesView from "../../components/ExpansesView";
+import CardsView from "../../components/CardsView";
 
-const Home = observer(() => {
-  const { menuStore } = useStores();
-  const { selectItem, menu } = menuStore;
+const Home = () => {
+  const menu = {
+    item: "Home",
+  };
 
   return (
     <div>
@@ -28,42 +32,41 @@ const Home = observer(() => {
           <MenuItem
             icon={MdHome}
             title="Inicio"
-            selected={menu.item === 'Home'}
-            onClick={() => selectItem('Home')}
+            selected={menu.item === "Home"}
+            onClick={() => null}
           />
           <MenuItem
-            onClick={() => selectItem('Entradas')}
+            onClick={() => null}
             icon={MdArrowUpward}
-            selected={menu.item === 'Entradas'}
+            selected={menu.item === "Entradas"}
             title="Entradas"
           />
           <MenuItem
             icon={MdArrowDownward}
             title="Despesas"
-            selected={menu.item === 'Despesas'}
-            onClick={() => selectItem('Despesas')}
+            selected={menu.item === "Despesas"}
+            onClick={() => null}
           />
           <MenuItem
             icon={MdCreditCard}
             title="Cartões"
-            selected={menu.item === 'Cartões'}
-            onClick={() => selectItem('Cartões')}
+            selected={menu.item === "Cartões"}
+            onClick={() => null}
           />
-
         </S.MenuList>
 
         <S.Content>
-          {menu.item === 'Home' && <HomeContent />}
+          {menu.item === "Home" && <HomeContent />}
 
-          {menu.item === 'Entradas' && <IncomeView />}
+          {menu.item === "Entradas" && <IncomeView />}
 
-          {menu.item === 'Despesas' && <ExpansesView />}
+          {menu.item === "Despesas" && <ExpansesView />}
 
-          {menu.item === 'Cartões' && <CardsView />}
+          {menu.item === "Cartões" && <CardsView />}
         </S.Content>
       </S.Container>
     </div>
-  )
-});
+  );
+};
 
-export default Home
+export default Home;
