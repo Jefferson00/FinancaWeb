@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import State from "../store/interfaces";
 import { signUp } from "../store/modules/Auth/fetchActions";
 import { signIn } from "../store/modules/Auth";
-import { AnyAction } from "redux";
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
@@ -31,7 +30,7 @@ const RouterWrapper = ({
   position,
   ...rest
 }: RouteProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const { isAuthenticated } = useSelector((state: State) => state.auth);
 
   const auth = getAuth(app);
@@ -41,7 +40,7 @@ const RouterWrapper = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const { displayName, photoURL, uid, email, phoneNumber } = user;
+        const { displayName, photoURL, email, phoneNumber } = user;
 
         const token = await user.getIdToken();
 
@@ -63,9 +62,9 @@ const RouterWrapper = ({
         api
           .get(`users/email/${email}`)
           .then(({ data }) => {
-            console.log("usuario encontrado com email", data);
+            console.log("usuario encontrado com email");
             if (!data) {
-              dispatch(signUp(userInput) as unknown as AnyAction);
+              dispatch(signUp(userInput));
               setLoading(false);
             } else {
               dispatch(
@@ -75,7 +74,6 @@ const RouterWrapper = ({
                   avatar: data.avatar ? data.avatar : photoURL,
                 })
               );
-              console.log(data);
               return;
             }
           })

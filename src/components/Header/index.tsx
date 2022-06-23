@@ -11,14 +11,17 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import State from "../../store/interfaces";
 
+import { signOut } from "../../store/modules/Auth";
+
 const Header = () => {
   const { user } = useSelector((state: State) => state.auth);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
   const backgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
 
-  const signOut = async () => {
-    //dispatch(signOutAction());
+  const handleSignOut = async () => {
+    localStorage.removeItem("@FinancaWeb:token");
+    dispatch(signOut({}));
     const firebaseAuth = getAuth(app);
     await firebaseAuth.signOut();
   };
@@ -38,7 +41,7 @@ const Header = () => {
         <S.Avatar src={user?.avatar ? user?.avatar : DefaultAvatar} />
 
         {user && (
-          <S.SignOutButton onClick={signOut}>
+          <S.SignOutButton onClick={handleSignOut}>
             <FaSignOutAlt color="#fff" size={28} />
           </S.SignOutButton>
         )}

@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import { Colors } from "../../styles/global";
 import LogoImg from "../../assets/logo.svg";
 import * as S from "./styles";
@@ -11,17 +10,18 @@ import api from "../../config/api";
 import { HeadersDefaults } from "axios";
 import { useDispatch } from "react-redux";
 import { signIn } from "../../store/modules/Auth";
+import { signUp } from "../../store/modules/Auth/fetchActions";
 
 interface CommonHeaderProperties extends HeadersDefaults {
   authorization: string;
 }
 
-const Login = observer(() => {
+const Login = () => {
   const backgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
   const googlePrimary = Colors.ORANGE_PRIMARY_LIGHTER;
   const googleSecondary = Colors.ORANGE_SECONDARY_LIGHTER;
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
   async function signInWithGoogle() {
     const auth = getAuth(app);
@@ -30,13 +30,17 @@ const Login = observer(() => {
     const result = await signInWithPopup(auth, provider);
 
     if (result.user) {
-      const { displayName, photoURL, uid, email, phoneNumber } = result.user;
+      const { displayName, photoURL, email, phoneNumber } = result.user;
 
       if (!displayName || !photoURL) {
         throw new Error("Missing information from Google Account.");
       }
 
       const token = await result.user.getIdToken();
+
+      api.defaults.headers = {
+        authorization: `Bearer ${token}`,
+      } as CommonHeaderProperties;
 
       const userInput = {
         avatar: photoURL,
@@ -45,35 +49,12 @@ const Login = observer(() => {
         phone: phoneNumber,
       };
 
-      api.defaults.headers = {
-        authorization: `Bearer ${token}`,
-      } as CommonHeaderProperties;
-
       api
         .get(`users/email/${email}`)
         .then(({ data }) => {
-          console.log("usuario encontrado com email", data);
+          console.log("usuario encontrado com email");
           if (!data) {
-            api
-              .post("users", userInput)
-              .then(({ data: dataCreated }) => {
-                dispatch(
-                  signIn({
-                    ...dataCreated,
-                    phone: dataCreated.phone
-                      ? dataCreated.phone.replace("+55", "")
-                      : null,
-                  })
-                );
-                /*                 setUser({
-                  ...dataCreated,
-                  phone: dataCreated.phone
-                    ? dataCreated.phone.replace("+55", "")
-                    : null,
-                }); */
-                return;
-              })
-              .catch((err) => console.log("erro ao criar usuário:", err));
+            dispatch(signUp(userInput));
           } else {
             dispatch(
               signIn({
@@ -82,13 +63,8 @@ const Login = observer(() => {
                 avatar: data.avatar ? data.avatar : photoURL,
               })
             );
-            /* setUser({
-              ...data,
-              phone: data.phone ? data.phone.replace("+55", "") : null,
-              avatar: data.avatar ? data.avatar : photoURL,
-            }); */
-            return;
           }
+          localStorage.setItem("@FinancaWeb:token", token);
         })
         .catch((err) => {
           console.log("erro ao encontrar usuário com email", err);
@@ -119,6 +95,6 @@ const Login = observer(() => {
       </S.ActionSection>
     </S.Container>
   );
-});
+};
 
 export default Login;

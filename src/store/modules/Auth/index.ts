@@ -1,7 +1,7 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
 const INITIAL_STATE = {
-  isAuthenticated: !!localStorage.getItem("token"),
+  isAuthenticated: !!localStorage.getItem("@FinancaWeb:token"),
   user: {},
 };
 
