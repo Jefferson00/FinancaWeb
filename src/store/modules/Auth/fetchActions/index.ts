@@ -1,4 +1,3 @@
-import { AnyAction, Dispatch } from "redux";
 import { signIn } from "..";
 import api from "../../../../config/api";
 

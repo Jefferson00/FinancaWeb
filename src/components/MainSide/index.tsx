@@ -13,11 +13,12 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import State from "../../store/interfaces";
+import { listAccounts } from "../../store/modules/Accounts/fetchActions";
 
 const MainSide = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
-  const accounts = useSelector((state: State) => state.account);
+  const accounts = useSelector((state: State) => state.accounts);
 
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
@@ -39,7 +40,7 @@ const MainSide = () => {
 
   useEffect(() => {
     if (user) {
-      // dispatch(fetchAccounts(user.id));
+      dispatch(listAccounts(user.id));
     }
   }, [dispatch, user]);
 
@@ -126,13 +127,13 @@ const MainSide = () => {
         <h4>Contas</h4>
 
         <S.AccountCardList>
-          {accounts?.length > 0 && (
+          {accounts.length > 0 && (
             <Card account={accounts[accountSelected]} censored={censored} />
           )}
         </S.AccountCardList>
 
         <S.CardDots>
-          {accounts?.map((account, index) => (
+          {accounts.map((account, index) => (
             <S.Dot
               key={index}
               selected={accountSelected === index}

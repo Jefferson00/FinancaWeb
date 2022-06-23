@@ -21,5 +21,5 @@ export interface IAuthState {
 }
 export default interface State {
   auth: IAuthState;
-  account: IAccount[];
+  accounts: IAccount[];
 }
