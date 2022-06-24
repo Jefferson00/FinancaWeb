@@ -1,7 +1,7 @@
 import { Colors } from "../../styles/global";
 import LogoImg from "../../assets/logo.svg";
 import * as S from "./styles";
-import Button from "../../components/Button";
+import Button from "../../components/utils/Button";
 import { FaGoogle } from "react-icons/fa";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";

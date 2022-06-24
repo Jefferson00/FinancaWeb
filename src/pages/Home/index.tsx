@@ -1,6 +1,6 @@
-import Header from "../../components/Header";
-import MainSide from "../../components/MainSide";
-import MenuItem from "../../components/MenuItem";
+import Header from "../../components/app/Header";
+import MainSide from "../../components/app/MainSide";
+import MenuItem from "../../components/utils/MenuItem";
 
 import {
   MdArrowUpward,
@@ -11,10 +11,10 @@ import {
 
 import * as S from "./styles";
 
-import HomeContent from "../../components/HomeContent";
-import IncomeView from "../../components/IncomeView";
-import ExpansesView from "../../components/ExpansesView";
-import CardsView from "../../components/CardsView";
+import HomeContent from "../../components/app/HomeContent";
+import IncomeView from "../../components/app/IncomeView";
+import ExpansesView from "../../components/app/ExpansesView";
+import CardsView from "../../components/app/CardsView";
 
 const Home = () => {
   const menu = {
