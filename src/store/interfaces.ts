@@ -4,7 +4,7 @@ export interface IAccount {
   type: string;
   status: string;
   created_at: string;
-  initial_value: number;
+  initialValue: number;
   balance: number;
   createdAt: string;
   Invoice: any[];
@@ -18,6 +18,13 @@ export interface ICreateAccount {
   status: string;
   initialValue: number;
   userId: string;
+}
+
+export interface IUpdateAccount {
+  userId: string;
+  type?: string;
+  status?: string;
+  name?: string;
 }
 
 export interface IIncomes {

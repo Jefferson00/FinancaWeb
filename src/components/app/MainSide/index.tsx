@@ -10,24 +10,16 @@ import {
   FaEye,
   FaEyeSlash,
   FaPlus,
-  FaSave,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import State, { IAccount, ICreateAccount } from "../../../store/interfaces";
-import {
-  createAccount,
-  listAccounts,
-} from "../../../store/modules/Accounts/fetchActions";
+import State, { IAccount } from "../../../store/interfaces";
+import { listAccounts } from "../../../store/modules/Accounts/fetchActions";
 import Modal from "../../utils/Modal";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import {
-  currencyMask,
-  currencyToValue,
-} from "../../../utils/getCurrencyFormat";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Input from "../../utils/Input";
-import Select from "../../utils/Select";
+import CreateAccount from "../CreateAccount";
+import { accountTypes } from "../../../utils/types";
 
 const schema = yup.object({
   name: yup
@@ -44,44 +36,6 @@ type FormData = {
   status: string;
   initialValue?: string;
 };
-
-export const accountTypes = [
-  {
-    id: 1,
-    name: "Conta Corrente",
-  },
-  {
-    id: 2,
-    name: "Conta Poupança",
-  },
-  {
-    id: 3,
-    name: "Carteira",
-  },
-  {
-    id: 4,
-    name: "Outro",
-  },
-];
-
-const types = [
-  {
-    icon: "🏢",
-    name: "Conta Corrente",
-  },
-  {
-    icon: "💰",
-    name: "Conta Poupança",
-  },
-  {
-    icon: "💵",
-    name: "Carteira",
-  },
-  {
-    icon: "🪙",
-    name: "Outro",
-  },
-];
 
 const MainSide = () => {
   const dispatch = useDispatch<any>();
@@ -125,16 +79,20 @@ const MainSide = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    const accountToCreate: ICreateAccount = {
-      ...data,
-      status: "active",
-      initialValue: Number(currencyToValue(data.initialValue || "0")),
-      userId: user.id,
-    };
-    console.log(accountToCreate);
-    // dispatch(createAccount(accountToCreate));
+  const handleEditAccountOpenModal = () => {
+    setModalVisibility(true);
+    setValue("name", accounts[accountSelected].name);
+    setValue("type", accounts[accountSelected].type);
+    setValue("initialValue", accounts[accountSelected].initialValue.toString());
+    setAccountState(accounts[accountSelected]);
+  };
+
+  const handleCloseAccountModal = () => {
     setModalVisibility(false);
+    setValue("name", "");
+    setValue("type", accountTypes[0].name);
+    setValue("initialValue", "0");
+    setAccountState(null);
   };
 
   return (
@@ -214,13 +172,7 @@ const MainSide = () => {
         <S.AccountContainer>
           <h4>Contas</h4>
 
-          <S.AccountCardList
-            onClick={() => {
-              setModalVisibility(true);
-              setValue("name", accounts[accountSelected].name);
-              setAccountState(accounts[accountSelected]);
-            }}
-          >
+          <S.AccountCardList onClick={handleEditAccountOpenModal}>
             {accounts.length > 0 && (
               <Card account={accounts[accountSelected]} censored={censored} />
             )}
@@ -253,54 +205,13 @@ const MainSide = () => {
         </S.ButtonContainer>
       </S.Container>
 
-      <Modal
-        visible={modalVisibility}
-        onCancel={() => setModalVisibility(false)}
-      >
-        <p>{accountState?.name}</p>
-        <S.AccountForm>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Input
-              label="Nome"
-              backgroundColor="#D4E3F5"
-              textColor="#000"
-              name="name"
-              defaultValue={accountState?.name || ""}
-              control={control}
-            />
-
-            <Select
-              label="Tipo de conta"
-              backgroundColor="#D4E3F5"
-              textColor="#000"
-              name="type"
-              control={control}
-              options={types}
-              defaultValue={types[0].name}
-            />
-
-            <Input
-              label="Saldo Inicial"
-              backgroundColor="#D4E3F5"
-              textColor="#000"
-              name="initialValue"
-              mask={currencyMask}
-              defaultValue={String(accountState?.initial_value) || "0"}
-              control={control}
-            />
-
-            <Button
-              title="Salvar"
-              colors={{
-                PRIMARY_BACKGROUND: firstBackgroundColor,
-                SECOND_BACKGROUND: secondBackgroundColor,
-                TEXT: "#fff",
-              }}
-              icon={() => <FaSave color="#FFF" size={25} />}
-              type="submit"
-            />
-          </form>
-        </S.AccountForm>
+      <Modal visible={modalVisibility} onCancel={handleCloseAccountModal}>
+        <CreateAccount
+          accountId={accountState?.id}
+          control={control}
+          handleSubmit={handleSubmit}
+          onFinish={handleCloseAccountModal}
+        />
       </Modal>
     </>
   );

@@ -19,7 +19,9 @@ export default function Modal({
 }: ModalProps) {
   const [closeAnimation, setCloseAnimation] = useState(false);
 
-  const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClose = (
+    e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>
+  ) => {
     setCloseAnimation(true);
 
     setTimeout(() => {
@@ -29,8 +31,12 @@ export default function Modal({
   };
 
   return (
-    <S.Container visible={visible}>
-      <S.Content animation={animation} closeAnimation={closeAnimation}>
+    <S.Container visible={visible} onClick={(e) => handleClose(e)}>
+      <S.Content
+        animation={animation}
+        closeAnimation={closeAnimation}
+        onClick={(e) => e.stopPropagation()}
+      >
         <S.CloseButton onClick={handleClose}>
           <FiX size={24} />
         </S.CloseButton>
