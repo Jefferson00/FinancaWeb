@@ -29,9 +29,8 @@ export const LabelContainer = styled.div`
 
 export const Alert = styled.p<TextColor>`
   color: ${(props) => props.color};
-  font-size: 1rem;
+  font-size: 0.8rem;
   text-align: left;
-  margin-left: 1rem;
 `;
 
 export const Container = styled.div<ContainerProps>`
@@ -51,14 +50,12 @@ export const Container = styled.div<ContainerProps>`
   ${(props) =>
     props.isErrored &&
     css`
-      border-width: 2px;
-      border-color: #cc3728;
+      border: 2px solid #cc3728;
     `}
   ${(props) =>
     props.isFocused &&
     css`
-      border-width: 2px;
-      border-color: #2673ce;
+      border: 2px solid #2673ce;
     `}
 
   ${(props) =>

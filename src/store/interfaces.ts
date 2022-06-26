@@ -39,7 +39,19 @@ export interface IAuthState {
   isAuthenticated: boolean;
   user: any;
 }
+
+export interface AccountState {
+  accounts: IAccount[];
+  loading: boolean;
+}
+
+export interface DatesState {
+  selectedMonth: Date;
+}
+
 export default interface State {
   auth: IAuthState;
-  accounts: IAccount[];
+  accounts: AccountState;
+  menus: string;
+  dates: DatesState;
 }

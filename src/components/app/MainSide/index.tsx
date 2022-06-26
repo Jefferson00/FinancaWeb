@@ -20,6 +20,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CreateAccount from "../CreateAccount";
 import { accountTypes } from "../../../utils/types";
+import { changeMonth } from "../../../store/modules/Dates";
 
 const schema = yup.object({
   name: yup
@@ -40,7 +41,8 @@ type FormData = {
 const MainSide = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
-  const accounts = useSelector((state: State) => state.accounts);
+  const { accounts, loading } = useSelector((state: State) => state.accounts);
+  const { selectedMonth } = useSelector((state: State) => state.dates);
 
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
@@ -93,6 +95,17 @@ const MainSide = () => {
     setValue("type", accountTypes[0].name);
     setValue("initialValue", "0");
     setAccountState(null);
+    setAccountSelected(0);
+  };
+
+  const handleChangeMonth = (order: "PREV" | "NEXT") => {
+    const currentMonth = selectedMonth.getMonth();
+    const newDate = new Date(
+      selectedMonth.setMonth(
+        order === "NEXT" ? currentMonth + 1 : currentMonth - 1
+      )
+    );
+    dispatch(changeMonth(newDate));
   };
 
   return (
@@ -105,11 +118,11 @@ const MainSide = () => {
       >
         <S.Header>
           <S.MonthSelector>
-            <S.Prev>
+            <S.Prev onClick={() => handleChangeMonth("PREV")}>
               <FaChevronLeft color="#fff" />
             </S.Prev>
-            <S.Month>{getMounthAndYear(new Date())}</S.Month>
-            <S.Next>
+            <S.Month>{getMounthAndYear(selectedMonth)}</S.Month>
+            <S.Next onClick={() => handleChangeMonth("NEXT")}>
               <FaChevronRight color="#fff" />
             </S.Next>
           </S.MonthSelector>
@@ -173,6 +186,7 @@ const MainSide = () => {
           <h4>Contas</h4>
 
           <S.AccountCardList onClick={handleEditAccountOpenModal}>
+            {loading && <p>Carregando...</p>}
             {accounts.length > 0 && (
               <Card account={accounts[accountSelected]} censored={censored} />
             )}

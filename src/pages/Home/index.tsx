@@ -15,10 +15,20 @@ import HomeContent from "../../components/app/HomeContent";
 import IncomeView from "../../components/app/IncomeView";
 import ExpansesView from "../../components/app/ExpansesView";
 import CardsView from "../../components/app/CardsView";
+import { useDispatch, useSelector } from "react-redux";
+import { changeMenu } from "../../store/modules/Menus";
+import State from "../../store/interfaces";
 
 const Home = () => {
-  const menu = {
+  const dispatch = useDispatch<any>();
+  const menu = useSelector((state: State) => state.menus);
+
+  /* const menu = {
     item: "Home",
+  }; */
+
+  const handleChangeMenu = (menu: string) => {
+    dispatch(changeMenu(menu));
   };
 
   return (
@@ -32,37 +42,37 @@ const Home = () => {
           <MenuItem
             icon={MdHome}
             title="Inicio"
-            selected={menu.item === "Home"}
-            onClick={() => null}
+            selected={menu === "Home"}
+            onClick={() => handleChangeMenu("Home")}
           />
           <MenuItem
-            onClick={() => null}
+            onClick={() => handleChangeMenu("Entradas")}
             icon={MdArrowUpward}
-            selected={menu.item === "Entradas"}
+            selected={menu === "Entradas"}
             title="Entradas"
           />
           <MenuItem
             icon={MdArrowDownward}
             title="Despesas"
-            selected={menu.item === "Despesas"}
-            onClick={() => null}
+            selected={menu === "Despesas"}
+            onClick={() => handleChangeMenu("Despesas")}
           />
           <MenuItem
             icon={MdCreditCard}
             title="Cartões"
-            selected={menu.item === "Cartões"}
-            onClick={() => null}
+            selected={menu === "Cartões"}
+            onClick={() => handleChangeMenu("Cartões")}
           />
         </S.MenuList>
 
         <S.Content>
-          {menu.item === "Home" && <HomeContent />}
+          {menu === "Home" && <HomeContent />}
 
-          {menu.item === "Entradas" && <IncomeView />}
+          {menu === "Entradas" && <IncomeView />}
 
-          {menu.item === "Despesas" && <ExpansesView />}
+          {menu === "Despesas" && <ExpansesView />}
 
-          {menu.item === "Cartões" && <CardsView />}
+          {menu === "Cartões" && <CardsView />}
         </S.Content>
       </S.Container>
     </div>
