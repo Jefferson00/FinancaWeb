@@ -1,16 +1,31 @@
 import { useEffect, useState, useRef } from "react";
 import * as S from "./styles";
-import { observer } from "mobx-react-lite";
 import { Colors } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import ItemView from "../../utils/ItemView";
-import { getFullDayOfTheMounth } from "../../../utils/dateFormats";
 import Button from "../../utils/Button";
+import { useDispatch, useSelector } from "react-redux";
+import State from "../../../store/interfaces";
+import {
+  listIncomes,
+  listIncomesOnAccount,
+} from "../../../store/modules/Incomes/fetchActions";
+import { listByDate } from "../../../utils/listByDate";
+import { getMonthName } from "../../../utils/dateFormats";
 
-const IncomeList = observer(() => {
+const IncomeList = () => {
+  const { incomes, incomesOnAccount, loading } = useSelector(
+    (state: State) => state.incomes
+  );
+  const { user } = useSelector((state: State) => state.auth);
+  const { selectedMonth } = useSelector((state: State) => state.dates);
+  const dispatch = useDispatch<any>();
+  const [incomesListState, setIncomesListState] = useState<
+    { day: number; items: any[] }[]
+  >([]);
+
   const [censored, setCensored] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
-  const incomes: any[] = [];
 
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
   const textColor = Colors.MAIN_TEXT_LIGHTER;
@@ -39,6 +54,18 @@ const IncomeList = observer(() => {
       if (listRef.current) listRef.current.style.overflowY = "hidden";
     });
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(listIncomes(user.id));
+      dispatch(listIncomesOnAccount(user.id));
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    const incomesList = listByDate(incomes, incomesOnAccount, selectedMonth);
+    setIncomesListState(incomesList);
+  }, [incomes, incomesOnAccount, selectedMonth]);
 
   return (
     <S.Container>
@@ -72,22 +99,26 @@ const IncomeList = observer(() => {
         </S.CensoredContainer>
       ) : (
         <S.ItemsList ref={listRef}>
-          {incomes.map((item, index) => {
-            return (
-              <div key={index}>
-                <S.DateText color={textColor}>
-                  {getFullDayOfTheMounth(item.day)}
-                </S.DateText>
-                {item?.items?.map((i: any, index: number) => {
-                  return <ItemView key={index} type={"INCOME"} item={i} />;
-                })}
-              </div>
-            );
-          })}
+          {loading ? (
+            <p>Carregando...</p>
+          ) : (
+            incomesListState.map((item, index) => {
+              return (
+                <div key={index}>
+                  <S.DateText color={textColor}>
+                    {item.day} de {getMonthName(selectedMonth)}
+                  </S.DateText>
+                  {item?.items?.map((i: any, index: number) => {
+                    return <ItemView key={index} type={"INCOME"} item={i} />;
+                  })}
+                </div>
+              );
+            })
+          )}
         </S.ItemsList>
       )}
     </S.Container>
   );
-});
+};
 
 export default IncomeList;

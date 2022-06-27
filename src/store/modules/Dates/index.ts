@@ -4,11 +4,11 @@ const INITIAL_STATE = {
   selectedMonth: new Date(),
 };
 
-export const changeMonth = createAction<Date>("CHANGE_MONTH");
+export const changeMonth = createAction<string>("CHANGE_MONTH");
 
 export default createReducer(INITIAL_STATE, {
   [changeMonth.type]: (state, action) => ({
     ...state,
-    selectedMonth: action.payload,
+    selectedMonth: new Date(action.payload),
   }),
 });

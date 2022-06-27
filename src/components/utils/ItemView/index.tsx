@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./styles";
 import { Colors } from "../../../styles/global";
 import { FaDollarSign } from "react-icons/fa";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
-import { IIncomes } from "../../../store/interfaces";
+import State, { IIncomes, IIncomesOnAccount } from "../../../store/interfaces";
+import { getDayOfTheMounth } from "../../../utils/dateFormats";
+import { reduceString } from "../../../utils/reduceString";
+import { useSelector } from "react-redux";
+
+interface ItemType extends IIncomes, IIncomesOnAccount {}
 
 interface ItemViewProps {
   type: "EXPANSE" | "INCOME";
-  item: IIncomes;
+  item: ItemType;
 }
 
 export default function ItemView({ type, item }: ItemViewProps) {
+  const { accounts } = useSelector((state: State) => state.accounts);
   const mainColor =
     type === "EXPANSE"
       ? Colors.RED_PRIMARY_LIGHTER
@@ -24,7 +30,26 @@ export default function ItemView({ type, item }: ItemViewProps) {
   const backgroundColor =
     type === "EXPANSE" ? Colors.RED_SOFT_LIGHTER : Colors.GREEN_SOFT_LIGHTER;
 
-  const [checked, setChecked] = useState(item?.received);
+  const [checked, setChecked] = useState(!!item?.paymentDate);
+  const [receivedMessage, setReceivedMessage] = useState(
+    type === "EXPANSE" ? "Pagar" : "Receber"
+  );
+
+  useEffect(() => {
+    setChecked(!!item?.paymentDate);
+
+    if (!!item?.paymentDate) {
+      const term = type === "EXPANSE" ? "Pago" : "Recebido";
+      const date = getDayOfTheMounth(new Date(item.paymentDate));
+      const accountName = reduceString(
+        accounts.find((acc) => acc.id === item.accountId)?.name,
+        16
+      );
+
+      const message = `${term} em ${date} - ${accountName}`;
+      setReceivedMessage(message);
+    }
+  }, [accounts, item, type]);
 
   return (
     <S.Container
@@ -43,7 +68,7 @@ export default function ItemView({ type, item }: ItemViewProps) {
       </summary>
 
       <S.Content>
-        <span />
+        <span>{receivedMessage}</span>
         <S.SwitchContainer>
           <p>Pago:</p>
           <Switch

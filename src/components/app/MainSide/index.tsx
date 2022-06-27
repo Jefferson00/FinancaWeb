@@ -105,7 +105,7 @@ const MainSide = () => {
         order === "NEXT" ? currentMonth + 1 : currentMonth - 1
       )
     );
-    dispatch(changeMonth(newDate));
+    dispatch(changeMonth(newDate.toISOString()));
   };
 
   return (

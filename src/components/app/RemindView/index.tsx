@@ -83,7 +83,7 @@ export default function RemindView({ type, items }: RemindViewProps) {
         </S.CensoredContainer>
       ) : (
         <S.ItemsList>
-          {items.map((item, index) => {
+          {/*  {items.map((item, index) => {
             return (
               <div key={index}>
                 <S.DateText>{getFullDayOfTheMounth(item.day)}</S.DateText>
@@ -92,7 +92,7 @@ export default function RemindView({ type, items }: RemindViewProps) {
                 })}
               </div>
             );
-          })}
+          })} */}
         </S.ItemsList>
       )}
     </S.Container>

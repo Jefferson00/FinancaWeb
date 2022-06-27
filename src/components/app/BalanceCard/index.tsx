@@ -1,4 +1,6 @@
 import { FaDollarSign } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import State from "../../../store/interfaces";
 import { getMounthAndYear } from "../../../utils/dateFormats";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
@@ -19,7 +21,7 @@ const BalanceCard = ({
   type,
   balance,
 }: BalanceCardProps) => {
-  const month = new Date();
+  const { selectedMonth } = useSelector((state: State) => state.dates);
 
   return (
     <S.Container
@@ -30,8 +32,8 @@ const BalanceCard = ({
     >
       <div>
         <S.Title>
-          {type === "INCOME" && `Receitas ${getMounthAndYear(month)}`}
-          {type === "EXPANSE" && `Despesas ${getMounthAndYear(month)}`}
+          {type === "INCOME" && `Receitas ${getMounthAndYear(selectedMonth)}`}
+          {type === "EXPANSE" && `Despesas ${getMounthAndYear(selectedMonth)}`}
         </S.Title>
         <S.Value>{getCurrencyFormat(balance.currentBalance)}</S.Value>
         <S.Subvalue>
