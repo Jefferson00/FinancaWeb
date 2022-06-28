@@ -1,4 +1,5 @@
 import { ExpansesState } from "./modules/Expanses";
+import { TransactionsState } from "./modules/Transactions";
 
 export interface IAccount {
   id: string;
@@ -116,4 +117,5 @@ export default interface State {
   dates: DatesState;
   incomes: IncomesState;
   expanses: ExpansesState;
+  transactions: TransactionsState;
 }

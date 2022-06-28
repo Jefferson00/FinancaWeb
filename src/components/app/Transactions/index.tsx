@@ -7,8 +7,17 @@ import { getCategoryIcon } from "../../../utils/getCategoryIcon";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 
 import { getDayOfTheMounth } from "../../../utils/dateFormats";
+import { useDispatch, useSelector } from "react-redux";
+import State from "../../../store/interfaces";
+import { listLastTransactions } from "../../../store/modules/Transactions/fetchActions";
 
 export default function Transactions() {
+  const dispatch = useDispatch<any>();
+  const { user } = useSelector((state: State) => state.auth);
+  const { lastTransactions } = useSelector(
+    (state: State) => state.transactions
+  );
+
   const [censored, setCensored] = useState(false);
 
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
@@ -31,32 +40,11 @@ export default function Transactions() {
     localStorage.setItem("financaWeb.censored.transactions", String(!censored));
   };
 
-  const latestTransactions = [
-    {
-      id: "f015df05d",
-      category: "Casa",
-      name: "Compras do mês",
-      value: 58590,
-      created_at: new Date(),
-      type: "despesa",
-    },
-    {
-      id: "ddsfsdfdg",
-      category: "Lazer",
-      name: "Ida ao cinema",
-      value: 158590,
-      created_at: new Date(),
-      type: "despesa",
-    },
-    {
-      id: "hththnrn",
-      category: "Outros",
-      name: "Pagamento do agiota",
-      value: 8590,
-      created_at: new Date(),
-      type: "entrada",
-    },
-  ];
+  useEffect(() => {
+    if (user.id) {
+      dispatch(listLastTransactions(user.id));
+    }
+  }, [dispatch, user]);
 
   return (
     <S.Container>
@@ -78,7 +66,7 @@ export default function Transactions() {
         </S.CensoredContainer>
       ) : (
         <S.TransactionsList>
-          {latestTransactions.map((transaction) => {
+          {lastTransactions.map((transaction) => {
             return (
               <S.TransactionItem
                 backgroundColor={itemBackground}
@@ -89,16 +77,16 @@ export default function Transactions() {
                 <S.TextContainer
                   strongColor={strongColor}
                   regularColor={
-                    transaction.type === "despesa" ? expanseColor : incomeColor
+                    transaction.type === "Expanse" ? expanseColor : incomeColor
                   }
                 >
-                  <strong>{transaction.name}</strong>
+                  <strong>{transaction.title}</strong>
                   <p>
-                    {transaction.type === "despesa" && "- "}
+                    {transaction.type === "Expanse" && "- "}
                     {getCurrencyFormat(transaction.value)}
                   </p>
                 </S.TextContainer>
-                <p>{getDayOfTheMounth(transaction.created_at)}</p>
+                <p>{getDayOfTheMounth(new Date(transaction.paymentDate))}</p>
               </S.TransactionItem>
             );
           })}
