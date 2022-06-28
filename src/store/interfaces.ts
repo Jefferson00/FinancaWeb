@@ -1,5 +1,7 @@
+import { ExpansesState } from "./modules/Expanses";
+
 export interface IAccount {
-  id?: string;
+  id: string;
   name: string;
   type: string;
   status: string;
@@ -34,6 +36,30 @@ export interface IIncomesOnAccount {
   value: number;
   name: string;
   income: IIncomes;
+}
+
+export interface IExpanses {
+  id: string;
+  name: string;
+  category: string;
+  value: number;
+  receiptDate: string;
+  iteration: string;
+  receiptDefault: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface IExpansesOnAccount {
+  id: string;
+  paymentDate: string;
+  month: string;
+  recurrence: string;
+  expanseId: string;
+  accountId: string;
+  value: number;
+  name: string;
+  expanse: IExpanses;
 }
 
 export interface ICreateIncome {
@@ -89,4 +115,5 @@ export default interface State {
   menus: string;
   dates: DatesState;
   incomes: IncomesState;
+  expanses: ExpansesState;
 }

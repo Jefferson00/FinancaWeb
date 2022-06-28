@@ -4,12 +4,8 @@ import { Colors } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import ItemView from "../../utils/ItemView";
 import Button from "../../utils/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import State from "../../../store/interfaces";
-import {
-  listIncomes,
-  listIncomesOnAccount,
-} from "../../../store/modules/Incomes/fetchActions";
 import { listByDate } from "../../../utils/listByDate";
 import { getMonthName } from "../../../utils/dateFormats";
 
@@ -17,9 +13,7 @@ const IncomeList = () => {
   const { incomes, incomesOnAccount, loading } = useSelector(
     (state: State) => state.incomes
   );
-  const { user } = useSelector((state: State) => state.auth);
   const { selectedMonth } = useSelector((state: State) => state.dates);
-  const dispatch = useDispatch<any>();
   const [incomesListState, setIncomesListState] = useState<
     { day: number; items: any[] }[]
   >([]);
@@ -54,13 +48,6 @@ const IncomeList = () => {
       if (listRef.current) listRef.current.style.overflowY = "hidden";
     });
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      dispatch(listIncomes(user.id));
-      dispatch(listIncomesOnAccount(user.id));
-    }
-  }, [dispatch, user]);
 
   useEffect(() => {
     const incomesList = listByDate(incomes, incomesOnAccount, selectedMonth);

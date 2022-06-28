@@ -21,6 +21,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import CreateAccount from "../CreateAccount";
 import { accountTypes } from "../../../utils/types";
 import { changeMonth } from "../../../store/modules/Dates";
+import {
+  listExpanses,
+  listExpansesOnAccount,
+} from "../../../store/modules/Expanses/fetchActions";
+import {
+  listIncomes,
+  listIncomesOnAccount,
+} from "../../../store/modules/Incomes/fetchActions";
+import { isSameMonth } from "date-fns";
+import { getAccountEstimateBalance } from "../../../utils/getAccountBalance";
+import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { getItemsInThisMonth } from "../../../utils/listByDate";
 
 const schema = yup.object({
   name: yup
@@ -42,6 +54,8 @@ const MainSide = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
   const { accounts, loading } = useSelector((state: State) => state.accounts);
+  const { incomes } = useSelector((state: State) => state.incomes);
+  const { expanses } = useSelector((state: State) => state.expanses);
   const { selectedMonth } = useSelector((state: State) => state.dates);
 
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
@@ -56,6 +70,13 @@ const MainSide = () => {
 
   const [accountState, setAccountState] = useState<IAccount | null>(null);
   const [modalVisibility, setModalVisibility] = useState(false);
+  const [totalEstimateBalance, setTotalEstimateBalance] = useState(0);
+  const [totalCurrentBalance, setTotalCurrentBalance] = useState(0);
+  const [totalIncomesBalance, setTotalIncomesBalance] = useState(0);
+  const [totalExpansesBalance, setTotalExpansesBalance] = useState(0);
+  const [balances, setBalances] = useState<
+    { accountId: string; currentBalance: number; estimateBalance: number }[]
+  >([]);
 
   useEffect(() => {
     const censoredStatusStoraged = localStorage.getItem(
@@ -66,8 +87,12 @@ const MainSide = () => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user.id) {
       dispatch(listAccounts(user.id));
+      dispatch(listExpanses(user.id));
+      dispatch(listExpansesOnAccount(user.id));
+      dispatch(listIncomes(user.id));
+      dispatch(listIncomesOnAccount(user.id));
     }
   }, [dispatch, user]);
 
@@ -108,6 +133,89 @@ const MainSide = () => {
     dispatch(changeMonth(newDate.toISOString()));
   };
 
+  useEffect(() => {
+    let sumTotalCurrentBalance = 0;
+    let sumTotalEstimateBalance = 0;
+    const accountsBalances: {
+      accountId: string;
+      currentBalance: number;
+      estimateBalance: number;
+    }[] = [];
+    const isTheSameMonth = isSameMonth(new Date(), selectedMonth);
+
+    // eslint-disable-next-line array-callback-return
+    accounts.map((account) => {
+      const currentBalance = account.balance;
+
+      const lastMonthEstimateBalance = localStorage.getItem(
+        `@FinancaAppBeta:LastMonthEstimateBalance@${account.id}`
+      );
+
+      const estimateBalance = isTheSameMonth
+        ? getAccountEstimateBalance(
+            account,
+            currentBalance,
+            incomes,
+            expanses,
+            selectedMonth
+          )
+        : getAccountEstimateBalance(
+            account,
+            Number(lastMonthEstimateBalance),
+            incomes,
+            expanses,
+            selectedMonth
+          );
+
+      const currentMonthEstimateBalance = localStorage.getItem(
+        `@FinancaAppBeta:CurrentMonthEstimateBalance@${account.id}@${selectedMonth}`
+      );
+
+      if (!currentMonthEstimateBalance) {
+        localStorage.setItem(
+          `@FinancaAppBeta:CurrentMonthEstimateBalance@${account.id}@${selectedMonth}`,
+          String(estimateBalance)
+        );
+      }
+
+      sumTotalCurrentBalance = sumTotalCurrentBalance + currentBalance;
+      sumTotalEstimateBalance =
+        isTheSameMonth || !currentMonthEstimateBalance
+          ? sumTotalEstimateBalance + estimateBalance
+          : sumTotalEstimateBalance + Number(currentMonthEstimateBalance);
+
+      accountsBalances.push({
+        accountId: account.id,
+        currentBalance: currentBalance,
+        estimateBalance:
+          isTheSameMonth || !currentMonthEstimateBalance
+            ? estimateBalance
+            : Number(currentMonthEstimateBalance),
+      });
+    });
+
+    setTotalCurrentBalance(sumTotalCurrentBalance);
+    setTotalEstimateBalance(sumTotalEstimateBalance);
+    setBalances(accountsBalances);
+  }, [accounts, expanses, incomes, selectedMonth]);
+
+  useEffect(() => {
+    const currentIncomes = getItemsInThisMonth(incomes, selectedMonth);
+    const totalcurrentIncomes = currentIncomes.reduce(
+      (a, b) => a + (b["value"] || 0),
+      0
+    );
+
+    const currentExpanses = getItemsInThisMonth(expanses, selectedMonth);
+    const totalcurrentExpanses = currentExpanses.reduce(
+      (a, b) => a + (b["value"] || 0),
+      0
+    );
+
+    setTotalIncomesBalance(totalcurrentIncomes);
+    setTotalExpansesBalance(totalcurrentExpanses);
+  }, [expanses, incomes, selectedMonth]);
+
   return (
     <>
       <S.Container
@@ -143,7 +251,9 @@ const MainSide = () => {
               {censored ? (
                 <S.Value color={textColor}>***********</S.Value>
               ) : (
-                <S.Value color={textColor}>R$ 15.000,00</S.Value>
+                <S.Value color={textColor}>
+                  {getCurrencyFormat(totalCurrentBalance)}
+                </S.Value>
               )}
             </S.Balance>
             <S.Balance>
@@ -156,7 +266,7 @@ const MainSide = () => {
                 </S.Value>
               ) : (
                 <S.Value color={textColor} opacity={0.5}>
-                  R$ 14.300,00
+                  {getCurrencyFormat(totalEstimateBalance)}
                 </S.Value>
               )}
             </S.Balance>
@@ -168,7 +278,9 @@ const MainSide = () => {
               {censored ? (
                 <S.Value color={incomeColor}>***********</S.Value>
               ) : (
-                <S.Value color={incomeColor}>R$ 15.000,00</S.Value>
+                <S.Value color={incomeColor}>
+                  {getCurrencyFormat(totalIncomesBalance)}
+                </S.Value>
               )}
             </S.Balance>
             <S.Balance>
@@ -176,7 +288,9 @@ const MainSide = () => {
               {censored ? (
                 <S.Value color={expenseColor}>***********</S.Value>
               ) : (
-                <S.Value color={expenseColor}>R$ 14.300,00</S.Value>
+                <S.Value color={expenseColor}>
+                  {getCurrencyFormat(totalExpansesBalance)}
+                </S.Value>
               )}
             </S.Balance>
           </S.Row>
@@ -188,7 +302,11 @@ const MainSide = () => {
           <S.AccountCardList onClick={handleEditAccountOpenModal}>
             {loading && <p>Carregando...</p>}
             {accounts.length > 0 && (
-              <Card account={accounts[accountSelected]} censored={censored} />
+              <Card
+                account={accounts[accountSelected]}
+                balances={balances[accountSelected]}
+                censored={censored}
+              />
             )}
           </S.AccountCardList>
 

@@ -4,6 +4,7 @@ import accountReducer from "./modules/Accounts";
 import menuReducer from "./modules/Menus";
 import dateReducer from "./modules/Dates";
 import incomesReducer from "./modules/Incomes";
+import expansesReducer from "./modules/Expanses";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     menus: menuReducer,
     dates: dateReducer,
     incomes: incomesReducer,
+    expanses: expansesReducer,
   },
 });
