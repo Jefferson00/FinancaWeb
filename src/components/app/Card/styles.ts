@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 interface ContainerProps {
   background: string;
@@ -14,30 +14,32 @@ export const Container = styled.div<ContainerProps>`
   gap: 0.5rem;
   margin-bottom: 1rem;
 
-  header{
+  cursor: pointer;
+
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     flex: 1;
 
-    strong{
+    strong {
       font-weight: 600;
       font-size: 1.125rem;
       color: #fff;
     }
   }
 
-  main{
+  main {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    div{
-      p{
+    div {
+      p {
         color: #fff;
       }
-      strong{
+      strong {
         font-weight: 600;
         font-size: 1.125rem;
         color: #fff;
@@ -45,16 +47,15 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
-
-  footer{
+  footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    div{
-      p{
+    div {
+      p {
         font-size: 0.75rem;
         color: #fff;
       }
     }
   }
-`
+`;

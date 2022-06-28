@@ -1,3 +1,4 @@
+import { CreditCardsState } from "./modules/CreditCards";
 import { ExpansesState } from "./modules/Expanses";
 import { TransactionsState } from "./modules/Transactions";
 
@@ -63,6 +64,42 @@ export interface IExpansesOnAccount {
   expanse: IExpanses;
 }
 
+export interface IExpanseOnInvoice {
+  id: string;
+  recurrence?: string;
+  expanseId: string;
+  value: number;
+  name: string;
+  invoiceId: string;
+  day: number;
+}
+
+export interface IInvoice {
+  id: string;
+  month: string;
+  closingDate: string;
+  paymentDate: string;
+  paid: boolean;
+  closed: boolean;
+  value: number;
+  creditCardId: string;
+  accountId: string;
+  updatedAt: string;
+  ExpanseOnInvoice: IExpanseOnInvoice[];
+}
+
+export interface ICreditCard {
+  id: string;
+  name: string;
+  limit: number;
+  paymentDate: string;
+  invoiceClosing: string;
+  color: string;
+  receiptDefault: string;
+  userId: string;
+  Invoice: IInvoice[];
+}
+
 export interface ICreateIncome {
   name: string;
   userId: string;
@@ -118,4 +155,5 @@ export default interface State {
   incomes: IncomesState;
   expanses: ExpansesState;
   transactions: TransactionsState;
+  creditCards: CreditCardsState;
 }

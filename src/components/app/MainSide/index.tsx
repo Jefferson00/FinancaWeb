@@ -33,6 +33,7 @@ import { isSameMonth } from "date-fns";
 import { getAccountEstimateBalance } from "../../../utils/getAccountBalance";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import { getItemsInThisMonth } from "../../../utils/listByDate";
+import { listCreditCards } from "../../../store/modules/CreditCards/fetchActions";
 
 const schema = yup.object({
   name: yup
@@ -93,6 +94,7 @@ const MainSide = () => {
       dispatch(listExpansesOnAccount(user.id));
       dispatch(listIncomes(user.id));
       dispatch(listIncomesOnAccount(user.id));
+      dispatch(listCreditCards(user.id));
     }
   }, [dispatch, user]);
 

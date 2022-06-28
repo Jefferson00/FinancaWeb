@@ -1,33 +1,23 @@
 import { FaDollarSign, FaInfoCircle } from "react-icons/fa";
-import { getDayOfTheMounth } from "../../../utils/dateFormats";
+import { getDayOfTheMounth, getMonthName } from "../../../utils/dateFormats";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
 import Switch from "react-switch";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import State from "../../../store/interfaces";
+import { isSameMonth } from "date-fns";
 
-interface ExpandableCardProps {
-  card: {
-    name: string;
-    limit: number;
-    pay_date: Date;
-    color: string;
-  };
-  invoice: {
-    value: number;
-    paid: boolean;
-    invoiceItems: {
-      day: Date;
-      items: {
-        name: string;
-        recurrence: string;
-        value: number;
-      }[];
-    }[];
-  };
-}
-
-const ExpandableCard = ({ card, invoice }: ExpandableCardProps) => {
-  const [checked, setChecked] = useState(invoice?.paid);
+const ExpandableCard = () => {
+  const {
+    cardSelected,
+    invoiceSelected,
+    expanseOnInvoiceDays,
+    paidExpanseOnInvoiceDays,
+    paidInvoiceSelected,
+  } = useSelector((state: State) => state.creditCards);
+  const { selectedMonth } = useSelector((state: State) => state.dates);
+  const [checked, setChecked] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,17 +30,17 @@ const ExpandableCard = ({ card, invoice }: ExpandableCardProps) => {
   }, []);
 
   return (
-    <S.Container background={card.color}>
+    <S.Container background={cardSelected.color}>
       <section>
         <header>
-          <strong>{card.name}</strong>
+          <strong>{cardSelected.name}</strong>
           <FaInfoCircle size={21} color="#CC3728" />
         </header>
 
         <main>
           <div>
             <p>Fatura atual</p>
-            <strong>{getCurrencyFormat(invoice.value)}</strong>
+            <strong>{getCurrencyFormat(invoiceSelected?.value || 0)}</strong>
           </div>
           <div>
             <p>Pago:</p>
@@ -73,35 +63,80 @@ const ExpandableCard = ({ card, invoice }: ExpandableCardProps) => {
         <footer>
           <div>
             <p>Limite disponível</p>
-            <p>{getCurrencyFormat(card.limit)}</p>
+            <p>{getCurrencyFormat(cardSelected.limit)}</p>
           </div>
 
           <div>
             <p>Data de pagamento</p>
-            <p>{getDayOfTheMounth(card.pay_date)}</p>
+            <p>{getDayOfTheMounth(new Date(cardSelected.paymentDate))}</p>
           </div>
         </footer>
       </section>
 
       <S.InvoiceExpanses ref={listRef}>
-        {invoice.invoiceItems.map((item) => (
-          <div>
-            <p>{getDayOfTheMounth(item.day)}</p>
-            {item.items.map((i, index) => {
-              return (
-                <S.Item key={index}>
-                  <span>
-                    <FaDollarSign size={21} color={card.color} />
-                  </span>
-                  <div>
-                    <p>{`${i.name} - ${i.recurrence}`}</p>
-                    <strong>{getCurrencyFormat(i.value)}</strong>
-                  </div>
-                </S.Item>
-              );
-            })}
+        {invoiceSelected?.ExpanseOnInvoice?.length === 0 && (
+          <S.Item>
+            <div>
+              <p>Nenhuma despesa nessa fatura</p>
+            </div>
+          </S.Item>
+        )}
+        {expanseOnInvoiceDays.map((day, index) => (
+          <div key={index}>
+            <p>
+              {day} de {getMonthName(new Date(invoiceSelected.month))}
+            </p>
+            {invoiceSelected?.ExpanseOnInvoice.filter(
+              (exp) => exp.day === day
+            ).map((expanse) => (
+              <S.Item key={expanse.id}>
+                <span>
+                  <FaDollarSign size={21} color={cardSelected.color} />
+                </span>
+                <div>
+                  <p>{`${expanse.name} - ${expanse.recurrence}`}</p>
+                  <strong>{getCurrencyFormat(expanse.value)}</strong>
+                </div>
+              </S.Item>
+            ))}
           </div>
         ))}
+
+        {paidInvoiceSelected && isSameMonth(selectedMonth, new Date()) && (
+          <div>
+            <S.Item>
+              <div>
+                <p>
+                  Fatura de {getMonthName(new Date(paidInvoiceSelected?.month))}{" "}
+                  paga em{" "}
+                  {getDayOfTheMounth(new Date(paidInvoiceSelected?.updatedAt))}
+                </p>
+              </div>
+            </S.Item>
+
+            {paidExpanseOnInvoiceDays.map((day) => (
+              <div key={Math.random()}>
+                <p>
+                  {day} de {getMonthName(new Date(paidInvoiceSelected.month))}
+                </p>
+
+                {paidInvoiceSelected?.ExpanseOnInvoice.filter(
+                  (exp) => exp.day === day
+                ).map((expanse) => (
+                  <S.Item key={expanse.id}>
+                    <span>
+                      <FaDollarSign size={21} color={cardSelected.color} />
+                    </span>
+                    <div>
+                      <p>{`${expanse.name} - ${expanse.recurrence}`}</p>
+                      <strong>{getCurrencyFormat(expanse.value)}</strong>
+                    </div>
+                  </S.Item>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </S.InvoiceExpanses>
     </S.Container>
   );

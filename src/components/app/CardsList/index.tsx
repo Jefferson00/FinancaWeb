@@ -1,12 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import * as S from "./styles";
-import { observer } from "mobx-react-lite";
 import { Colors } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import Button from "../../utils/Button";
 import Card from "../Card";
+import { useSelector } from "react-redux";
+import State from "../../../store/interfaces";
 
-const CardsList = observer(() => {
+const CardsList = () => {
+  const { creditCards } = useSelector((state: State) => state.creditCards);
   const [censored, setCensored] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -69,32 +71,13 @@ const CardsList = observer(() => {
         </S.CensoredContainer>
       ) : (
         <S.ItemsList ref={listRef}>
-          <Card
-            card={{
-              limit: 700000,
-              color: "#612F74",
-              name: "Nubank",
-              pay_date: new Date(),
-            }}
-            invoice={{
-              value: 20000,
-            }}
-          />
-          <Card
-            card={{
-              limit: 200000,
-              color: "#FF8C00",
-              name: "Inter",
-              pay_date: new Date(),
-            }}
-            invoice={{
-              value: 0,
-            }}
-          />
+          {creditCards.map((card) => (
+            <Card key={card.id} creditCard={card} />
+          ))}
         </S.ItemsList>
       )}
     </S.Container>
   );
-});
+};
 
 export default CardsList;
