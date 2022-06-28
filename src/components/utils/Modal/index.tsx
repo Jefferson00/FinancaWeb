@@ -9,6 +9,8 @@ interface ModalProps {
   onConfirm?: (...args: any) => any;
   onCancel?: (...args: any) => any;
   animation?: any;
+  overlaid?: boolean;
+  type?: "Delete" | "Default" | "Warning" | "Confirm" | "Success";
 }
 
 export default function Modal({
@@ -16,6 +18,8 @@ export default function Modal({
   onCancel,
   visible = false,
   animation = "slide",
+  overlaid = false,
+  type = "Default",
 }: ModalProps) {
   const [closeAnimation, setCloseAnimation] = useState(false);
 
@@ -31,7 +35,12 @@ export default function Modal({
   };
 
   return (
-    <S.Container visible={visible} onClick={(e) => handleClose(e)}>
+    <S.Container
+      overlaid={overlaid}
+      visible={visible}
+      onClick={(e) => handleClose(e)}
+      type={type}
+    >
       <S.Content
         animation={animation}
         closeAnimation={closeAnimation}

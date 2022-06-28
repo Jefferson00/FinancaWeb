@@ -102,7 +102,7 @@ const ExpandableCard = () => {
           </div>
         ))}
 
-        {paidInvoiceSelected && isSameMonth(selectedMonth, new Date()) && (
+        {!!paidInvoiceSelected.id && isSameMonth(selectedMonth, new Date()) && (
           <div>
             <S.Item>
               <div>

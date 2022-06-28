@@ -9,7 +9,7 @@ export const Container = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 24.5rem;
-  min-height: 22rem;
+  min-height: 11rem;
 `;
 
 export const Header = styled.header`

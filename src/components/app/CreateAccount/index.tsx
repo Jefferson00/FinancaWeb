@@ -45,6 +45,8 @@ export default function CreateAccount({
   onFinish,
 }: CreateAccountProps) {
   const { user } = useSelector((state: State) => state.auth);
+  const { incomesOnAccount } = useSelector((state: State) => state.incomes);
+  const { expansesOnAccount } = useSelector((state: State) => state.expanses);
   const dispatch = useDispatch<any>();
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
@@ -52,9 +54,14 @@ export default function CreateAccount({
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
   const deleteColor = Colors.RED_PRIMARY_LIGHTER;
+  const cancelButtonColor = Colors.BLUE_PRIMARY_LIGHTER;
+  const okButtonColor = Colors.RED_PRIMARY_LIGHTER;
 
   const canDelete = () => {
-    return true;
+    return (
+      !incomesOnAccount.find((i) => i.accountId === accountId) &&
+      !expansesOnAccount.find((i) => i.accountId === accountId)
+    );
   };
 
   const handleDelete = async () => {
@@ -147,18 +154,30 @@ export default function CreateAccount({
       <Modal
         visible={deleteConfirmationVisible}
         onCancel={() => setDeleteConfirmationVisible(false)}
+        overlaid
+        type="Delete"
       >
-        <div>
-          <FiAlertCircle />
-          <h1>Tem certeza que deseja excluir essa conta?</h1>
+        <S.ModalContent>
+          <FiAlertCircle color={okButtonColor} size={34} />
+          <strong>Tem certeza que deseja excluir essa conta?</strong>
 
-          <div>
-            <button onClick={() => setDeleteConfirmationVisible(false)}>
+          <S.ButtonRowContainer>
+            <S.Button
+              background={cancelButtonColor}
+              color="#fff"
+              onClick={() => setDeleteConfirmationVisible(false)}
+            >
               Cancelar
-            </button>
-            <button onClick={handleDelete}>Sim</button>
-          </div>
-        </div>
+            </S.Button>
+            <S.Button
+              background={okButtonColor}
+              color="#fff"
+              onClick={handleDelete}
+            >
+              Sim
+            </S.Button>
+          </S.ButtonRowContainer>
+        </S.ModalContent>
       </Modal>
     </>
   );

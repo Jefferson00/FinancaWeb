@@ -2,6 +2,8 @@ import styled, { css, keyframes } from "styled-components";
 
 interface ContainerProps {
   visible: boolean;
+  overlaid: boolean;
+  type: "Delete" | "Default" | "Warning" | "Confirm" | "Success";
 }
 
 interface ContentProps {
@@ -36,7 +38,7 @@ export const Container = styled.div<ContainerProps>`
   backdrop-filter: blur(10px);
 
   width: 100%;
-  height: calc(100vh + 3.5rem);
+  height: 100vh;
 
   position: fixed;
   top: 0;
@@ -44,7 +46,7 @@ export const Container = styled.div<ContainerProps>`
   right: 0;
   bottom: 0;
 
-  transform: translateY(-6.5rem);
+  // transform: translateY(-6.5rem);
   z-index: 9999;
 
   display: ${(props) => (props.visible ? "flex" : "none")};
@@ -53,6 +55,20 @@ export const Container = styled.div<ContainerProps>`
   justify-content: center;
 
   overflow: hidden;
+
+  ${(props) =>
+    props.overlaid &&
+    props.type === "Delete" &&
+    css`
+      background-color: rgba(255, 0, 0, 0.4);
+    `}
+
+  ${(props) =>
+    props.overlaid &&
+    props.type === "Warning" &&
+    css`
+      background-color: rgba(255, 255, 0, 0.4);
+    `}
 `;
 
 export const Content = styled.div<ContentProps>`

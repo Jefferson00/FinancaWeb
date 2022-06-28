@@ -19,16 +19,23 @@ interface IEstimate {
 }
 
 const Estimates = observer(() => {
-  const { accounts } = useSelector((state: State) => state.accounts);
-  const { incomes, incomesOnAccount } = useSelector(
-    (state: State) => state.incomes
+  const { accounts, loading: accountLoading } = useSelector(
+    (state: State) => state.accounts
   );
-  const { expanses, expansesOnAccount } = useSelector(
-    (state: State) => state.expanses
-  );
+  const {
+    incomes,
+    incomesOnAccount,
+    loading: incomeLoading,
+  } = useSelector((state: State) => state.incomes);
+  const {
+    expanses,
+    expansesOnAccount,
+    loading: expanseLoading,
+  } = useSelector((state: State) => state.expanses);
 
   const [censored, setCensored] = useState(false);
   const [estimates, setEstimates] = useState<IEstimate[]>([]);
+  const [calculating, setCalculating] = useState(true);
 
   const backgroundColor = Colors.BLUE_SOFT_LIGHTER;
   const graphColor = Colors.ORANGE_SECONDARY_LIGHTER;
@@ -119,6 +126,7 @@ const Estimates = observer(() => {
   );
 
   useEffect(() => {
+    setCalculating(true);
     let count = 0;
     let currentMonth = new Date();
     let sumBalanceLastMonth = 0;
@@ -168,6 +176,7 @@ const Estimates = observer(() => {
       };
     });
     setEstimates(estimatesArr);
+    setCalculating(false);
   }, [accounts, calculateEstimateExpanses, calculateEstimateIncomes]);
 
   return (
@@ -187,6 +196,8 @@ const Estimates = observer(() => {
       <S.GraphContainer backgroundColor={backgroundColor}>
         {censored ? (
           <FaBan size={40} color={regularColor} />
+        ) : incomeLoading || accountLoading || expanseLoading || calculating ? (
+          <p>Carregando...</p>
         ) : (
           estimates.map((estimate) => (
             <S.GraphItem

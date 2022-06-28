@@ -66,3 +66,29 @@ export const Button = styled.button<ButtonProps>`
     filter: brightness(0.8);
   }
 `;
+
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  gap: 1rem;
+`;
+
+export const Col = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+interface TextProps {
+  color: string;
+}
+
+export const Label = styled.label<TextProps>`
+  color: ${(props) => props.color};
+  font-size: 1rem;
+  align-self: flex-start;
+
+  margin: 1rem 0 1rem 0;
+`;

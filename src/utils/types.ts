@@ -16,3 +16,22 @@ export const accountTypes = [
     name: "Outro",
   },
 ];
+
+export const IncomeCategories = [
+  {
+    icon: "🪙",
+    name: "Salário",
+  },
+  {
+    icon: "🪙",
+    name: "Benefício",
+  },
+  {
+    icon: "🪙",
+    name: "Transferência",
+  },
+  {
+    icon: "🪙",
+    name: "Outro",
+  },
+];

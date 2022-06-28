@@ -4,33 +4,27 @@ import { Control, Controller } from "react-hook-form";
 
 import * as S from "./styles";
 
-interface OptionsProps {
-  id?: string;
-  name: string;
-  icon?: string;
-}
-
-interface InputProps extends InputHTMLAttributes<HTMLSelectElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   backgroundColor: string;
   textColor: string;
   label?: string;
-  defaultValue: string | number;
+  mask?: any;
+  isMasked?: boolean;
+  defaultValue?: string | number;
   control: Control<any>;
-  options: OptionsProps[];
-  optionValueType?: "name" | "id";
   icon?: React.ComponentType<IconBaseProps>;
 }
 
-export default function Select({
+export default function DatePicker({
   name,
+  mask,
+  isMasked,
   control,
   label,
   textColor,
   backgroundColor,
-  options,
   defaultValue,
-  optionValueType = "name",
   ...rest
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -58,24 +52,15 @@ export default function Select({
             isFocused={isFocused}
             isErrored={!!fieldState.error}
           >
-            <S.InputSelect
+            <S.InputText
+              type="date"
               color={textColor}
               onChange={field.onChange}
-              value={field.value}
-              name={name}
+              value={!!mask ? mask(field.value) : field.value}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               {...rest}
-            >
-              {options.map(({ icon, name, id }) => (
-                <option
-                  value={optionValueType === "name" ? name : id}
-                  key={Math.random()}
-                >
-                  {icon} {name}
-                </option>
-              ))}
-            </S.InputSelect>
+            />
           </S.Container>
         </>
       )}

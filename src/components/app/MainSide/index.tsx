@@ -302,13 +302,16 @@ const MainSide = () => {
           <h4>Contas</h4>
 
           <S.AccountCardList onClick={handleEditAccountOpenModal}>
-            {loading && <p>Carregando...</p>}
-            {accounts.length > 0 && (
-              <Card
-                account={accounts[accountSelected]}
-                balances={balances[accountSelected]}
-                censored={censored}
-              />
+            {loading ? (
+              <p>Carregando...</p>
+            ) : (
+              accounts.length > 0 && (
+                <Card
+                  account={accounts[accountSelected]}
+                  balances={balances[accountSelected]}
+                  censored={censored}
+                />
+              )
             )}
           </S.AccountCardList>
 
