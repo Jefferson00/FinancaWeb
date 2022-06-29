@@ -5,8 +5,11 @@ interface ContainerProps {
   mainColor: string;
   textColor: string;
 }
+interface ContentProps {
+  mainColor: string;
+}
 
-export const Container = styled.details<ContainerProps>`
+export const Collapse = styled.button<ContainerProps>`
   background-color: ${(props) => props.backgroundColor};
   border-color: ${(props) => props.mainColor};
   border-width: 2px;
@@ -14,49 +17,40 @@ export const Container = styled.details<ContainerProps>`
   border-radius: 20px;
   width: 100%;
   padding: 0.5rem 1rem;
-  cursor: pointer;
 
   transition: all 0.4s;
+`;
 
-  &[open] summary ~ * {
-    animation: open 0.5s ease-in-out;
-  }
+export const CollapseContent = styled.section<ContentProps>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
 
-  @keyframes open {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  summary {
+  > div {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
 
-    > div {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      strong {
-        font-size: 0.8rem;
-      }
+    strong {
+      font-size: 0.8rem;
     }
+  }
 
-    p {
-      color: ${(props) => props.mainColor};
-      font-weight: 600;
-    }
+  p {
+    color: ${(props) => props.mainColor};
+    font-weight: 600;
   }
 `;
 
 export const Content = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 0.5rem;
+
+  transition: opacity 0.4s;
+  flex-wrap: wrap;
 
   span {
     font-size: 0.8rem;
@@ -67,4 +61,14 @@ export const SwitchContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+`;
+
+export const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  margin-top: 1rem;
 `;

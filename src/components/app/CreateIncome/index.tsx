@@ -5,85 +5,103 @@ import Select from "../../utils/Select";
 import Switch from "react-switch";
 import * as S from "./styles";
 import { Colors } from "../../../styles/global";
-import State from "../../../store/interfaces";
-import { currencyMask } from "../../../utils/getCurrencyFormat";
+import State, { ICreateIncome, IUpdateIncome } from "../../../store/interfaces";
+import {
+  currencyMask,
+  currencyToValue,
+} from "../../../utils/getCurrencyFormat";
 import { useDispatch, useSelector } from "react-redux";
-import { FaCheck, FaSave, FaTrash } from "react-icons/fa";
+import { FaCheck, FaSave } from "react-icons/fa";
 import { IncomeCategories } from "../../../utils/types";
-import { FiAlertCircle } from "react-icons/fi";
-import { useState } from "react";
-import Modal from "../../utils/Modal";
+import { useEffect, useState } from "react";
 import SelectButton from "../../utils/SelectButton";
-import { format, isSameMonth } from "date-fns";
+import { addMonths, format, isSameMonth, parse } from "date-fns";
 import DatePicker from "../../utils/DatePicker";
-
-type FormData = {
-  name: string;
-  value: string;
-  status: boolean;
-  receiptDefault: string;
-  category: string | number;
-};
+import {
+  createIncome,
+  updateIncome,
+} from "../../../store/modules/Incomes/fetchActions";
+import { IncomeFormData } from "../../../utils/formDatas";
 
 interface CreateIncomeProps {
-  control: Control<FormData>;
-  handleSubmit: UseFormHandleSubmit<FormData>;
+  control: Control<IncomeFormData>;
+  handleSubmit: UseFormHandleSubmit<IncomeFormData>;
   incomeId?: string;
   onFinish: () => void;
+  recurrence: "Mensal" | "Parcelada";
 }
 
 export default function CreateIncome({
   control,
   incomeId,
-  handleSubmit,
+  recurrence,
   onFinish,
+  handleSubmit,
 }: CreateIncomeProps) {
+  const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
   const { selectedMonth } = useSelector((state: State) => state.dates);
   const { accounts } = useSelector((state: State) => state.accounts);
 
-  const dispatch = useDispatch<any>();
-
-  const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
-    useState(false);
-  const [recurrence, setRecurrence] = useState<"Mensal" | "Parcelada">(
-    "Parcelada"
-  );
+  const [recurrenceState, setRecurrenceState] = useState<
+    "Mensal" | "Parcelada"
+  >(recurrence);
   const [received, setReceived] = useState(false);
 
   const firstBackgroundColor = Colors.GREEN_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.GREEN_SECONDARY_LIGHTER;
-  const deleteColor = Colors.RED_PRIMARY_LIGHTER;
-  const cancelButtonColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const okButtonColor = Colors.RED_PRIMARY_LIGHTER;
 
-  const handleDelete = async () => {
-    if (user && incomeId) {
-      // dispatch(deleteIncome(incomeId, user.id));
-      setDeleteConfirmationVisible(false);
-      onFinish();
-    }
-  };
-
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IncomeFormData> = (data) => {
+    const interationVerified =
+      data.iteration === "0" ? 1 : Number(data.iteration);
+    const startDateParsed = parse(data.startDate, "yyyy-MM-dd", new Date());
     if (!!incomeId) {
-      /* const incomeToUpdate: IUpdateIncome = {
+      console.log(data.value);
+      const incomeToUpdate: IUpdateIncome = {
         ...data,
         userId: user.id,
+        value:
+          data.value && data.value.startsWith("R$")
+            ? Number(currencyToValue(data.value))
+            : Number(data.value),
+        iteration:
+          recurrenceState === "Parcelada"
+            ? String(interationVerified)
+            : "Mensal",
+        receiptDate: startDateParsed,
+        startDate: startDateParsed,
+        endDate:
+          recurrenceState === "Parcelada"
+            ? addMonths(startDateParsed, interationVerified - 1)
+            : null,
       };
-      dispatch(updateIncome(incomeToUpdate, incomeId)); */
+      dispatch(updateIncome(incomeToUpdate, incomeId));
       onFinish();
       return;
     }
-    /* const incomeToCreate: ICreateIncome = {
+    const incomeToCreate: ICreateIncome = {
       ...data,
-      value: Number(currencyToValue(data.value)),
       userId: user.id,
+      value:
+        data.value && data.value !== "0"
+          ? Number(currencyToValue(data.value))
+          : 0,
+      iteration:
+        recurrenceState === "Parcelada" ? String(interationVerified) : "Mensal",
+      receiptDate: startDateParsed,
+      startDate: startDateParsed,
+      endDate:
+        recurrenceState === "Parcelada"
+          ? addMonths(startDateParsed, interationVerified - 1)
+          : null,
     };
-    dispatch(createIncome(incomeToCreate)); */
+    dispatch(createIncome(incomeToCreate));
     onFinish();
   };
+
+  useEffect(() => {
+    setRecurrenceState(recurrence);
+  }, [recurrence]);
 
   return (
     <>
@@ -117,8 +135,8 @@ export default function CreateIncome({
                 color="#262626"
                 icon={() => <FaCheck color="#FFF" size={25} />}
                 title="Mensal"
-                checked={recurrence === "Mensal"}
-                onClick={() => setRecurrence("Mensal")}
+                checked={recurrenceState === "Mensal"}
+                onClick={() => setRecurrenceState("Mensal")}
               />
               <SelectButton
                 type="button"
@@ -126,16 +144,16 @@ export default function CreateIncome({
                 color="#262626"
                 icon={() => <FaCheck color="#FFF" size={25} />}
                 title="Parcelada"
-                checked={recurrence === "Parcelada"}
-                onClick={() => setRecurrence("Parcelada")}
+                checked={recurrenceState === "Parcelada"}
+                onClick={() => setRecurrenceState("Parcelada")}
               />
               <Input
                 backgroundColor="#D4E3F5"
                 textColor="#000"
-                name="interation"
+                name="iteration"
                 maxLength={2}
-                defaultValue={0}
-                disabled={recurrence === "Mensal"}
+                defaultValue={1}
+                disabled={recurrenceState === "Mensal"}
                 prefix="x"
                 type="number"
                 control={control}
@@ -215,46 +233,9 @@ export default function CreateIncome({
               icon={() => <FaSave color="#FFF" size={25} />}
               type="submit"
             />
-            {!!incomeId && (
-              <S.DeleteButton
-                type="button"
-                onClick={() => setDeleteConfirmationVisible(true)}
-              >
-                <FaTrash size={28} color={deleteColor} />
-              </S.DeleteButton>
-            )}
           </S.ButtonContainer>
         </form>
       </S.Container>
-
-      <Modal
-        visible={deleteConfirmationVisible}
-        onCancel={() => setDeleteConfirmationVisible(false)}
-        overlaid
-        type="Delete"
-      >
-        <S.ModalContent>
-          <FiAlertCircle color={okButtonColor} size={34} />
-          <strong>Tem certeza que deseja excluir essa conta?</strong>
-
-          <S.ButtonRowContainer>
-            <S.Button
-              background={cancelButtonColor}
-              color="#fff"
-              onClick={() => setDeleteConfirmationVisible(false)}
-            >
-              Cancelar
-            </S.Button>
-            <S.Button
-              background={okButtonColor}
-              color="#fff"
-              onClick={handleDelete}
-            >
-              Sim
-            </S.Button>
-          </S.ButtonRowContainer>
-        </S.ModalContent>
-      </Modal>
     </>
   );
 }

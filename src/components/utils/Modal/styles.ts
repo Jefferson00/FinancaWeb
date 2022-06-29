@@ -3,7 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 interface ContainerProps {
   visible: boolean;
   overlaid: boolean;
-  type: "Delete" | "Default" | "Warning" | "Confirm" | "Success";
+  type: "Delete" | "Default" | "Warning" | "Confirmation" | "Success";
 }
 
 interface ContentProps {
@@ -78,6 +78,8 @@ export const Content = styled.div<ContentProps>`
 
   position: relative;
 
+  overflow: auto;
+
   ${(props) =>
     props.animation &&
     !props.closeAnimation &&
@@ -119,4 +121,86 @@ export const CloseButton = styled.button`
   position: absolute;
   top: 0.5rem;
   right: 1rem;
+`;
+
+export const ModalContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  height: 100%;
+
+  strong {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+`;
+
+export const ButtonContainer = styled.div`
+  margin-top: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  width: 50%;
+`;
+
+export const ButtonRowContainer = styled.div`
+  margin-top: 3.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+`;
+
+interface ButtonProps {
+  background: string;
+  color: string;
+}
+
+export const Button = styled.button<ButtonProps>`
+  background: ${(props) => props.background};
+  color: ${(props) => props.color};
+
+  width: 7rem;
+  padding: 0.5rem;
+
+  border-radius: 10px;
+
+  transition: all 0.3s;
+
+  &:hover {
+    filter: brightness(0.8);
+  }
+`;
+
+interface ConfirmationItemProps {
+  backgroundColor: string;
+  borderColor?: string;
+  selected?: boolean;
+}
+
+export const ConfirmationItem = styled.button<ConfirmationItemProps>`
+  background-color: ${(props) => props.backgroundColor};
+  width: 100%;
+  border-radius: 10px;
+  height: 3rem;
+  margin: 0.5rem 0;
+  padding: 0 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ${(props) =>
+    props.selected &&
+    css`
+      border: 1px solid;
+      border-color: ${props.borderColor ? props.borderColor : "#000"};
+    `}
 `;

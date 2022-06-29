@@ -1,23 +1,44 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
 import { Colors } from "../../../styles/global";
-import { FaDollarSign } from "react-icons/fa";
+import { FaDollarSign, FaEdit, FaTrash } from "react-icons/fa";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
 import State, { IIncomes, IIncomesOnAccount } from "../../../store/interfaces";
 import { getDayOfTheMounth } from "../../../utils/dateFormats";
 import { reduceString } from "../../../utils/reduceString";
 import { useSelector } from "react-redux";
+import useCollapse from "react-collapsed";
 
 interface ItemType extends IIncomes, IIncomesOnAccount {}
 
 interface ItemViewProps {
   type: "EXPANSE" | "INCOME";
   item: ItemType;
+  switchValue?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onChangeSwitch?: () => void;
 }
 
-export default function ItemView({ type, item }: ItemViewProps) {
+export default function ItemView({
+  type,
+  item,
+  switchValue = false,
+  onDelete,
+  onEdit,
+  onChangeSwitch = () => null,
+}: ItemViewProps) {
   const { accounts } = useSelector((state: State) => state.accounts);
+  const { getCollapseProps, getToggleProps } = useCollapse({
+    expandStyles: {
+      opacity: 0,
+    },
+    collapseStyles: {
+      opacity: 0,
+    },
+  });
+
   const mainColor =
     type === "EXPANSE"
       ? Colors.RED_PRIMARY_LIGHTER
@@ -30,14 +51,11 @@ export default function ItemView({ type, item }: ItemViewProps) {
   const backgroundColor =
     type === "EXPANSE" ? Colors.RED_SOFT_LIGHTER : Colors.GREEN_SOFT_LIGHTER;
 
-  const [checked, setChecked] = useState(!!item?.paymentDate);
-  const [receivedMessage, setReceivedMessage] = useState(
-    type === "EXPANSE" ? "Pagar" : "Receber"
-  );
+  // const [checked, setChecked] = useState(!!item?.paymentDate);
+  const [receivedMessage, setReceivedMessage] = useState("");
 
   useEffect(() => {
-    setChecked(!!item?.paymentDate);
-
+    setReceivedMessage("");
     if (!!item?.paymentDate) {
       const term = type === "EXPANSE" ? "Pago" : "Recebido";
       const date = getDayOfTheMounth(new Date(item.paymentDate));
@@ -52,12 +70,12 @@ export default function ItemView({ type, item }: ItemViewProps) {
   }, [accounts, item, type]);
 
   return (
-    <S.Container
+    <S.Collapse
       backgroundColor={backgroundColor}
       mainColor={mainColor}
       textColor={textColor}
     >
-      <summary>
+      <S.CollapseContent mainColor={mainColor} {...getToggleProps()}>
         <div>
           <FaDollarSign size={24} color={mainColor} />
 
@@ -65,15 +83,15 @@ export default function ItemView({ type, item }: ItemViewProps) {
         </div>
 
         <p>{getCurrencyFormat(item.value)}</p>
-      </summary>
+      </S.CollapseContent>
 
-      <S.Content>
+      <S.Content {...getCollapseProps()}>
         <span>{receivedMessage}</span>
         <S.SwitchContainer>
-          <p>Pago:</p>
+          <p>{type === "EXPANSE" ? "Pago:" : "Recebido:"}</p>
           <Switch
-            checked={checked}
-            onChange={() => setChecked(!checked)}
+            checked={switchValue}
+            onChange={onChangeSwitch}
             checkedIcon={false}
             uncheckedIcon={false}
             offColor="#d2d2d2"
@@ -85,7 +103,16 @@ export default function ItemView({ type, item }: ItemViewProps) {
             handleDiameter={20}
           />
         </S.SwitchContainer>
+
+        <S.ButtonContainer>
+          <button onClick={onEdit}>
+            <FaEdit color={mainColor} size={22} />
+          </button>
+          <button onClick={onDelete}>
+            <FaTrash color="#d12" size={22} />
+          </button>
+        </S.ButtonContainer>
       </S.Content>
-    </S.Container>
+    </S.Collapse>
   );
 }

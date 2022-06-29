@@ -17,13 +17,18 @@ export const addIncome = createAction<IIncomes>("ADD_INCOME");
 export const addIncomes = createAction<IIncomes[]>("ADD_INCOMES");
 export const updateIncomeState = createAction<IIncomes>("UPDATE_INCOME_STATE");
 export const removeIncomeState = createAction<string>("REMOVE_INCOME_STATE");
-export const changeLoadingState = createAction<boolean>("CHANGE_LOADING_STATE");
+export const changeLoadingState = createAction<boolean>(
+  "CHANGE_INCOMES_LOADING_STATE"
+);
 
 export const addIncomeOnAccount = createAction<IIncomes>(
   "ADD_INCOME_ON_ACCOUNT"
 );
 export const addIncomesOnAccount = createAction<IIncomes[]>(
   "ADD_INCOMES_ON_ACCOUNT"
+);
+export const removeIncomeOnAccountState = createAction<string>(
+  "REMOVE_INCOME_ON_ACCOUNT_STATE"
 );
 
 export default createReducer(INITIAL_STATE, {
@@ -64,5 +69,12 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     incomesOnAccount: [...action.payload],
+  }),
+  [removeIncomeOnAccountState.type]: (state, action) => ({
+    ...state,
+    loading: false,
+    incomesOnAccount: state.incomesOnAccount.filter(
+      (s) => s.id !== action.payload
+    ),
   }),
 });

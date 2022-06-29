@@ -31,7 +31,7 @@ const IncomeResume = () => {
       incomesOnAccount,
       selectedMonth
     );
-    const currentTotal = currentIncomes.reduce(
+    const currentTotal = currentIncomesOnAccount.reduce(
       (a, b) => a + (b["value"] || 0),
       0
     );

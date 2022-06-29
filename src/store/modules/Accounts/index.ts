@@ -17,7 +17,9 @@ export const updateAccountState = createAction<IAccount>(
   "UPDATE_ACCOUNT_STATE"
 );
 export const removeAccountState = createAction<string>("REMOVE_ACCOUNT_STATE");
-export const changeLoadingState = createAction<boolean>("CHANGE_LOADING_STATE");
+export const changeLoadingState = createAction<boolean>(
+  "CHANGE_ACCOUNTS_LOADING_STATE"
+);
 
 export default createReducer(INITIAL_STATE, {
   [addAccount.type]: (state, action) => ({
@@ -31,6 +33,7 @@ export default createReducer(INITIAL_STATE, {
     accounts: [...action.payload],
   }),
   [updateAccountState.type]: (state, action) => {
+    console.log(action.payload);
     const itemIndex = state.accounts.findIndex(
       (s) => s.id === action.payload.id
     );

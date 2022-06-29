@@ -4,8 +4,12 @@ import { Colors } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import ItemView from "../../utils/ItemView";
 import Button from "../../utils/Button";
-import { useSelector } from "react-redux";
-import State, { IIncomes } from "../../../store/interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import State, {
+  ICreateIncomeOnAccount,
+  IIncomes,
+  IIncomesOnAccount,
+} from "../../../store/interfaces";
 import { listByDate } from "../../../utils/listByDate";
 import { getMonthName } from "../../../utils/dateFormats";
 import Modal from "../../utils/Modal";
@@ -14,6 +18,14 @@ import { useForm } from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { format } from "date-fns";
+import { IncomeCategories } from "../../../utils/types";
+import { IncomeFormData } from "../../../utils/formDatas";
+import {
+  createIncomeOnAccount,
+  deleteIncome,
+  deleteIncomeOnAccount,
+} from "../../../store/modules/Incomes/fetchActions";
 
 const schema = yup.object({
   name: yup
@@ -23,15 +35,12 @@ const schema = yup.object({
     .max(25, "deve ter no máximo 25 caracteres"),
 });
 
-type FormData = {
-  name: string;
-  value: string;
-  status: boolean;
-  receiptDefault: string;
-  category: string | number;
-};
+interface Income extends IIncomes, IIncomesOnAccount {}
 
 const IncomeList = () => {
+  const dispatch = useDispatch<any>();
+  const { user } = useSelector((state: State) => state.auth);
+  const { accounts } = useSelector((state: State) => state.accounts);
   const { incomes, incomesOnAccount, loading } = useSelector(
     (state: State) => state.incomes
   );
@@ -43,6 +52,16 @@ const IncomeList = () => {
   const [censored, setCensored] = useState(false);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [incomeSelected, setIncomeSelected] = useState<IIncomes | null>(null);
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
+    useState(false);
+  const [
+    deleteReceiveConfirmationVisible,
+    setDeleteReceiveConfirmationVisible,
+  ] = useState(false);
+  const [confirmReceivedVisible, setConfirmReceivedVisible] = useState(false);
+  const [accountIdSelected, setAccountIdSelected] = useState<string | null>(
+    null
+  );
 
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -51,12 +70,106 @@ const IncomeList = () => {
   const primaryGreen = Colors.GREEN_PRIMARY_LIGHTER;
   const secondaryGreen = Colors.GREEN_SECONDARY_LIGHTER;
 
-  const { control, handleSubmit, setValue } = useForm<FormData>({
+  const { control, handleSubmit, setValue } = useForm<IncomeFormData>({
     resolver: yupResolver(schema),
   });
 
-  const handleCloseAccountModal = () => {
+  const handleCloseModal = () => {
     setModalVisibility(false);
+    setValue("name", "");
+    setValue("iteration", "1");
+    setValue("category", IncomeCategories[0].name);
+    setValue("startDate", format(new Date(), "yyyy-MM-dd"));
+    setValue("value", "0");
+    setIncomeSelected(null);
+  };
+
+  const handleOpenEditModal = (income: Income) => {
+    setModalVisibility(true);
+    setValue("name", income.name);
+    setValue("receiptDefault", income.receiptDefault || income.accountId);
+    setValue("iteration", income.iteration || income.income.iteration);
+    setValue("category", income.category || income.income.category);
+    setValue(
+      "startDate",
+      format(
+        new Date(income.startDate || income.income.startDate),
+        "yyyy-MM-dd"
+      )
+    );
+    setValue("value", String(income.value));
+    setIncomeSelected(income.income ? income.income : income);
+  };
+
+  const handleOpenDeleteModal = (income: Income) => {
+    setIncomeSelected(income.income ? income.income : income);
+    setDeleteConfirmationVisible(true);
+  };
+
+  const handleOpenConfirmReceiveModal = (income: Income) => {
+    setConfirmReceivedVisible(true);
+    setAccountIdSelected(income.receiptDefault);
+    setIncomeSelected(income);
+  };
+
+  const handleOpenConfirmUnreceiveModal = (income: Income) => {
+    setDeleteReceiveConfirmationVisible(true);
+    setAccountIdSelected(income.accountId);
+    setIncomeSelected(income);
+  };
+
+  const handleDelete = () => {
+    if (user && incomeSelected) {
+      dispatch(deleteIncome(incomeSelected.id, user.id));
+      setDeleteConfirmationVisible(false);
+      setIncomeSelected(null);
+    }
+  };
+
+  const handleDeleteIncomeOnAccount = () => {
+    if (user && incomeSelected) {
+      const findAccount = accounts.find(
+        (acc) =>
+          acc.id === accountIdSelected ||
+          acc.id === incomeSelected.receiptDefault
+      );
+
+      if (findAccount) {
+        dispatch(
+          deleteIncomeOnAccount(incomeSelected.id, user.id, findAccount)
+        );
+        setDeleteReceiveConfirmationVisible(false);
+        setIncomeSelected(null);
+        setAccountIdSelected(null);
+      }
+    }
+  };
+
+  const handleReceive = () => {
+    if (user && incomeSelected) {
+      const findAccount = accounts.find(
+        (acc) =>
+          acc.id === accountIdSelected ||
+          acc.id === incomeSelected.receiptDefault
+      );
+
+      const incomeOnAccountToCreate: ICreateIncomeOnAccount = {
+        userId: user.id,
+        accountId: accountIdSelected || incomeSelected.receiptDefault,
+        incomeId: incomeSelected.id,
+        month: new Date(),
+        value: incomeSelected.value,
+        name: incomeSelected.name,
+        recurrence: incomeSelected.iteration,
+      };
+
+      if (findAccount) {
+        dispatch(createIncomeOnAccount(incomeOnAccountToCreate, findAccount));
+      }
+
+      setConfirmReceivedVisible(false);
+      setIncomeSelected(null);
+    }
   };
 
   useEffect(() => {
@@ -130,8 +243,24 @@ const IncomeList = () => {
                     <S.DateText color={textColor}>
                       {item.day} de {getMonthName(selectedMonth)}
                     </S.DateText>
-                    {item?.items?.map((i: any, index: number) => {
-                      return <ItemView key={index} type={"INCOME"} item={i} />;
+                    {item?.items?.map((i: Income, index: number) => {
+                      return (
+                        <ItemView
+                          key={index}
+                          type={"INCOME"}
+                          item={i}
+                          switchValue={!!i.paymentDate}
+                          onEdit={() => handleOpenEditModal(i)}
+                          onDelete={() => handleOpenDeleteModal(i)}
+                          onChangeSwitch={() => {
+                            if (!i?.paymentDate) {
+                              handleOpenConfirmReceiveModal(i);
+                            } else {
+                              handleOpenConfirmUnreceiveModal(i);
+                            }
+                          }}
+                        />
+                      );
                     })}
                   </div>
                 );
@@ -141,14 +270,48 @@ const IncomeList = () => {
         )}
       </S.Container>
 
-      <Modal visible={modalVisibility} onCancel={handleCloseAccountModal}>
+      <Modal visible={modalVisibility} onCancel={handleCloseModal}>
         <CreateIncome
           control={control}
           incomeId={incomeSelected?.id}
           handleSubmit={handleSubmit}
-          onFinish={handleCloseAccountModal}
+          onFinish={handleCloseModal}
+          recurrence={
+            incomeSelected?.iteration === "Mensal" ? "Mensal" : "Parcelada"
+          }
         />
       </Modal>
+
+      <Modal
+        visible={deleteConfirmationVisible}
+        onCancel={() => setDeleteConfirmationVisible(false)}
+        overlaid
+        type="Delete"
+        title="Tem certeza que deseja excluir essa entrada?"
+        onConfirm={handleDelete}
+      />
+
+      <Modal
+        visible={deleteReceiveConfirmationVisible}
+        onCancel={() => setDeleteReceiveConfirmationVisible(false)}
+        overlaid
+        type="Delete"
+        title="Tem certeza que deseja excluir esse recebimento?"
+        onConfirm={handleDeleteIncomeOnAccount}
+      />
+
+      <Modal
+        visible={confirmReceivedVisible}
+        onCancel={() => setConfirmReceivedVisible(false)}
+        overlaid
+        type="Confirmation"
+        title="Em qual conta a entrada será recebida?"
+        onConfirm={handleReceive}
+        okButtonTitle="Receber"
+        confirmationOptions={accounts}
+        onSelectOption={(e) => setAccountIdSelected(e)}
+        optionValue={accountIdSelected}
+      />
     </>
   );
 };

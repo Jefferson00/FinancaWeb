@@ -106,10 +106,32 @@ export interface ICreateIncome {
   value: number;
   category: string;
   iteration: string;
-  receiptDate: string;
-  startDate: string;
-  endDate: string;
+  receiptDate: Date;
+  startDate: Date;
+  endDate?: Date | null;
   receiptDefault: string;
+}
+
+export interface ICreateIncomeOnAccount {
+  userId: string;
+  incomeId: string;
+  accountId: string;
+  name: string;
+  month: Date;
+  value: number;
+  recurrence: string;
+}
+
+export interface IUpdateIncome {
+  userId: string;
+  name?: string;
+  value?: number;
+  category?: string;
+  iteration?: string;
+  receiptDate?: Date;
+  startDate?: Date;
+  endDate?: Date | null;
+  receiptDefault?: string;
 }
 
 export interface ICreateAccount {
