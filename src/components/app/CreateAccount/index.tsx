@@ -20,7 +20,6 @@ import {
   deleteAccount,
   updateAccount,
 } from "../../../store/modules/Accounts/fetchActions";
-import { FiAlertCircle } from "react-icons/fi";
 import { useState } from "react";
 import Modal from "../../utils/Modal";
 
@@ -54,8 +53,6 @@ export default function CreateAccount({
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
   const deleteColor = Colors.RED_PRIMARY_LIGHTER;
-  const cancelButtonColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const okButtonColor = Colors.RED_PRIMARY_LIGHTER;
 
   const canDelete = () => {
     return (
@@ -126,6 +123,7 @@ export default function CreateAccount({
             mask={currencyMask}
             defaultValue={"0"}
             control={control}
+            disabled={!!accountId}
           />
 
           <S.ButtonContainer>
@@ -156,29 +154,9 @@ export default function CreateAccount({
         onCancel={() => setDeleteConfirmationVisible(false)}
         overlaid
         type="Delete"
-      >
-        <S.ModalContent>
-          <FiAlertCircle color={okButtonColor} size={34} />
-          <strong>Tem certeza que deseja excluir essa conta?</strong>
-
-          <S.ButtonRowContainer>
-            <S.Button
-              background={cancelButtonColor}
-              color="#fff"
-              onClick={() => setDeleteConfirmationVisible(false)}
-            >
-              Cancelar
-            </S.Button>
-            <S.Button
-              background={okButtonColor}
-              color="#fff"
-              onClick={handleDelete}
-            >
-              Sim
-            </S.Button>
-          </S.ButtonRowContainer>
-        </S.ModalContent>
-      </Modal>
+        title="Tem certeza que deseja excluir essa conta?"
+        onConfirm={handleDelete}
+      />
     </>
   );
 }

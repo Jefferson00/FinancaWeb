@@ -108,9 +108,11 @@ export default function ItemView({
           <button onClick={onEdit}>
             <FaEdit color={mainColor} size={22} />
           </button>
-          <button onClick={onDelete}>
-            <FaTrash color="#d12" size={22} />
-          </button>
+          {!item.paymentDate && (
+            <button onClick={onDelete}>
+              <FaTrash color="#d12" size={22} />
+            </button>
+          )}
         </S.ButtonContainer>
       </S.Content>
     </S.Collapse>

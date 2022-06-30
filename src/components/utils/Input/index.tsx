@@ -51,6 +51,7 @@ export default function Input({
             backgroundColor={backgroundColor}
             isFocused={isFocused}
             isErrored={!!fieldState.error}
+            disabled={rest.disabled}
           >
             <S.InputText
               color={textColor}

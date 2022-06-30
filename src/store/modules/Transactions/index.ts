@@ -11,10 +11,12 @@ export interface ITransactions {
 
 export interface TransactionsState {
   lastTransactions: ITransactions[];
+  loading: boolean;
 }
 
 const INITIAL_STATE: TransactionsState = {
   lastTransactions: [],
+  loading: true,
 };
 
 export const addLastTransactions = createAction<ITransactions[]>(
@@ -27,10 +29,12 @@ export const addLastTransaction = createAction<ITransactions>(
 export default createReducer(INITIAL_STATE, {
   [addLastTransactions.type]: (state, action) => ({
     ...state,
+    loading: false,
     lastTransactions: [...action.payload],
   }),
   [addLastTransaction.type]: (state, action) => ({
     ...state,
+    loading: false,
     lastTransactions: [...state.lastTransactions, action.payload],
   }),
 });

@@ -6,7 +6,9 @@ import {
   changeLoadingState,
 } from "..";
 import api from "../../../../config/api";
+import { checkApiError } from "../../../../utils/checkApiError";
 import { ICreateAccount, IUpdateAccount } from "../../../interfaces";
+import { addMessage } from "../../Feedbacks";
 
 export const listAccounts = (userId: string) => {
   return (dispatch: any) => {
@@ -15,7 +17,15 @@ export const listAccounts = (userId: string) => {
       .then((res) => {
         dispatch(addAccounts(res.data));
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -26,8 +36,23 @@ export const createAccount = (account: ICreateAccount) => {
       .post(`accounts`, account)
       .then((res) => {
         dispatch(addAccount(res.data));
+
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Conta criada com sucesso!",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -38,8 +63,23 @@ export const updateAccount = (account: IUpdateAccount, accountId: string) => {
       .put(`accounts/${accountId}`, account)
       .then((res) => {
         dispatch(updateAccountState(res.data));
+
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Conta atualizada com sucesso!",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -50,7 +90,22 @@ export const deleteAccount = (accountId: string, userId: string) => {
       .delete(`accounts/${accountId}/${userId}`)
       .then((res) => {
         dispatch(removeAccountState(accountId));
+
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Conta excluída",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };

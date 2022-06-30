@@ -14,7 +14,7 @@ import { listLastTransactions } from "../../../store/modules/Transactions/fetchA
 export default function Transactions() {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
-  const { lastTransactions } = useSelector(
+  const { lastTransactions, loading } = useSelector(
     (state: State) => state.transactions
   );
 
@@ -64,6 +64,8 @@ export default function Transactions() {
         <S.CensoredContainer>
           <FaBan size={40} color={titleColor} />
         </S.CensoredContainer>
+      ) : loading ? (
+        <p>Carregando...</p>
       ) : (
         <S.TransactionsList>
           {lastTransactions.map((transaction) => {

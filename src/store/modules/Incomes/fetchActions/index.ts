@@ -9,6 +9,7 @@ import {
   removeIncomeOnAccountState,
 } from "..";
 import api from "../../../../config/api";
+import { checkApiError } from "../../../../utils/checkApiError";
 import {
   IAccount,
   ICreateIncome,
@@ -16,6 +17,7 @@ import {
   IUpdateIncome,
 } from "../../../interfaces";
 import { updateAccountState } from "../../Accounts";
+import { addMessage } from "../../Feedbacks";
 
 export const listIncomes = (userId: string) => {
   return (dispatch: any) => {
@@ -24,7 +26,15 @@ export const listIncomes = (userId: string) => {
       .then((res) => {
         dispatch(addIncomes(res.data));
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -35,7 +45,15 @@ export const listIncomesOnAccount = (userId: string) => {
       .then((res) => {
         dispatch(addIncomesOnAccount(res.data));
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -46,8 +64,22 @@ export const createIncome = (income: ICreateIncome) => {
       .post(`incomes`, income)
       .then((res) => {
         dispatch(addIncome(res.data));
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Entrada criada com sucesso!",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -58,8 +90,22 @@ export const updateIncome = (account: IUpdateIncome, incomeId: string) => {
       .put(`incomes/${incomeId}`, account)
       .then((res) => {
         dispatch(updateIncomeState(res.data));
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Entrada atualizada com sucesso!",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -70,8 +116,22 @@ export const deleteIncome = (incomeId: string, userId: string) => {
       .delete(`incomes/${incomeId}/${userId}`)
       .then((res) => {
         dispatch(removeIncomeState(incomeId));
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Entrada excluída",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -93,8 +153,22 @@ export const createIncomeOnAccount = (
         };
 
         dispatch(updateAccountState(accountUpdated));
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Entrada recebida com sucesso!",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 
@@ -119,7 +193,21 @@ export const deleteIncomeOnAccount = (
         };
 
         dispatch(updateAccountState(accountUpdated));
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Recebimento excluído com sucesso!",
+          })
+        );
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
