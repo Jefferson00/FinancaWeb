@@ -3,11 +3,12 @@ import image from "../../../assets/logoBackground.svg";
 
 interface ContainerProps {
   backgroundColor: string;
+  expanded?: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
   width: 100%;
-  height: 10rem;
+  height: ${(props) => (props.expanded ? "100vh" : "10rem")};
   background-color: ${(props) => props.backgroundColor};
   background-image: url(${image});
   background-repeat: no-repeat;

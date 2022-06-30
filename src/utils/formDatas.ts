@@ -7,3 +7,9 @@ export type IncomeFormData = {
   iteration: string;
   startDate: string;
 };
+
+export type UserFormData = {
+  name: string;
+  email: string;
+  phone?: string;
+};

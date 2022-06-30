@@ -13,7 +13,11 @@ import State from "../../../store/interfaces";
 
 import { signOut } from "../../../store/modules/Auth";
 
-const Header = () => {
+interface HeaderProps {
+  expanded?: boolean;
+}
+
+const Header = ({ expanded = false }: HeaderProps) => {
   const { user } = useSelector((state: State) => state.auth);
   const dispatch = useDispatch<any>();
 
@@ -27,7 +31,7 @@ const Header = () => {
   };
 
   return (
-    <S.Container backgroundColor={backgroundColor}>
+    <S.Container backgroundColor={backgroundColor} expanded={expanded}>
       <Link to="/">
         <S.Logo src={LogoImg} />
       </Link>
@@ -38,7 +42,9 @@ const Header = () => {
           <S.BoldText>{user?.name}</S.BoldText>
         </S.Welcome>
 
-        <S.Avatar src={user?.avatar ? user?.avatar : DefaultAvatar} />
+        <Link to="/profile">
+          <S.Avatar src={user?.avatar ? user?.avatar : DefaultAvatar} />
+        </Link>
 
         {user && (
           <S.SignOutButton onClick={handleSignOut}>

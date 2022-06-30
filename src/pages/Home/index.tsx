@@ -23,10 +23,6 @@ const Home = () => {
   const dispatch = useDispatch<any>();
   const menu = useSelector((state: State) => state.menus);
 
-  /* const menu = {
-    item: "Home",
-  }; */
-
   const handleChangeMenu = (menu: string) => {
     dispatch(changeMenu(menu));
   };
