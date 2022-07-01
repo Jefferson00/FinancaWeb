@@ -32,7 +32,7 @@ const ExpanseResume = () => {
       expansesOnAccount,
       selectedMonth
     );
-    const currentTotal = currentExpanses.reduce(
+    const currentTotal = currentExpansesOnAccount.reduce(
       (a, b) => a + (b["value"] || 0),
       0
     );

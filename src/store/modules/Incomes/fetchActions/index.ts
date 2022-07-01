@@ -83,11 +83,11 @@ export const createIncome = (income: ICreateIncome) => {
   };
 };
 
-export const updateIncome = (account: IUpdateIncome, incomeId: string) => {
+export const updateIncome = (income: IUpdateIncome, incomeId: string) => {
   return (dispatch: any) => {
     dispatch(changeLoadingState(true));
     api
-      .put(`incomes/${incomeId}`, account)
+      .put(`incomes/${incomeId}`, income)
       .then((res) => {
         dispatch(updateIncomeState(res.data));
         dispatch(

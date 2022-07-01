@@ -123,7 +123,41 @@ export interface ICreateIncomeOnAccount {
   recurrence: string;
 }
 
+export interface ICreateExpanseOnAccount {
+  userId: string;
+  expanseId: string;
+  accountId: string;
+  name: string;
+  month: Date;
+  value: number;
+  recurrence: string;
+}
+
 export interface IUpdateIncome {
+  userId: string;
+  name?: string;
+  value?: number;
+  category?: string;
+  iteration?: string;
+  receiptDate?: Date;
+  startDate?: Date;
+  endDate?: Date | null;
+  receiptDefault?: string;
+}
+
+export interface ICreateExpanse {
+  name: string;
+  userId: string;
+  value: number;
+  category: string;
+  iteration: string;
+  receiptDate: Date;
+  startDate: Date;
+  endDate?: Date | null;
+  receiptDefault: string;
+}
+
+export interface IUpdateExpanse {
   userId: string;
   name?: string;
   value?: number;

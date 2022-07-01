@@ -35,3 +35,22 @@ export const IncomeCategories = [
     name: "Outro",
   },
 ];
+
+export const ExpanseCategories = [
+  {
+    icon: "🪙",
+    name: "Salário",
+  },
+  {
+    icon: "🪙",
+    name: "Benefício",
+  },
+  {
+    icon: "🪙",
+    name: "Transferência",
+  },
+  {
+    icon: "🪙",
+    name: "Outro",
+  },
+];

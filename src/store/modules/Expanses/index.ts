@@ -13,8 +13,15 @@ const INITIAL_STATE: ExpansesState = {
   loading: true,
 };
 
+export const changeLoadingState = createAction<boolean>(
+  "CHANGE_EXPANSES_LOADING_STATE"
+);
 export const addExpanse = createAction<IExpanses>("ADD_EXPANSE");
 export const addExpanses = createAction<IExpanses[]>("ADD_EXPANSES");
+export const updateExpanseState = createAction<IExpanses>(
+  "UPDATE_EXPANSE_STATE"
+);
+export const removeExpanseState = createAction<string>("REMOVE_EXPANSE_STATE");
 
 export const addExpanseOnAccount = createAction<IExpansesOnAccount>(
   "ADD_EXPANSE_ON_ACCOUNT"
@@ -22,8 +29,15 @@ export const addExpanseOnAccount = createAction<IExpansesOnAccount>(
 export const addExpansesOnAccount = createAction<IExpansesOnAccount[]>(
   "ADD_EXPANSES_ON_ACCOUNT"
 );
+export const removeExpanseOnAccountState = createAction<string>(
+  "REMOVE_EXPANSE_ON_ACCOUNT_STATE"
+);
 
 export default createReducer(INITIAL_STATE, {
+  [changeLoadingState.type]: (state, action) => ({
+    ...state,
+    loading: action.payload,
+  }),
   [addExpanse.type]: (state, action) => ({
     ...state,
     loading: false,
@@ -43,5 +57,25 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     expansesOnAccount: [...action.payload],
+  }),
+  [updateExpanseState.type]: (state, action) => {
+    const itemIndex = state.expanses.findIndex(
+      (s) => s.id === action.payload.id
+    );
+    const stateCopy = [...state.expanses];
+    stateCopy[itemIndex] = action.payload;
+    return { ...state, loading: false, expanses: stateCopy };
+  },
+  [removeExpanseState.type]: (state, action) => ({
+    ...state,
+    loading: false,
+    expanses: state.expanses.filter((s) => s.id !== action.payload),
+  }),
+  [removeExpanseOnAccountState.type]: (state, action) => ({
+    ...state,
+    loading: false,
+    expansesOnAccount: state.expansesOnAccount.filter(
+      (s) => s.id !== action.payload
+    ),
   }),
 });
