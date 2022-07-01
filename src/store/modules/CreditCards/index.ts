@@ -28,8 +28,18 @@ export const selectInvoice = createAction<IInvoice>("SELECT_INVOICE");
 export const addDays = createAction<number[]>("ADD_DAYS");
 export const selectPaidInvoice = createAction<IInvoice>("SELECT_PAID_INVOICE");
 export const addPaidDays = createAction<number[]>("ADD_PAID_DAYS");
+export const updateCreditCardState = createAction<ICreditCard>(
+  "UPDATE_CREDIT_CARD_STATE"
+);
+export const changeCardLoadingState = createAction<boolean>(
+  "CHANGE_CARD_LOADING_STATE"
+);
 
 export default createReducer(INITIAL_STATE, {
+  [changeCardLoadingState.type]: (state, action) => ({
+    ...state,
+    loading: action.payload,
+  }),
   [addCreditCard.type]: (state, action) => ({
     ...state,
     loading: false,
@@ -65,4 +75,12 @@ export default createReducer(INITIAL_STATE, {
     loading: false,
     paidExpanseOnInvoiceDays: [...action.payload],
   }),
+  [updateCreditCardState.type]: (state, action) => {
+    const itemIndex = state.creditCards.findIndex(
+      (c) => c.id === action.payload.id
+    );
+    const stateCopy = [...state.creditCards];
+    stateCopy[itemIndex] = action.payload;
+    return { ...state, loading: false, creditCards: stateCopy };
+  },
 });

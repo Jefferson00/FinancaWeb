@@ -6,9 +6,12 @@ import Button from "../../utils/Button";
 import Card from "../Card";
 import { useSelector } from "react-redux";
 import State from "../../../store/interfaces";
+import Loader from "../../utils/Loader";
 
 const CardsList = () => {
-  const { creditCards } = useSelector((state: State) => state.creditCards);
+  const { creditCards, loading } = useSelector(
+    (state: State) => state.creditCards
+  );
   const [censored, setCensored] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +72,10 @@ const CardsList = () => {
         <S.CensoredContainer>
           <FaBan size={40} color={titleColor} />
         </S.CensoredContainer>
+      ) : loading ? (
+        <div style={{ marginTop: 32 }}>
+          <Loader width="390" height="180" color="#D4E3F5" />
+        </div>
       ) : (
         <S.ItemsList ref={listRef}>
           {creditCards.map((card) => (

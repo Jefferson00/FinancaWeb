@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 interface ContainerProps {
   background: string;
@@ -11,60 +11,7 @@ export const Container = styled.div<ContainerProps>`
   background: ${(props) => props.background};
   padding: 1rem 2rem;
 
-  section{
-    height: 11.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    flex: 1;
-
-    strong{
-      font-weight: 600;
-      font-size: 1.125rem;
-      color: #fff;
-    }
-  }
-
-  main{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    div{
-      p{
-        color: #fff;
-      }
-      strong{
-        font-weight: 600;
-        font-size: 1.125rem;
-        color: #fff;
-      }
-    }
-  }
-
-
-  footer{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    div{
-      p{
-        font-size: 0.75rem;
-        color: #fff;
-      }
-    }
-  }
-  }
-`
-export const InvoiceExpanses = styled.div`
-  margin-top: 2rem;
-  max-height: 288px;
+  max-height: 415px;
   overflow: hidden;
   overflow-y: none;
 
@@ -80,30 +27,87 @@ export const InvoiceExpanses = styled.div`
 
   &::-webkit-scrollbar-thumb {
     background: transparent;
-    background: #D4E3F5;
+    background: #d4e3f5;
   }
-  
+
+  section {
+    height: 11.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      flex: 1;
+
+      strong {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #fff;
+      }
+    }
+
+    main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      div {
+        p {
+          color: #fff;
+        }
+        strong {
+          font-weight: 600;
+          font-size: 1.125rem;
+          color: #fff;
+        }
+      }
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      div {
+        p {
+          font-size: 0.75rem;
+          color: #fff;
+        }
+      }
+    }
+  }
+`;
+export const InvoiceExpanses = styled.div`
+  margin-top: 2rem;
+
+  padding-bottom: 2rem;
+
   > div {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 
-    > p{
+    > p {
       font-size: 0.8rem;
       color: #fff;
     }
   }
-`
+`;
 export const Item = styled.div`
   height: 5rem;
-  background:rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 1rem;
 
   display: flex;
   justify-content: space-between;
 
-  span{
+  cursor: pointer;
+
+  span {
     width: 2.5rem;
     height: 2.5rem;
     background: #fff;
@@ -113,13 +117,13 @@ export const Item = styled.div`
     justify-content: center;
   }
 
-  div{
+  div {
     text-align: right;
-    p{
-      color: #09192D;
+    p {
+      color: #09192d;
     }
-    strong{
+    strong {
       color: #fff;
     }
   }
-`
+`;

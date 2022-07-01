@@ -30,6 +30,7 @@ interface CreateIncomeProps {
   control: Control<ExpanseFormData>;
   handleSubmit: UseFormHandleSubmit<ExpanseFormData>;
   expanseId?: string;
+  fromInvoice?: boolean;
   onFinish: () => void;
   recurrence: "Mensal" | "Parcelada";
 }
@@ -38,6 +39,7 @@ export default function CreateExpanse({
   control,
   expanseId,
   recurrence,
+  fromInvoice = false,
   onFinish,
   handleSubmit,
 }: CreateIncomeProps) {
@@ -78,7 +80,7 @@ export default function CreateExpanse({
             ? addMonths(startDateParsed, interationVerified - 1)
             : null,
       };
-      dispatch(updateExpanse(expanseToUpdate, expanseId));
+      dispatch(updateExpanse(expanseToUpdate, expanseId, fromInvoice));
       onFinish();
       return;
     }

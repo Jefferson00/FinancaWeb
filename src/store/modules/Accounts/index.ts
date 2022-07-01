@@ -33,7 +33,6 @@ export default createReducer(INITIAL_STATE, {
     accounts: [...action.payload],
   }),
   [updateAccountState.type]: (state, action) => {
-    console.log(action.payload);
     const itemIndex = state.accounts.findIndex(
       (s) => s.id === action.payload.id
     );

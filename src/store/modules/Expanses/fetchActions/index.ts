@@ -17,6 +17,8 @@ import {
   IUpdateExpanse,
 } from "../../../interfaces";
 import { updateAccountState } from "../../Accounts";
+import { changeCardLoadingState } from "../../CreditCards";
+import { listCreditCards } from "../../CreditCards/fetchActions";
 import { addMessage } from "../../Feedbacks";
 
 export const listExpanses = (userId: string) => {
@@ -83,13 +85,23 @@ export const createExpanse = (expanse: ICreateExpanse) => {
   };
 };
 
-export const updateExpanse = (expanse: IUpdateExpanse, expanseId: string) => {
+export const updateExpanse = (
+  expanse: IUpdateExpanse,
+  expanseId: string,
+  fromInvoice: boolean
+) => {
   return (dispatch: any) => {
     dispatch(changeLoadingState(true));
+    if (fromInvoice) {
+      dispatch(changeCardLoadingState(true));
+    }
     api
       .put(`expanses/${expanseId}`, expanse)
       .then((res) => {
         dispatch(updateExpanseState(res.data));
+        if (fromInvoice) {
+          dispatch(listCreditCards(expanse.userId));
+        }
         dispatch(
           addMessage({
             type: "success",
