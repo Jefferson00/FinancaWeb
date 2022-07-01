@@ -10,6 +10,7 @@ import State from "../../../store/interfaces";
 import { getItemsInThisMonth } from "../../../utils/listByDate";
 import { addMonths, isSameMonth } from "date-fns";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import Loader from "../../utils/Loader";
 
 interface IEstimate {
   id: string | number;
@@ -193,30 +194,32 @@ const Estimates = observer(() => {
         </S.ViewButton>
       </S.Header>
 
-      <S.GraphContainer backgroundColor={backgroundColor}>
-        {censored ? (
-          <FaBan size={40} color={regularColor} />
-        ) : incomeLoading || accountLoading || expanseLoading || calculating ? (
-          <p>Carregando...</p>
-        ) : (
-          estimates.map((estimate) => (
-            <S.GraphItem
-              key={estimate.id}
-              strongColor={textColor}
-              regularColor={regularColor}
-            >
-              <strong>
-                {getMounthAndYear(new Date(estimate.month), true)}
-              </strong>
-              <p>{getCurrencyFormat(estimate.value)}</p>
-              <S.GraphIndicator
-                heightIndicator={estimate.indicator.toString()}
-                color={graphColor}
-              />
-            </S.GraphItem>
-          ))
-        )}
-      </S.GraphContainer>
+      {incomeLoading || accountLoading || expanseLoading || calculating ? (
+        <Loader height="150" width="400" color="#D4E3F5" />
+      ) : (
+        <S.GraphContainer backgroundColor={backgroundColor}>
+          {censored ? (
+            <FaBan size={40} color={regularColor} />
+          ) : (
+            estimates.map((estimate) => (
+              <S.GraphItem
+                key={estimate.id}
+                strongColor={textColor}
+                regularColor={regularColor}
+              >
+                <strong>
+                  {getMounthAndYear(new Date(estimate.month), true)}
+                </strong>
+                <p>{getCurrencyFormat(estimate.value)}</p>
+                <S.GraphIndicator
+                  heightIndicator={estimate.indicator.toString()}
+                  color={graphColor}
+                />
+              </S.GraphItem>
+            ))
+          )}
+        </S.GraphContainer>
+      )}
     </S.Container>
   );
 });

@@ -26,6 +26,7 @@ import {
   deleteIncome,
   deleteIncomeOnAccount,
 } from "../../../store/modules/Incomes/fetchActions";
+import Loader from "../../utils/Loader";
 
 const schema = yup.object({
   name: yup
@@ -235,7 +236,20 @@ const IncomeList = () => {
         ) : (
           <S.ItemsList ref={listRef}>
             {loading ? (
-              <p>Carregando...</p>
+              <Loader
+                height="200"
+                width="400"
+                color="#D4E3F5"
+                rectLength={3}
+                rectProps={{
+                  height: "40",
+                  rx: "20",
+                  ry: "20",
+                  y: "20",
+                  x: "0",
+                  width: "390",
+                }}
+              />
             ) : (
               incomesListState.map((item, index) => {
                 return (

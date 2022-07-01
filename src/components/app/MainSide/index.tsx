@@ -34,6 +34,7 @@ import { getAccountEstimateBalance } from "../../../utils/getAccountBalance";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import { getItemsInThisMonth } from "../../../utils/listByDate";
 import { listCreditCards } from "../../../store/modules/CreditCards/fetchActions";
+import Loader from "../../utils/Loader";
 
 const schema = yup.object({
   name: yup
@@ -55,8 +56,16 @@ const MainSide = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
   const { accounts, loading } = useSelector((state: State) => state.accounts);
-  const { incomes } = useSelector((state: State) => state.incomes);
-  const { expanses } = useSelector((state: State) => state.expanses);
+  const {
+    incomes,
+    incomesOnAccount,
+    loading: incomesLoading,
+  } = useSelector((state: State) => state.incomes);
+  const {
+    expanses,
+    expansesOnAccount,
+    loading: expansesLoading,
+  } = useSelector((state: State) => state.expanses);
   const { selectedMonth } = useSelector((state: State) => state.dates);
 
   const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
@@ -78,6 +87,8 @@ const MainSide = () => {
   const [balances, setBalances] = useState<
     { accountId: string; currentBalance: number; estimateBalance: number }[]
   >([]);
+  const [calculateLoading, setCalculateLoading] = useState(true);
+  const [secondCalculateLoading, setSecondCalculateLoading] = useState(true);
 
   useEffect(() => {
     const censoredStatusStoraged = localStorage.getItem(
@@ -136,6 +147,7 @@ const MainSide = () => {
   };
 
   useEffect(() => {
+    setCalculateLoading(true);
     let sumTotalCurrentBalance = 0;
     let sumTotalEstimateBalance = 0;
     const accountsBalances: {
@@ -199,16 +211,21 @@ const MainSide = () => {
     setTotalCurrentBalance(sumTotalCurrentBalance);
     setTotalEstimateBalance(sumTotalEstimateBalance);
     setBalances(accountsBalances);
+    setCalculateLoading(false);
   }, [accounts, expanses, incomes, selectedMonth]);
 
   useEffect(() => {
-    const currentIncomes = getItemsInThisMonth(incomes, selectedMonth);
+    setSecondCalculateLoading(true);
+    const currentIncomes = getItemsInThisMonth(incomesOnAccount, selectedMonth);
     const totalcurrentIncomes = currentIncomes.reduce(
       (a, b) => a + (b["value"] || 0),
       0
     );
 
-    const currentExpanses = getItemsInThisMonth(expanses, selectedMonth);
+    const currentExpanses = getItemsInThisMonth(
+      expansesOnAccount,
+      selectedMonth
+    );
     const totalcurrentExpanses = currentExpanses.reduce(
       (a, b) => a + (b["value"] || 0),
       0
@@ -216,7 +233,8 @@ const MainSide = () => {
 
     setTotalIncomesBalance(totalcurrentIncomes);
     setTotalExpansesBalance(totalcurrentExpanses);
-  }, [expanses, incomes, selectedMonth]);
+    setSecondCalculateLoading(false);
+  }, [expansesOnAccount, incomesOnAccount, selectedMonth]);
 
   return (
     <>
@@ -252,6 +270,15 @@ const MainSide = () => {
               <S.Title color={titleColor}>Saldo atual</S.Title>
               {censored ? (
                 <S.Value color={textColor}>***********</S.Value>
+              ) : loading ||
+                incomesLoading ||
+                expansesLoading ||
+                calculateLoading ? (
+                <Loader
+                  height="21"
+                  width="110"
+                  color="rgba(255,255,255,0.26)"
+                />
               ) : (
                 <S.Value color={textColor}>
                   {getCurrencyFormat(totalCurrentBalance)}
@@ -266,6 +293,15 @@ const MainSide = () => {
                 <S.Value color={textColor} opacity={0.5}>
                   ***********
                 </S.Value>
+              ) : loading ||
+                incomesLoading ||
+                expansesLoading ||
+                calculateLoading ? (
+                <Loader
+                  height="21"
+                  width="110"
+                  color="rgba(255,255,255,0.26)"
+                />
               ) : (
                 <S.Value color={textColor} opacity={0.5}>
                   {getCurrencyFormat(totalEstimateBalance)}
@@ -279,6 +315,14 @@ const MainSide = () => {
               <S.Title color={incomeColor}>Receitas</S.Title>
               {censored ? (
                 <S.Value color={incomeColor}>***********</S.Value>
+              ) : incomesLoading ||
+                expansesLoading ||
+                secondCalculateLoading ? (
+                <Loader
+                  height="21"
+                  width="110"
+                  color="rgba(255,255,255,0.26)"
+                />
               ) : (
                 <S.Value color={incomeColor}>
                   {getCurrencyFormat(totalIncomesBalance)}
@@ -289,6 +333,14 @@ const MainSide = () => {
               <S.Title color={expenseColor}>Despesas</S.Title>
               {censored ? (
                 <S.Value color={expenseColor}>***********</S.Value>
+              ) : incomesLoading ||
+                expansesLoading ||
+                secondCalculateLoading ? (
+                <Loader
+                  height="21"
+                  width="110"
+                  color="rgba(255,255,255,0.26)"
+                />
               ) : (
                 <S.Value color={expenseColor}>
                   {getCurrencyFormat(totalExpansesBalance)}
@@ -303,7 +355,7 @@ const MainSide = () => {
 
           <S.AccountCardList onClick={handleEditAccountOpenModal}>
             {loading ? (
-              <p>Carregando...</p>
+              <Loader height="200" width="400" color="rgba(255,255,255,0.26)" />
             ) : (
               accounts.length > 0 && (
                 <Card

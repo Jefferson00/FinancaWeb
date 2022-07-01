@@ -10,6 +10,7 @@ import { getDayOfTheMounth } from "../../../utils/dateFormats";
 import { useDispatch, useSelector } from "react-redux";
 import State from "../../../store/interfaces";
 import { listLastTransactions } from "../../../store/modules/Transactions/fetchActions";
+import Loader from "../../utils/Loader";
 
 export default function Transactions() {
   const dispatch = useDispatch<any>();
@@ -65,7 +66,20 @@ export default function Transactions() {
           <FaBan size={40} color={titleColor} />
         </S.CensoredContainer>
       ) : loading ? (
-        <p>Carregando...</p>
+        <Loader
+          height="150"
+          width="400"
+          color="#D4E3F5"
+          rectLength={3}
+          rectProps={{
+            height: "40",
+            rx: "20",
+            ry: "20",
+            y: "0",
+            x: "0",
+            width: "400",
+          }}
+        />
       ) : (
         <S.TransactionsList>
           {lastTransactions.map((transaction) => {

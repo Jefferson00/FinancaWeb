@@ -20,13 +20,15 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+
+  z-index: 999;
 `;
 
 export const AvatarContainer = styled.section`
   flex: 1;
 
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 2rem;
@@ -52,8 +54,8 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Avatar = styled.img`
-  width: 7.43rem;
-  height: 7.43rem;
+  width: 10.43rem;
+  height: 10.43rem;
   border-radius: 50%;
 `;
 
@@ -65,4 +67,21 @@ export const IconContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+`;
+
+export const Background = styled.div`
+  background: linear-gradient(
+    10deg,
+    rgba(212, 227, 245, 0.6) 20%,
+    rgba(249, 195, 60, 0) 100%
+  );
+  width: 100%;
+  height: 100vh;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  pointer-events: none;
 `;

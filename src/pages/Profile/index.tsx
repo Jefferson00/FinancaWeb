@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/app/Header";
 import State from "../../store/interfaces";
 import * as S from "./styles";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Button from "../../components/utils/Button";
 import { FaMoon, FaSave, FaSun } from "react-icons/fa";
 import { Colors } from "../../styles/global";
+import { updateProfile } from "../../store/modules/Auth/fetchActions";
 
 const schema = yup.object({
   name: yup
@@ -22,13 +23,25 @@ const schema = yup.object({
   email: yup.string().required("Campo obrigátorio").email("E-mail inválido"),
 });
 
+export const phoneMask = (value: string) => {
+  if (value) {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/g, "($1) $2")
+      .replace(/(\d)(\d{4})$/, "$1-$2");
+  } else {
+    return "";
+  }
+};
+
 export default function Profile() {
+  const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
 
   const [themeState, setThemeState] = useState("ligth");
 
-  const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
+  const firstBackgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
+  const secondBackgroundColor = Colors.BLUE_SECONDARY_LIGHTER;
 
   const { control, handleSubmit, setValue } = useForm<UserFormData>({
     resolver: yupResolver(schema),
@@ -36,6 +49,11 @@ export default function Profile() {
 
   const onSubmit: SubmitHandler<UserFormData> = (data) => {
     console.log(data);
+    const userInput = {
+      ...data,
+      phone: data.phone ? `+55${data.phone}` : null,
+    };
+    dispatch(updateProfile(userInput, user.id));
   };
 
   const toggleTheme = () => {
@@ -103,8 +121,11 @@ export default function Profile() {
               backgroundColor="#D4E3F5"
               textColor="#000"
               name="phone"
+              placeholder="(99) 9 9999-9999"
+              mask={phoneMask}
               defaultValue={""}
               control={control}
+              maxLength={15}
             />
 
             <S.ButtonContainer>
@@ -122,6 +143,8 @@ export default function Profile() {
           </form>
         </S.FormContainer>
       </S.Container>
+
+      <S.Background />
     </div>
   );
 }

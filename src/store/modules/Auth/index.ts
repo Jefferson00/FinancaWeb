@@ -7,6 +7,7 @@ const INITIAL_STATE = {
 
 export const signIn = createAction<any>("SIGN_IN");
 export const signOut = createAction<any>("SIGN_OUT");
+export const updateUser = createAction<any>("UPDATE_USER");
 
 export default createReducer(INITIAL_STATE, {
   [signIn.type]: (state, action) => ({
@@ -18,5 +19,9 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     isAuthenticated: false,
     user: {},
+  }),
+  [updateUser.type]: (state, action) => ({
+    ...state,
+    user: action.payload,
   }),
 });
