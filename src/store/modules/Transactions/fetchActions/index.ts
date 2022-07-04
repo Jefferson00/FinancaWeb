@@ -1,4 +1,4 @@
-import { addLastTransactions } from "..";
+import { addLastTransactions, changeLoadingState } from "..";
 import api from "../../../../config/api";
 import { checkApiError } from "../../../../utils/checkApiError";
 import { addMessage } from "../../Feedbacks";
@@ -11,6 +11,7 @@ export const listLastTransactions = (userId: string) => {
         dispatch(addLastTransactions(res.data));
       })
       .catch((e) => {
+        dispatch(changeLoadingState(false));
         dispatch(
           addMessage({
             type: "error",

@@ -106,6 +106,11 @@ export default function Transactions() {
               </S.TransactionItem>
             );
           })}
+          {!loading && lastTransactions.length === 0 && (
+            <S.EmptyItem backgroundColor={itemBackground}>
+              <p>Nenhuma transação por enquanto</p>
+            </S.EmptyItem>
+          )}
         </S.TransactionsList>
       )}
     </S.Container>

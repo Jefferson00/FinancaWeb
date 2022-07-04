@@ -25,6 +25,9 @@ export const addLastTransactions = createAction<ITransactions[]>(
 export const addLastTransaction = createAction<ITransactions>(
   "ADD_LAST_TRANSACTION"
 );
+export const changeLoadingState = createAction<boolean>(
+  "CHANGE_LAST_TRANSACTIOS_LOADING_STATE"
+);
 
 export default createReducer(INITIAL_STATE, {
   [addLastTransactions.type]: (state, action) => ({
@@ -36,5 +39,9 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     lastTransactions: [...state.lastTransactions, action.payload],
+  }),
+  [changeLoadingState.type]: (state, action) => ({
+    ...state,
+    loading: action.payload,
   }),
 });
