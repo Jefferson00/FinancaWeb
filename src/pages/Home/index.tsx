@@ -18,12 +18,39 @@ import CardsView from "../../components/app/CardsView";
 import { useDispatch, useSelector } from "react-redux";
 import { changeMenu } from "../../store/modules/Menus";
 import State from "../../store/interfaces";
+import { addMessage } from "../../store/modules/Feedbacks";
 
 const Home = () => {
   const dispatch = useDispatch<any>();
   const menu = useSelector((state: State) => state.menus);
+  const { accounts, loading: loadingAccounts } = useSelector(
+    (state: State) => state.accounts
+  );
+  const { loading: loadingIncomes } = useSelector(
+    (state: State) => state.incomes
+  );
+  const { loading: loadingExpanses } = useSelector(
+    (state: State) => state.expanses
+  );
+  const { loading: loadingCreditCards } = useSelector(
+    (state: State) => state.creditCards
+  );
+
+  const noAccountFound = () => {
+    return !loadingAccounts && accounts.length === 0;
+  };
 
   const handleChangeMenu = (menu: string) => {
+    if (noAccountFound()) {
+      dispatch(
+        addMessage({
+          type: "warning",
+          message:
+            "Você precisa cadastrar uma conta para poder usar essa funcionalidade",
+        })
+      );
+      return;
+    }
     dispatch(changeMenu(menu));
   };
 
@@ -46,18 +73,21 @@ const Home = () => {
             icon={MdArrowUpward}
             selected={menu === "Entradas"}
             title="Entradas"
+            disabled={loadingAccounts || loadingIncomes}
           />
           <MenuItem
             icon={MdArrowDownward}
             title="Despesas"
             selected={menu === "Despesas"}
             onClick={() => handleChangeMenu("Despesas")}
+            disabled={loadingAccounts || loadingExpanses}
           />
           <MenuItem
             icon={MdCreditCard}
             title="Cartões"
             selected={menu === "Cartões"}
             onClick={() => handleChangeMenu("Cartões")}
+            disabled={loadingAccounts || loadingExpanses || loadingCreditCards}
           />
         </S.MenuList>
 

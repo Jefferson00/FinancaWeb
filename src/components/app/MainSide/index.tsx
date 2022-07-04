@@ -365,6 +365,14 @@ const MainSide = () => {
                 />
               )
             )}
+
+            {!loading && accounts.length === 0 && (
+              <S.EmptyCard>
+                <p>
+                  Cadastre suas contas para começar a gerenciar suas finanças
+                </p>
+              </S.EmptyCard>
+            )}
           </S.AccountCardList>
 
           <S.CardDots>

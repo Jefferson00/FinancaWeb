@@ -12,6 +12,7 @@ import { addMessage } from "../../Feedbacks";
 
 export const listAccounts = (userId: string) => {
   return (dispatch: any) => {
+    dispatch(changeLoadingState(true));
     api
       .get(`accounts/active/user/${userId}`)
       .then((res) => {

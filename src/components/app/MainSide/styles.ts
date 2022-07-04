@@ -136,3 +136,20 @@ export const AccountForm = styled.div`
 
   padding: 2rem 3rem;
 `;
+
+export const EmptyCard = styled.div`
+  height: 8.125rem;
+  width: 100%;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.26);
+  padding: 1rem 1.43rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    text-align: center;
+    color: #2673ce;
+  }
+`;
