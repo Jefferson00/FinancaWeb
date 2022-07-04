@@ -18,6 +18,15 @@ export type ExpanseFormData = {
   startDate: string;
 };
 
+export type CardFormData = {
+  name: string;
+  limit: string;
+  color: string;
+  paymentDate: string;
+  invoiceClosing: string;
+  receiptDefault: string;
+};
+
 export type UserFormData = {
   name: string;
   email: string;

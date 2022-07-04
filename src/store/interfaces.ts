@@ -133,6 +133,26 @@ export interface ICreateExpanseOnAccount {
   recurrence: string;
 }
 
+export interface ICreateCreditCard {
+  name: string;
+  userId: string;
+  limit: number;
+  color: string;
+  paymentDate: Date;
+  invoiceClosing: Date;
+  receiptDefault: string;
+}
+
+export interface IUpdateCreditCard {
+  name?: string;
+  userId: string;
+  limit?: number;
+  color?: string;
+  paymentDate?: Date;
+  invoiceClosing?: Date;
+  receiptDefault?: string;
+}
+
 export interface IUpdateIncome {
   userId: string;
   name?: string;

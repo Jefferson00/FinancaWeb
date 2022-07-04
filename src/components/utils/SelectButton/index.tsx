@@ -8,6 +8,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   backgroundColor: string;
   border?: string;
   checked?: boolean;
+  children?: React.ReactNode;
+  dropDownContent?: React.ReactNode;
+  openDropDown?: boolean;
 }
 
 export default function SelectButton({
@@ -17,6 +20,9 @@ export default function SelectButton({
   backgroundColor,
   border,
   checked,
+  children,
+  dropDownContent,
+  openDropDown = false,
   ...rest
 }: ButtonProps) {
   return (
@@ -24,10 +30,18 @@ export default function SelectButton({
       backgroundColor={backgroundColor}
       color={color}
       checked={checked}
+      style={{
+        borderBottomLeftRadius: openDropDown ? 0 : 10,
+        borderBottomRightRadius: openDropDown ? 0 : 10,
+      }}
       {...rest}
     >
-      <S.Option color={color}>{title}</S.Option>
+      <S.Option color={color}>{children ? children : title}</S.Option>
       <Icon />
+
+      <S.HiddenDropDown height={openDropDown ? 6 : 0}>
+        {dropDownContent}
+      </S.HiddenDropDown>
     </S.Container>
   );
 }

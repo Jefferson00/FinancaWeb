@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 import { addMonths, isSameMonth } from "date-fns";
 import { HTMLAttributes, useCallback, useEffect, useState } from "react";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import State, {
   ICreditCard,
@@ -22,9 +22,11 @@ import * as S from "./styles";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   creditCard: ICreditCard;
+  onDelete?: () => void;
+  onEdit?: () => void;
 }
 
-const Card = ({ creditCard, ...rest }: CardProps) => {
+const Card = ({ creditCard, onDelete, onEdit, ...rest }: CardProps) => {
   const dispatch = useDispatch<any>();
   const { cardSelected } = useSelector((state: State) => state.creditCards);
   const { selectedMonth } = useSelector((state: State) => state.dates);
@@ -141,6 +143,14 @@ const Card = ({ creditCard, ...rest }: CardProps) => {
     setDaysState(days);
   }, []);
 
+  const canDelete = () => {
+    return !creditCard.Invoice.find((inv) => inv.ExpanseOnInvoice.length > 0);
+  };
+
+  const showAlert = () => {
+    return !!creditCard.Invoice.find((inv) => inv.closed && !inv.paid);
+  };
+
   useEffect(() => {
     const invoiceInThisMonth = getInvoiceInThisMonth();
     getCurrentPaidInvoice();
@@ -185,7 +195,21 @@ const Card = ({ creditCard, ...rest }: CardProps) => {
     >
       <header>
         <strong>{creditCard.name}</strong>
-        <FaInfoCircle size={21} color="#CC3728" />
+        <div>
+          {showAlert() && (
+            <button type="button">
+              <FaInfoCircle size={18} color="#CC3728" />
+            </button>
+          )}
+          <button type="button" onClick={onEdit}>
+            <FaPencilAlt size={18} color={creditCard.color} />
+          </button>
+          {canDelete() && (
+            <button type="button" onClick={onDelete}>
+              <FaTrash size={18} color="#CC3728" />
+            </button>
+          )}
+        </div>
       </header>
 
       <main>

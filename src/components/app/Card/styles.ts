@@ -28,6 +28,21 @@ export const Container = styled.div<ContainerProps>`
       font-size: 1.125rem;
       color: #fff;
     }
+
+    div {
+      display: flex;
+      gap: 0.5rem;
+      button {
+        background-color: #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+    }
   }
 
   main {

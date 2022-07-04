@@ -34,6 +34,9 @@ export const updateCreditCardState = createAction<ICreditCard>(
 export const changeCardLoadingState = createAction<boolean>(
   "CHANGE_CARD_LOADING_STATE"
 );
+export const removeCreditCardState = createAction<string>(
+  "REMOVE_CREDIT_CARD_STATE"
+);
 
 export default createReducer(INITIAL_STATE, {
   [changeCardLoadingState.type]: (state, action) => ({
@@ -81,6 +84,20 @@ export default createReducer(INITIAL_STATE, {
     );
     const stateCopy = [...state.creditCards];
     stateCopy[itemIndex] = action.payload;
-    return { ...state, loading: false, creditCards: stateCopy };
+    return {
+      ...state,
+      loading: false,
+      creditCards: stateCopy,
+      cardSelected:
+        state.cardSelected.id === action.payload.id
+          ? action.payload
+          : state.cardSelected,
+    };
   },
+  [removeCreditCardState.type]: (state, action) => ({
+    ...state,
+    loading: false,
+    creditCards: state.creditCards.filter((s) => s.id !== action.payload),
+    cardSelected: {},
+  }),
 });

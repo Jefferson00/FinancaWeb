@@ -73,6 +73,10 @@ const ExpandableCard = () => {
     }
   };
 
+  const showAlert = () => {
+    return !invoiceSelected?.paid && invoiceSelected.closed;
+  };
+
   useEffect(() => {
     listRef.current?.addEventListener("mouseenter", () => {
       if (listRef.current) listRef.current.style.overflowY = "scroll";
@@ -88,7 +92,7 @@ const ExpandableCard = () => {
         <section>
           <header>
             <strong>{cardSelected.name}</strong>
-            <FaInfoCircle size={21} color="#CC3728" />
+            {showAlert() && <FaInfoCircle size={21} color="#CC3728" />}
           </header>
 
           <main>
@@ -96,22 +100,24 @@ const ExpandableCard = () => {
               <p>Fatura atual</p>
               <strong>{getCurrencyFormat(invoiceSelected?.value || 0)}</strong>
             </div>
-            <div>
-              <p>Pago:</p>
-              <Switch
-                checked={checked}
-                onChange={() => setChecked(!checked)}
-                checkedIcon={false}
-                uncheckedIcon={false}
-                offColor="#d2d2d2"
-                onColor="#E59B93"
-                onHandleColor="#E59B93"
-                offHandleColor="#E59B93"
-                height={13}
-                width={31}
-                handleDiameter={20}
-              />
-            </div>
+            {!invoiceSelected?.paid && invoiceSelected.closed && (
+              <div>
+                <p>Pagar:</p>
+                <Switch
+                  checked={checked}
+                  onChange={() => setChecked(!checked)}
+                  checkedIcon={false}
+                  uncheckedIcon={false}
+                  offColor="#d2d2d2"
+                  onColor="#E59B93"
+                  onHandleColor="#E59B93"
+                  offHandleColor="#E59B93"
+                  height={13}
+                  width={31}
+                  handleDiameter={20}
+                />
+              </div>
+            )}
           </main>
 
           <footer>
