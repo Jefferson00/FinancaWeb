@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import State from "../store/interfaces";
 import { signUp } from "../store/modules/Auth/fetchActions";
 import { signIn } from "../store/modules/Auth";
+import { addMessage } from "../store/modules/Feedbacks";
+import { checkApiError } from "../utils/checkApiError";
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
@@ -62,7 +64,6 @@ const RouterWrapper = ({
         api
           .get(`users/email/${email}`)
           .then(({ data }) => {
-            console.log("usuario encontrado com email");
             if (!data) {
               dispatch(signUp(userInput));
               setLoading(false);
@@ -78,7 +79,12 @@ const RouterWrapper = ({
             }
           })
           .catch((err) => {
-            console.log("erro ao encontrar usuário com email", err);
+            dispatch(
+              addMessage({
+                type: "error",
+                message: checkApiError(err),
+              })
+            );
           })
           .finally(() => setLoading(false));
       } else {

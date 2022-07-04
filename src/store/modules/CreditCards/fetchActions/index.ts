@@ -17,7 +17,14 @@ export const listCreditCards = (userId: string) => {
       .then((res) => {
         dispatch(addCreditCards(res.data));
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 

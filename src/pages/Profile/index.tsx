@@ -48,7 +48,6 @@ export default function Profile() {
   });
 
   const onSubmit: SubmitHandler<UserFormData> = (data) => {
-    console.log(data);
     const userInput = {
       ...data,
       phone: data.phone ? `+55${data.phone}` : null,

@@ -56,7 +56,6 @@ export default function CreateIncome({
       data.iteration === "0" ? 1 : Number(data.iteration);
     const startDateParsed = parse(data.startDate, "yyyy-MM-dd", new Date());
     if (!!incomeId) {
-      console.log(data.value);
       const incomeToUpdate: IUpdateIncome = {
         ...data,
         userId: user.id,

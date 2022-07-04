@@ -10,7 +10,14 @@ export const signUp = (user: any) => {
       .then((res) => {
         dispatch(signIn(res.data));
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
 

@@ -35,8 +35,6 @@ export default function Loader({
     let rects = [];
     let yValue = Number(y);
     for (let i = 1; i <= rectLength; i++) {
-      console.log(rectProps);
-      console.log(yValue);
       rects.push(
         <rect
           key={i}

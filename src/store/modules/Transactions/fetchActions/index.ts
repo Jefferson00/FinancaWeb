@@ -1,5 +1,7 @@
 import { addLastTransactions } from "..";
 import api from "../../../../config/api";
+import { checkApiError } from "../../../../utils/checkApiError";
+import { addMessage } from "../../Feedbacks";
 
 export const listLastTransactions = (userId: string) => {
   return (dispatch: any) => {
@@ -8,6 +10,13 @@ export const listLastTransactions = (userId: string) => {
       .then((res) => {
         dispatch(addLastTransactions(res.data));
       })
-      .catch(console.log);
+      .catch((e) => {
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
   };
 };
