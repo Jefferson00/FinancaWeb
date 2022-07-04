@@ -289,6 +289,13 @@ const ExpansesList = () => {
                 );
               })
             )}
+
+            {!loading && expansesListState.length === 0 && (
+              <S.Empty>
+                <FaBan />
+                <p>Nenhuma despesa nesse mês</p>
+              </S.Empty>
+            )}
           </S.ItemsList>
         )}
       </S.Container>

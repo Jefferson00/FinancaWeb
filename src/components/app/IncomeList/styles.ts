@@ -108,3 +108,17 @@ export const Button = styled.button<ButtonProps>`
     filter: brightness(0.8);
   }
 `;
+
+export const Empty = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  margin-top: 2rem;
+  height: 11rem;
+
+  p {
+    font-weight: 700;
+  }
+`;

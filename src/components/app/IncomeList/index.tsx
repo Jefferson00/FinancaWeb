@@ -280,6 +280,13 @@ const IncomeList = () => {
                 );
               })
             )}
+
+            {!loading && incomesListState.length === 0 && (
+              <S.Empty>
+                <FaBan />
+                <p>Nenhuma entrada nesse mês</p>
+              </S.Empty>
+            )}
           </S.ItemsList>
         )}
       </S.Container>
