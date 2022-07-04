@@ -18,6 +18,7 @@ export const listCreditCards = (userId: string) => {
         dispatch(addCreditCards(res.data));
       })
       .catch((e) => {
+        dispatch(changeCardLoadingState(false));
         dispatch(
           addMessage({
             type: "error",

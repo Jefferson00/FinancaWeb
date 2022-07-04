@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 interface TextProps {
   color: string;
@@ -9,7 +9,7 @@ export const Container = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 24.5rem;
-`
+`;
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
@@ -17,23 +17,23 @@ export const Header = styled.header`
 
   padding: 0 0.5rem;
 
-  div{
+  div {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
-`
+`;
 export const Title = styled.p<TextProps>`
   color: ${(props) => props.color};
   font-weight: 600;
-`
-export const ViewButton = styled.button``
+`;
+export const ViewButton = styled.button``;
 
 export const CensoredContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 export const ItemsList = styled.div`
   max-height: 288px;
   overflow: hidden;
@@ -53,10 +53,26 @@ export const ItemsList = styled.div`
 
   &::-webkit-scrollbar-thumb {
     background: transparent;
-    background: #D4E3F5;
+    background: #d4e3f5;
   }
-`
+`;
 export const DateText = styled.p<TextProps>`
   margin-top: 0.5rem;
   color: ${(props) => props.color};
-`
+`;
+
+export const EmptyCard = styled.div`
+  height: 11.25rem;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #d4e3f5;
+
+  p {
+    margin-left: 0.5rem;
+    font-weight: 700;
+  }
+`;

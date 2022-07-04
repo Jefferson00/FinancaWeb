@@ -154,6 +154,13 @@ const CardsList = () => {
             ))}
           </S.ItemsList>
         )}
+
+        {!loading && creditCards.length === 0 && (
+          <S.EmptyCard>
+            <FaBan />
+            <p>Nenhum cartão cadastrado</p>
+          </S.EmptyCard>
+        )}
       </S.Container>
 
       <Modal visible={modalVisibility} onCancel={handleCloseModal}>
