@@ -217,6 +217,11 @@ const ExpandableCard = () => {
             expanseSelected?.iteration === "Mensal" ? "Mensal" : "Parcelada"
           }
           fromInvoice
+          expanseOnInvoiceId={
+            invoiceSelected?.ExpanseOnInvoice?.find(
+              (e) => e.expanseId === expanseSelected?.id
+            )?.id
+          }
         />
       </Modal>
     </>

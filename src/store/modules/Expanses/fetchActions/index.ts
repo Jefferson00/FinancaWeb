@@ -121,13 +121,49 @@ export const updateExpanse = (
   };
 };
 
-export const deleteExpanse = (expanseId: string, userId: string) => {
+export const deleteExpanseOnInvoice = (
+  id: string,
+  expanseId: string,
+  userId: string
+) => {
   return (dispatch: any) => {
     dispatch(changeLoadingState(true));
+    dispatch(changeCardLoadingState(true));
+    api
+      .delete(`expansesOnInvoice/${id}`)
+      .then(() => {
+        dispatch(deleteExpanse(expanseId, userId, true));
+      })
+      .catch((e) => {
+        dispatch(changeLoadingState(false));
+        dispatch(changeCardLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
+  };
+};
+
+export const deleteExpanse = (
+  expanseId: string,
+  userId: string,
+  fromInvoice?: boolean
+) => {
+  return (dispatch: any) => {
+    dispatch(changeLoadingState(true));
+    if (fromInvoice) {
+      dispatch(changeCardLoadingState(true));
+    }
     api
       .delete(`expanses/${expanseId}/${userId}`)
       .then((res) => {
         dispatch(removeExpanseState(expanseId));
+        if (fromInvoice) {
+          dispatch(listCreditCards(userId));
+        }
         dispatch(
           addMessage({
             type: "success",

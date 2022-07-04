@@ -14,7 +14,7 @@ import {
   currencyToValue,
 } from "../../../utils/getCurrencyFormat";
 import { useDispatch, useSelector } from "react-redux";
-import { FaCheck, FaSave } from "react-icons/fa";
+import { FaCheck, FaSave, FaTrash } from "react-icons/fa";
 import { ExpanseCategories } from "../../../utils/types";
 import { useEffect, useState } from "react";
 import SelectButton from "../../utils/SelectButton";
@@ -23,13 +23,16 @@ import DatePicker from "../../utils/DatePicker";
 import { ExpanseFormData } from "../../../utils/formDatas";
 import {
   createExpanse,
+  deleteExpanseOnInvoice,
   updateExpanse,
 } from "../../../store/modules/Expanses/fetchActions";
+import Modal from "../../utils/Modal";
 
 interface CreateIncomeProps {
   control: Control<ExpanseFormData>;
   handleSubmit: UseFormHandleSubmit<ExpanseFormData>;
   expanseId?: string;
+  expanseOnInvoiceId?: string;
   fromInvoice?: boolean;
   onFinish: () => void;
   recurrence: "Mensal" | "Parcelada";
@@ -38,6 +41,7 @@ interface CreateIncomeProps {
 export default function CreateExpanse({
   control,
   expanseId,
+  expanseOnInvoiceId,
   recurrence,
   fromInvoice = false,
   onFinish,
@@ -49,6 +53,9 @@ export default function CreateExpanse({
   const { accounts } = useSelector((state: State) => state.accounts);
   const { creditCards } = useSelector((state: State) => state.creditCards);
 
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
+    useState(false);
+
   const [recurrenceState, setRecurrenceState] = useState<
     "Mensal" | "Parcelada"
   >(recurrence);
@@ -56,6 +63,14 @@ export default function CreateExpanse({
 
   const firstBackgroundColor = Colors.RED_PRIMARY_LIGHTER;
   const secondBackgroundColor = Colors.RED_SECONDARY_LIGHTER;
+
+  const handleDelete = () => {
+    if (user && expanseId && expanseOnInvoiceId) {
+      dispatch(deleteExpanseOnInvoice(expanseOnInvoiceId, expanseId, user.id));
+      setDeleteConfirmationVisible(false);
+      onFinish();
+    }
+  };
 
   const onSubmit: SubmitHandler<ExpanseFormData> = (data) => {
     const interationVerified =
@@ -238,9 +253,27 @@ export default function CreateExpanse({
               icon={() => <FaSave color="#FFF" size={25} />}
               type="submit"
             />
+
+            {fromInvoice && (
+              <S.DeleteButton
+                type="button"
+                onClick={() => setDeleteConfirmationVisible(true)}
+              >
+                <FaTrash size={28} color={firstBackgroundColor} />
+              </S.DeleteButton>
+            )}
           </S.ButtonContainer>
         </form>
       </S.Container>
+
+      <Modal
+        visible={deleteConfirmationVisible}
+        onCancel={() => setDeleteConfirmationVisible(false)}
+        overlaid
+        type="Delete"
+        title="Tem certeza que deseja excluir essa despesa?"
+        onConfirm={handleDelete}
+      />
     </>
   );
 }
