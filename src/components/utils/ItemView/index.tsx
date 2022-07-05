@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
 import { Colors } from "../../../styles/global";
-import { FaDollarSign, FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
 import State, { IIncomes, IIncomesOnAccount } from "../../../store/interfaces";
@@ -9,6 +9,7 @@ import { getDayOfTheMounth } from "../../../utils/dateFormats";
 import { reduceString } from "../../../utils/reduceString";
 import { useSelector } from "react-redux";
 import useCollapse from "react-collapsed";
+import { getCategoryIcon } from "../../../utils/getCategoryIcon";
 
 interface ItemType extends IIncomes, IIncomesOnAccount {}
 
@@ -77,7 +78,7 @@ export default function ItemView({
     >
       <S.CollapseContent mainColor={mainColor} {...getToggleProps()}>
         <div>
-          <FaDollarSign size={24} color={mainColor} />
+          {getCategoryIcon(item.category, mainColor, 24)}
 
           <strong>{item.name}</strong>
         </div>

@@ -19,7 +19,7 @@ export const accountTypes = [
 
 export const IncomeCategories = [
   {
-    icon: "🪙",
+    icon: "💵",
     name: "Salário",
   },
   {
@@ -27,30 +27,50 @@ export const IncomeCategories = [
     name: "Benefício",
   },
   {
-    icon: "🪙",
+    icon: "💸",
     name: "Transferência",
   },
   {
-    icon: "🪙",
+    icon: "💰",
     name: "Outro",
   },
 ];
 
 export const ExpanseCategories = [
   {
-    icon: "🪙",
-    name: "Salário",
+    icon: "🏠",
+    name: "Casa",
   },
   {
-    icon: "🪙",
-    name: "Benefício",
+    icon: "🍔",
+    name: "Alimentação",
   },
   {
-    icon: "🪙",
+    icon: "💵",
     name: "Transferência",
   },
   {
-    icon: "🪙",
+    icon: "🚌",
+    name: "Transporte",
+  },
+  {
+    icon: "📚",
+    name: "Educação",
+  },
+  {
+    icon: "🎭",
+    name: "Lazer",
+  },
+  {
+    icon: "📞",
+    name: "Comunicação",
+  },
+  {
+    icon: "💊",
+    name: "Saúde",
+  },
+  {
+    icon: "💰",
     name: "Outro",
   },
 ];
