@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import State from "../../../store/interfaces";
+import { signOut } from "../../../store/modules/Auth";
 import { MessageType, removeMessage } from "../../../store/modules/Feedbacks";
+import { getAuth } from "firebase/auth";
+import { app } from "../../../config/firebase";
 
 export default function ToastComponent() {
   const dispatch = useDispatch<any>();
@@ -15,6 +18,13 @@ export default function ToastComponent() {
       position: "top-center",
     };
   }, []);
+
+  const handleSignOut = useCallback(async () => {
+    localStorage.removeItem("@FinancaWeb:token");
+    dispatch(signOut({}));
+    const firebaseAuth = getAuth(app);
+    await firebaseAuth.signOut();
+  }, [dispatch]);
 
   const feedback = useCallback(
     (message: MessageType) => {
@@ -33,12 +43,16 @@ export default function ToastComponent() {
           },
         });
       if (message.type === "error")
-        return toast.error(message.message, {
-          ...config,
-          onClose: () => {
-            dispatch(removeMessage(message.message));
-          },
-        });
+        if (message.message === "Access Denied") {
+          handleSignOut();
+        } else {
+          return toast.error(message.message, {
+            ...config,
+            onClose: () => {
+              dispatch(removeMessage(message.message));
+            },
+          });
+        }
       if (message.type === "info")
         return toast.info(message.message, {
           ...config,
@@ -54,7 +68,7 @@ export default function ToastComponent() {
           },
         });
     },
-    [config, dispatch]
+    [config, dispatch, handleSignOut]
   );
 
   useEffect(() => {
