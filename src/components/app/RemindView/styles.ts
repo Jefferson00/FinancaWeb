@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Colors } from "../../../styles/global";
 
 interface TextProps {
   color: string;
@@ -46,4 +47,34 @@ export const CensoredContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+interface ItemProps {
+  type: "EXPANSE" | "INCOME";
+}
+
+export const Item = styled.div<ItemProps>`
+  background-color: ${(props) =>
+    props.type === "EXPANSE"
+      ? Colors.RED_SOFT_LIGHTER
+      : Colors.GREEN_SOFT_LIGHTER};
+  border-color: ${(props) =>
+    props.type === "EXPANSE"
+      ? Colors.RED_PRIMARY_LIGHTER
+      : Colors.GREEN_PRIMARY_LIGHTER};
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 20px;
+  width: 100%;
+  padding: 0.5rem 1rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 `;

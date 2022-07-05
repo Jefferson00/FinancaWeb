@@ -7,29 +7,32 @@ import {
   FaExclamationCircle,
   FaCalendarAlt,
   FaBan,
+  FaDollarSign,
 } from "react-icons/fa";
-import ItemView from "../../utils/ItemView";
+import { IExpanses, IIncomes } from "../../../store/interfaces";
 import { getFullDayOfTheMounth } from "../../../utils/dateFormats";
+import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 
 interface RemindViewProps {
   type: "LATE" | "NEXTDAYS";
-  items: RemindItemProps[];
+  items?: RemindItemProps[];
+  lateItems?: ItemProps[];
+}
+
+interface ItemProps extends IIncomes, IExpanses {
+  type: "EXPANSE" | "INCOME";
 }
 
 interface RemindItemProps {
   day: Date;
-  items: {
-    id: string;
-    category: string;
-    name: string;
-    value: number;
-    date: Date;
-    type: "EXPANSE" | "INCOME";
-    received: boolean;
-  }[];
+  items: ItemProps[];
 }
 
-export default function RemindView({ type, items }: RemindViewProps) {
+export default function RemindView({
+  type,
+  items = [],
+  lateItems = [],
+}: RemindViewProps) {
   const [censored, setCensored] = useState(false);
 
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
@@ -83,16 +86,59 @@ export default function RemindView({ type, items }: RemindViewProps) {
         </S.CensoredContainer>
       ) : (
         <S.ItemsList>
-          {/*  {items.map((item, index) => {
+          {lateItems.map((item, index) => {
+            return (
+              <div key={index}>
+                <S.DateText>
+                  {getFullDayOfTheMounth(new Date(item.receiptDate))}
+                </S.DateText>
+                <S.Item type={item.type}>
+                  <div>
+                    <FaDollarSign
+                      size={24}
+                      color={
+                        item.type === "EXPANSE"
+                          ? Colors.RED_PRIMARY_LIGHTER
+                          : Colors.GREEN_PRIMARY_LIGHTER
+                      }
+                    />
+
+                    <strong>{item.name}</strong>
+                  </div>
+
+                  <p>{getCurrencyFormat(item.value)}</p>
+                </S.Item>
+              </div>
+            );
+          })}
+
+          {items.map((item, index) => {
             return (
               <div key={index}>
                 <S.DateText>{getFullDayOfTheMounth(item.day)}</S.DateText>
                 {item.items.map((i, index) => {
-                  return <ItemView key={index} type={i.type} item={i} />;
+                  return (
+                    <S.Item key={index} type={i.type}>
+                      <div>
+                        <FaDollarSign
+                          size={24}
+                          color={
+                            i.type === "EXPANSE"
+                              ? Colors.RED_PRIMARY_LIGHTER
+                              : Colors.GREEN_PRIMARY_LIGHTER
+                          }
+                        />
+
+                        <strong>{i.name}</strong>
+                      </div>
+
+                      <p>{getCurrencyFormat(i.value)}</p>
+                    </S.Item>
+                  );
                 })}
               </div>
             );
-          })} */}
+          })}
         </S.ItemsList>
       )}
     </S.Container>
