@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import { GREEN_SOFT, RED_SOFT } from "../../../styles/global";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
@@ -30,6 +30,7 @@ export default function ItemView({
   onEdit,
   onChangeSwitch = () => null,
 }: ItemViewProps) {
+  const { theme } = useSelector((state: State) => state.themes);
   const { accounts } = useSelector((state: State) => state.accounts);
   const { getCollapseProps, getToggleProps } = useCollapse({
     expandStyles: {
@@ -40,19 +41,17 @@ export default function ItemView({
     },
   });
 
-  const mainColor =
-    type === "EXPANSE"
-      ? Colors.RED_PRIMARY_LIGHTER
-      : Colors.GREEN_PRIMARY_LIGHTER;
-  const secondColor =
-    type === "EXPANSE"
-      ? Colors.RED_SECONDARY_LIGHTER
-      : Colors.GREEN_SECONDARY_LIGHTER;
-  const textColor = Colors.MAIN_TEXT_LIGHTER;
-  const backgroundColor =
-    type === "EXPANSE" ? Colors.RED_SOFT_LIGHTER : Colors.GREEN_SOFT_LIGHTER;
+  const redPrimary = theme === "dark" ? "#AB5249" : "#CC3728";
+  const redSecondary = theme === "dark" ? "#D46559" : "#D46559";
+  const greenPrimary = theme === "dark" ? "#1A8289" : "#1A8289";
+  const greenSecondary = theme === "dark" ? "#4F9BA0" : "#4F9BA0";
 
-  // const [checked, setChecked] = useState(!!item?.paymentDate);
+  const mainColor = type === "EXPANSE" ? redPrimary : greenPrimary;
+
+  const secondColor = type === "EXPANSE" ? redSecondary : greenSecondary;
+
+  const backgroundColor = type === "EXPANSE" ? RED_SOFT : GREEN_SOFT;
+
   const [receivedMessage, setReceivedMessage] = useState("");
 
   useEffect(() => {
@@ -71,11 +70,7 @@ export default function ItemView({
   }, [accounts, item, type]);
 
   return (
-    <S.Collapse
-      backgroundColor={backgroundColor}
-      mainColor={mainColor}
-      textColor={textColor}
-    >
+    <S.Collapse backgroundColor={backgroundColor} mainColor={mainColor}>
       <S.CollapseContent mainColor={mainColor} {...getToggleProps()}>
         <div>
           {getCategoryIcon(item.category, mainColor, 24)}
@@ -111,7 +106,7 @@ export default function ItemView({
           </button>
           {!item.paymentDate && (
             <button onClick={onDelete}>
-              <FaTrash color="#d12" size={22} />
+              <FaTrash color={redPrimary} size={22} />
             </button>
           )}
         </S.ButtonContainer>

@@ -1,13 +1,14 @@
 import { InputHTMLAttributes, useState } from "react";
 import { IconBaseProps } from "react-icons";
 import { Control, Controller } from "react-hook-form";
+import theme from "styled-theming";
 
 import * as S from "./styles";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
-  backgroundColor: string;
-  textColor: string;
+  backgroundColor: string | theme.ThemeSet;
+  textColor: string | theme.ThemeSet;
   label?: string;
   mask?: any;
   isMasked?: boolean;
@@ -38,11 +39,11 @@ export default function DatePicker({
         <>
           {label && (
             <S.LabelContainer>
-              <S.Label color={!!fieldState.error ? "#CC3728" : textColor}>
+              <S.Label textColor={!!fieldState.error ? "#CC3728" : textColor}>
                 {label}
               </S.Label>
               {!!fieldState.error && (
-                <S.Alert color="red">{fieldState.error?.message}</S.Alert>
+                <S.Alert textColor="red">{fieldState.error?.message}</S.Alert>
               )}
             </S.LabelContainer>
           )}
@@ -54,7 +55,7 @@ export default function DatePicker({
           >
             <S.InputText
               type="date"
-              color={textColor}
+              textColor={textColor}
               onChange={field.onChange}
               value={!!mask ? mask(field.value) : field.value}
               onFocus={() => setIsFocused(true)}

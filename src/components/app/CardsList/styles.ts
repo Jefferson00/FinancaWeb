@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BLUE_PRIMARY } from "../../../styles/global";
 
 interface TextProps {
   color: string;
@@ -24,7 +25,7 @@ export const Header = styled.header`
   }
 `;
 export const Title = styled.p<TextProps>`
-  color: ${(props) => props.color};
+  color: ${BLUE_PRIMARY};
   font-weight: 600;
 `;
 export const ViewButton = styled.button``;

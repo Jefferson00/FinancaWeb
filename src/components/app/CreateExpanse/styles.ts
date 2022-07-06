@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MAIN_TEXT, RED_PRIMARY } from "../../../styles/global";
 
 export const Container = styled.div`
   width: 100%;
@@ -8,6 +9,10 @@ export const Container = styled.div`
 
 export const DeleteButton = styled.button`
   align-self: center;
+
+  svg {
+    color: ${RED_PRIMARY};
+  }
 `;
 
 export const ButtonContainer = styled.div`
@@ -86,7 +91,7 @@ interface TextProps {
 }
 
 export const Label = styled.label<TextProps>`
-  color: ${(props) => props.color};
+  color: ${MAIN_TEXT};
   font-size: 1rem;
   align-self: flex-start;
 

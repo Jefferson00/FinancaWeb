@@ -8,11 +8,17 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserFormData } from "../../utils/formDatas";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "../../components/utils/Button";
 import { FaMoon, FaSave, FaSun } from "react-icons/fa";
-import { Colors } from "../../styles/global";
+import {
+  BLUE_PRIMARY,
+  BLUE_SECONDARY,
+  MAIN_TEXT,
+  PRIMARY_INPUT,
+} from "../../styles/global";
 import { updateProfile } from "../../store/modules/Auth/fetchActions";
+import { toggleThemeState } from "../../store/modules/Theme";
 
 const schema = yup.object({
   name: yup
@@ -37,11 +43,10 @@ export const phoneMask = (value: string) => {
 export default function Profile() {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
+  const { theme } = useSelector((state: State) => state.themes);
 
-  const [themeState, setThemeState] = useState("ligth");
-
-  const firstBackgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.BLUE_SECONDARY_LIGHTER;
+  const firstBackgroundColor = BLUE_PRIMARY;
+  const secondBackgroundColor = BLUE_SECONDARY;
 
   const { control, handleSubmit, setValue } = useForm<UserFormData>({
     resolver: yupResolver(schema),
@@ -56,7 +61,11 @@ export default function Profile() {
   };
 
   const toggleTheme = () => {
-    setThemeState((prevState) => (prevState === "ligth" ? "dark" : "ligth"));
+    dispatch(toggleThemeState(theme === "light" ? "dark" : "light"));
+    localStorage.setItem(
+      "@FinancaWeb:theme",
+      theme === "light" ? "dark" : "light"
+    );
   };
 
   useEffect(() => {
@@ -73,7 +82,7 @@ export default function Profile() {
           <S.Avatar src={user?.avatar ? user?.avatar : DefaultAvatar} />
 
           <S.ThemeSwitch
-            checked={themeState === "dark"}
+            checked={theme === "dark"}
             onChange={toggleTheme}
             checkedIcon={false}
             uncheckedIcon={false}
@@ -101,24 +110,24 @@ export default function Profile() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               label="Nome"
-              backgroundColor="#D4E3F5"
-              textColor="#000"
+              backgroundColor={PRIMARY_INPUT}
+              textColor={MAIN_TEXT}
               name="name"
               defaultValue={""}
               control={control}
             />
             <Input
               label="Email"
-              backgroundColor="#D4E3F5"
-              textColor="#000"
+              backgroundColor={PRIMARY_INPUT}
+              textColor={MAIN_TEXT}
               name="email"
               defaultValue={""}
               control={control}
             />
             <Input
               label="Telefone"
-              backgroundColor="#D4E3F5"
-              textColor="#000"
+              backgroundColor={PRIMARY_INPUT}
+              textColor={MAIN_TEXT}
               name="phone"
               placeholder="(99) 9 9999-9999"
               mask={phoneMask}

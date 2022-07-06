@@ -1,7 +1,7 @@
 import * as S from "./styles";
 import { FiAlertCircle, FiX } from "react-icons/fi";
 import { useState } from "react";
-import { Colors } from "../../../styles/global";
+import { BLUE_PRIMARY, RED_PRIMARY } from "../../../styles/global";
 
 interface ModalProps {
   visible: boolean;
@@ -37,14 +37,8 @@ export default function Modal({
 }: ModalProps) {
   const [closeAnimation, setCloseAnimation] = useState(false);
 
-  const cancelButtonColor =
-    type === "Delete"
-      ? Colors.BLUE_PRIMARY_LIGHTER
-      : Colors.RED_PRIMARY_LIGHTER;
-  const okButtonColor =
-    type === "Delete"
-      ? Colors.RED_PRIMARY_LIGHTER
-      : Colors.BLUE_PRIMARY_LIGHTER;
+  const cancelButtonColor = type === "Delete" ? BLUE_PRIMARY : RED_PRIMARY;
+  const okButtonColor = type === "Delete" ? RED_PRIMARY : BLUE_PRIMARY;
 
   const handleClose = (
     e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>
@@ -74,20 +68,20 @@ export default function Modal({
         </S.CloseButton>
         {type === "Delete" && (
           <S.ModalContent>
-            <FiAlertCircle color={okButtonColor} size={34} />
+            <FiAlertCircle size={34} />
             <strong>{title}</strong>
 
             <S.ButtonRowContainer>
               <S.Button
                 background={cancelButtonColor}
-                color="#fff"
+                textColor="#fff"
                 onClick={handleClose}
               >
                 {cancelButtonTitle}
               </S.Button>
               <S.Button
                 background={okButtonColor}
-                color="#fff"
+                textColor="#fff"
                 onClick={onConfirm}
               >
                 {okButtonTitle}
@@ -117,14 +111,14 @@ export default function Modal({
               <S.Button
                 background="transparent"
                 style={{ border: `1px solid ${cancelButtonColor}` }}
-                color={cancelButtonColor}
+                textColor={cancelButtonColor}
                 onClick={handleClose}
               >
                 {cancelButtonTitle}
               </S.Button>
               <S.Button
                 background={okButtonColor}
-                color="#fff"
+                textColor="#fff"
                 onClick={onConfirm}
               >
                 {okButtonTitle}

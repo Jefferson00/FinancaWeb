@@ -3,7 +3,12 @@ import Button from "../../utils/Button";
 import Input from "../../utils/Input";
 import Select from "../../utils/Select";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import {
+  BLUE_PRIMARY,
+  BLUE_SECONDARY,
+  MAIN_TEXT,
+  RED_SOFT,
+} from "../../../styles/global";
 import State, {
   ICreateCreditCard,
   IUpdateCreditCard,
@@ -48,9 +53,6 @@ export default function CreateCreditCard({
   const [openDropDown, setOpenDropDown] = useState(false);
   const [colorState, setColorState] = useState(ColorsList[0].color);
 
-  const firstBackgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.BLUE_SECONDARY_LIGHTER;
-
   const onSubmit: SubmitHandler<CardFormData> = (data) => {
     if (!!creditCardId) {
       const cardToUpdate: IUpdateCreditCard = {
@@ -93,8 +95,8 @@ export default function CreateCreditCard({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Nome"
-            backgroundColor="#E9DEDF"
-            textColor="#000"
+            backgroundColor={RED_SOFT}
+            textColor={MAIN_TEXT}
             name="name"
             defaultValue={""}
             control={control}
@@ -104,8 +106,8 @@ export default function CreateCreditCard({
             <S.Col>
               <Input
                 label="Limite"
-                backgroundColor="#E9DEDF"
-                textColor="#000"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 name="limit"
                 mask={currencyMask}
                 defaultValue={"0"}
@@ -117,9 +119,9 @@ export default function CreateCreditCard({
               <S.Label color="#000">Cor</S.Label>
               <SelectButton
                 type="button"
-                backgroundColor="#E9DEDF"
-                color="#262626"
-                icon={() => <MdColorLens color="#2c2c2c" size={25} />}
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
+                icon={() => <MdColorLens size={25} />}
                 title="Cor"
                 onClick={() => setOpenDropDown((prevState) => !prevState)}
                 openDropDown={openDropDown}
@@ -146,8 +148,8 @@ export default function CreateCreditCard({
             <S.Col>
               <DatePicker
                 label="Data de pagamento"
-                backgroundColor="#E9DEDF"
-                textColor="#000"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 name="paymentDate"
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
@@ -157,8 +159,8 @@ export default function CreateCreditCard({
             <S.Col>
               <DatePicker
                 label="Fechamento da fatura"
-                backgroundColor="#E9DEDF"
-                textColor="#000"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 name="invoiceClosing"
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
@@ -168,8 +170,8 @@ export default function CreateCreditCard({
 
           <Select
             label="Conta de recebimento"
-            backgroundColor="#E9DEDF"
-            textColor="#000"
+            backgroundColor={RED_SOFT}
+            textColor={MAIN_TEXT}
             name="receiptDefault"
             control={control}
             options={accounts}
@@ -181,8 +183,8 @@ export default function CreateCreditCard({
             <Button
               title="Salvar"
               colors={{
-                PRIMARY_BACKGROUND: firstBackgroundColor,
-                SECOND_BACKGROUND: secondBackgroundColor,
+                PRIMARY_BACKGROUND: BLUE_PRIMARY,
+                SECOND_BACKGROUND: BLUE_SECONDARY,
                 TEXT: "#fff",
               }}
               icon={() => <FaSave color="#FFF" size={25} />}

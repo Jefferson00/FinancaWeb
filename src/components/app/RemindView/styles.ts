@@ -1,8 +1,15 @@
 import styled from "styled-components";
-import { Colors } from "../../../styles/global";
+import theme from "styled-theming";
+import {
+  GREEN_PRIMARY,
+  GREEN_SOFT,
+  PRIMARY_INPUT,
+  RED_PRIMARY,
+  RED_SOFT,
+} from "../../../styles/global";
 
 interface TextProps {
-  color: string;
+  textColor: string | theme.ThemeSet;
 }
 
 export const Container = styled.div`
@@ -27,7 +34,7 @@ export const Header = styled.header`
   }
 `;
 export const Title = styled.p<TextProps>`
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
   font-weight: 600;
 `;
 
@@ -55,13 +62,9 @@ interface ItemProps {
 
 export const Item = styled.div<ItemProps>`
   background-color: ${(props) =>
-    props.type === "EXPANSE"
-      ? Colors.RED_SOFT_LIGHTER
-      : Colors.GREEN_SOFT_LIGHTER};
+    props.type === "EXPANSE" ? RED_SOFT : GREEN_SOFT};
   border-color: ${(props) =>
-    props.type === "EXPANSE"
-      ? Colors.RED_PRIMARY_LIGHTER
-      : Colors.GREEN_PRIMARY_LIGHTER};
+    props.type === "EXPANSE" ? RED_PRIMARY : GREEN_PRIMARY};
   border-width: 2px;
   border-style: solid;
   border-radius: 20px;
@@ -77,4 +80,17 @@ export const Item = styled.div<ItemProps>`
     align-items: center;
     gap: 0.5rem;
   }
+`;
+
+export const Empty = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 6rem;
+  width: 100%;
+  margin-top: 1rem;
+
+  background-color: ${PRIMARY_INPUT};
+  border-radius: 10px;
 `;

@@ -1,11 +1,12 @@
 import { ButtonHTMLAttributes } from "react";
 import * as S from "./styles";
+import theme from "styled-theming";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.FC;
   title: string;
-  color: string;
-  backgroundColor: string;
+  textColor: string | theme.ThemeSet;
+  backgroundColor: string | theme.ThemeSet;
   border?: string;
   checked?: boolean;
   children?: React.ReactNode;
@@ -16,7 +17,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export default function SelectButton({
   title,
   icon: Icon,
-  color,
+  textColor,
   backgroundColor,
   border,
   checked,
@@ -28,7 +29,7 @@ export default function SelectButton({
   return (
     <S.Container
       backgroundColor={backgroundColor}
-      color={color}
+      textColor={textColor}
       checked={checked}
       style={{
         borderBottomLeftRadius: openDropDown ? 0 : 10,
@@ -36,7 +37,7 @@ export default function SelectButton({
       }}
       {...rest}
     >
-      <S.Option color={color}>{children ? children : title}</S.Option>
+      <S.Option textColor={textColor}>{children ? children : title}</S.Option>
       <Icon />
 
       <S.HiddenDropDown height={openDropDown ? 6 : 0}>

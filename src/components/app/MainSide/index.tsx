@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { Colors } from "../../../styles/global";
+import {
+  BLUE_PRIMARY,
+  GREEN_PRIMARY,
+  RED_PRIMARY,
+} from "../../../styles/global";
 import * as S from "./styles";
 import Card from "../AccountCard";
 import Button from "../../utils/Button";
@@ -32,7 +36,7 @@ import {
 import { isSameMonth } from "date-fns";
 import { getAccountEstimateBalance } from "../../../utils/getAccountBalance";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
-import { getItemsInThisMonth } from "../../../utils/listByDate";
+import { getItemsOnAccountThisMonth } from "../../../utils/listByDate";
 import { listCreditCards } from "../../../store/modules/CreditCards/fetchActions";
 import Loader from "../../utils/Loader";
 
@@ -67,13 +71,6 @@ const MainSide = () => {
     loading: expansesLoading,
   } = useSelector((state: State) => state.expanses);
   const { selectedMonth } = useSelector((state: State) => state.dates);
-
-  const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
-  const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const textColor = Colors.MAIN_TEXT_LIGHTER;
-  const expenseColor = Colors.RED_PRIMARY_LIGHTER;
-  const incomeColor = Colors.GREEN_PRIMARY_LIGHTER;
 
   const [accountSelected, setAccountSelected] = useState(0);
   const [censored, setCensored] = useState(false);
@@ -216,13 +213,16 @@ const MainSide = () => {
 
   useEffect(() => {
     setSecondCalculateLoading(true);
-    const currentIncomes = getItemsInThisMonth(incomesOnAccount, selectedMonth);
+    const currentIncomes = getItemsOnAccountThisMonth(
+      incomesOnAccount,
+      selectedMonth
+    );
     const totalcurrentIncomes = currentIncomes.reduce(
       (a, b) => a + (b["value"] || 0),
       0
     );
 
-    const currentExpanses = getItemsInThisMonth(
+    const currentExpanses = getItemsOnAccountThisMonth(
       expansesOnAccount,
       selectedMonth
     );
@@ -238,12 +238,7 @@ const MainSide = () => {
 
   return (
     <>
-      <S.Container
-        linearGradient={{
-          first: firstBackgroundColor,
-          second: secondBackgroundColor,
-        }}
-      >
+      <S.Container>
         <S.Header>
           <S.MonthSelector>
             <S.Prev onClick={() => handleChangeMonth("PREV")}>
@@ -267,9 +262,9 @@ const MainSide = () => {
         <S.Balances>
           <S.Row>
             <S.Balance>
-              <S.Title color={titleColor}>Saldo atual</S.Title>
+              <S.Title textColor={BLUE_PRIMARY}>Saldo atual</S.Title>
               {censored ? (
-                <S.Value color={textColor}>***********</S.Value>
+                <S.Value textColor="#000">***********</S.Value>
               ) : loading ||
                 incomesLoading ||
                 expansesLoading ||
@@ -280,17 +275,17 @@ const MainSide = () => {
                   color="rgba(255,255,255,0.26)"
                 />
               ) : (
-                <S.Value color={textColor}>
+                <S.Value textColor="#000">
                   {getCurrencyFormat(totalCurrentBalance)}
                 </S.Value>
               )}
             </S.Balance>
             <S.Balance>
-              <S.Title color={titleColor} opacity={0.5}>
+              <S.Title textColor={BLUE_PRIMARY} opacity={0.5}>
                 Saldo previsto
               </S.Title>
               {censored ? (
-                <S.Value color={textColor} opacity={0.5}>
+                <S.Value textColor="#000" opacity={0.5}>
                   ***********
                 </S.Value>
               ) : loading ||
@@ -303,7 +298,7 @@ const MainSide = () => {
                   color="rgba(255,255,255,0.26)"
                 />
               ) : (
-                <S.Value color={textColor} opacity={0.5}>
+                <S.Value textColor="#000" opacity={0.5}>
                   {getCurrencyFormat(totalEstimateBalance)}
                 </S.Value>
               )}
@@ -312,9 +307,9 @@ const MainSide = () => {
 
           <S.Row>
             <S.Balance>
-              <S.Title color={incomeColor}>Receitas</S.Title>
+              <S.Title textColor={GREEN_PRIMARY}>Receitas</S.Title>
               {censored ? (
-                <S.Value color={incomeColor}>***********</S.Value>
+                <S.Value textColor={GREEN_PRIMARY}>***********</S.Value>
               ) : incomesLoading ||
                 expansesLoading ||
                 secondCalculateLoading ? (
@@ -324,15 +319,15 @@ const MainSide = () => {
                   color="rgba(255,255,255,0.26)"
                 />
               ) : (
-                <S.Value color={incomeColor}>
+                <S.Value textColor={GREEN_PRIMARY}>
                   {getCurrencyFormat(totalIncomesBalance)}
                 </S.Value>
               )}
             </S.Balance>
             <S.Balance>
-              <S.Title color={expenseColor}>Despesas</S.Title>
+              <S.Title textColor={RED_PRIMARY}>Despesas</S.Title>
               {censored ? (
-                <S.Value color={expenseColor}>***********</S.Value>
+                <S.Value textColor={RED_PRIMARY}>***********</S.Value>
               ) : incomesLoading ||
                 expansesLoading ||
                 secondCalculateLoading ? (
@@ -342,7 +337,7 @@ const MainSide = () => {
                   color="rgba(255,255,255,0.26)"
                 />
               ) : (
-                <S.Value color={expenseColor}>
+                <S.Value textColor={RED_PRIMARY}>
                   {getCurrencyFormat(totalExpansesBalance)}
                 </S.Value>
               )}
@@ -394,8 +389,8 @@ const MainSide = () => {
             icon={() => <FaPlus color="#FFF" size={25} />}
             colors={{
               PRIMARY_BACKGROUND: "#FFF",
-              SECOND_BACKGROUND: "#2673CE",
-              TEXT: "#2673CE",
+              SECOND_BACKGROUND: BLUE_PRIMARY,
+              TEXT: BLUE_PRIMARY,
             }}
             onClick={() => setModalVisibility(true)}
           />

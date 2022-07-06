@@ -5,13 +5,16 @@ import { Provider } from "react-redux";
 import { GlobalStyle } from "./styles/global";
 import store from "./store";
 import ToastComponent from "./components/utils/Toast";
+import ThemeStateProvider from "./providers/theme";
 
 function App() {
   return (
     <Provider store={store}>
-      <GlobalStyle />
-      <Routes />
-      <ToastComponent />
+      <ThemeStateProvider>
+        <GlobalStyle />
+        <Routes />
+        <ToastComponent />
+      </ThemeStateProvider>
     </Provider>
   );
 }

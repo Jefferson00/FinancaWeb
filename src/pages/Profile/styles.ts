@@ -1,5 +1,15 @@
 import styled from "styled-components";
 import Switch from "react-switch";
+import theme from "styled-theming";
+
+export const BACKGROUND_COLOR = theme("theme", {
+  light: "rgba(212, 227, 245, 0.6)",
+  dark: "rgba(0, 0, 0, 0.6)",
+});
+export const CONTAINER_BACKGROUND_COLOR = theme("theme", {
+  light: "rgba(212, 227, 245, 0.3)",
+  dark: "rgba(0, 0, 0, 0.3)",
+});
 
 export const Container = styled.div`
   position: absolute;
@@ -11,7 +21,7 @@ export const Container = styled.div`
   width: 80%;
   min-height: 50%;
   margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: ${CONTAINER_BACKGROUND_COLOR};
 
   border-radius: 10px;
 
@@ -72,7 +82,7 @@ export const IconContainer = styled.div`
 export const Background = styled.div`
   background: linear-gradient(
     10deg,
-    rgba(212, 227, 245, 0.6) 20%,
+    ${BACKGROUND_COLOR} 20%,
     rgba(249, 195, 60, 0) 100%
   );
   width: 100%;

@@ -2,7 +2,7 @@ import { isBefore } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import State from "../../../store/interfaces";
-import { Colors } from "../../../styles/global";
+import { RED_PRIMARY, RED_SOFT } from "../../../styles/global";
 import {
   getItemsInThisMonth,
   getItemsOnAccountThisMonth,
@@ -15,9 +15,6 @@ const ExpanseResume = () => {
     (state: State) => state.expanses
   );
   const { selectedMonth } = useSelector((state: State) => state.dates);
-
-  const primaryColor = Colors.RED_PRIMARY_LIGHTER;
-  const secondColor = Colors.ORANGE_SECONDARY_LIGHTER;
 
   const [totalCurrentExpanses, setTotalCurrentExpanses] = useState(0);
   const [totalEstimateExpanses, setTotalEstimateExpanses] = useState(0);
@@ -59,8 +56,8 @@ const ExpanseResume = () => {
   return (
     <S.Container>
       <BalanceCard
-        primaryColor={primaryColor}
-        secondColor={secondColor}
+        primaryColor={RED_PRIMARY}
+        secondColor={RED_SOFT}
         type="EXPANSE"
         balance={{
           currentBalance: totalCurrentExpanses,

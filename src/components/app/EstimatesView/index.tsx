@@ -1,12 +1,12 @@
+/* eslint-disable array-callback-return */
 import { useState, useEffect, useCallback } from "react";
 import * as S from "./styles";
 
-import { Colors } from "../../../styles/global";
 import { FaEye, FaEyeSlash, FaBan } from "react-icons/fa";
 import { getMounthAndYear } from "../../../utils/dateFormats";
 import { observer } from "mobx-react-lite";
 import { useSelector } from "react-redux";
-import State from "../../../store/interfaces";
+import State, { IInvoice } from "../../../store/interfaces";
 import { getItemsInThisMonth } from "../../../utils/listByDate";
 import { addMonths, isSameMonth } from "date-fns";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
@@ -20,8 +20,12 @@ interface IEstimate {
 }
 
 const Estimates = observer(() => {
+  const { theme } = useSelector((state: State) => state.themes);
   const { accounts, loading: accountLoading } = useSelector(
     (state: State) => state.accounts
+  );
+  const { creditCards, loading: creditCardsLoading } = useSelector(
+    (state: State) => state.creditCards
   );
   const {
     incomes,
@@ -37,12 +41,6 @@ const Estimates = observer(() => {
   const [censored, setCensored] = useState(false);
   const [estimates, setEstimates] = useState<IEstimate[]>([]);
   const [calculating, setCalculating] = useState(true);
-
-  const backgroundColor = Colors.BLUE_SOFT_LIGHTER;
-  const graphColor = Colors.ORANGE_SECONDARY_LIGHTER;
-  const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const textColor = Colors.MAIN_TEXT_LIGHTER;
-  const regularColor = Colors.BLUE_SECONDARY_LIGHTER;
 
   useEffect(() => {
     const censoredStatusStoraged = localStorage.getItem(
@@ -91,23 +89,23 @@ const Estimates = observer(() => {
         isSameMonth(new Date(i.month), currentMonth)
       );
 
-      /* const invoicesInThisMonth: Invoice[] = [];
+      const invoicesInThisMonth: IInvoice[] = [];
 
-    creditCards.map(card => {
-      const foundInvoice = card.Invoice.find(
-        invoice =>
-          isSameMonth(new Date(invoice.month), currentMonth) && invoice.paid,
-      );
-      if (foundInvoice) invoicesInThisMonth.push(foundInvoice);
-    });
-
-    if (invoicesInThisMonth) {
-      invoicesInThisMonth.map(invoice => {
-        invoice.ExpanseOnInvoice.map(expanse => {
-          expansesOnAccountInThisMonth.push(expanse as any);
-        });
+      creditCards.map((card) => {
+        const foundInvoice = card.Invoice.find(
+          (invoice) =>
+            isSameMonth(new Date(invoice.month), currentMonth) && invoice.paid
+        );
+        if (foundInvoice) invoicesInThisMonth.push(foundInvoice);
       });
-    } */
+
+      if (invoicesInThisMonth) {
+        invoicesInThisMonth.map((invoice) => {
+          invoice.ExpanseOnInvoice.map((expanse) => {
+            expansesOnAccountInThisMonth.push(expanse as any);
+          });
+        });
+      }
 
       const expansesWithoutAccount = expansesInThisMonth.filter(
         (i) =>
@@ -123,7 +121,7 @@ const Estimates = observer(() => {
 
       return estimateExpanses;
     },
-    [expanses, expansesOnAccount]
+    [creditCards, expanses, expansesOnAccount]
   );
 
   useEffect(() => {
@@ -183,37 +181,36 @@ const Estimates = observer(() => {
   return (
     <S.Container>
       <S.Header>
-        <S.Title color={titleColor}>Estimativas</S.Title>
+        <S.Title>Estimativas</S.Title>
 
         <S.ViewButton onClick={handleToggleCensored}>
-          {censored ? (
-            <FaEye color={titleColor} size={26} />
-          ) : (
-            <FaEyeSlash color={titleColor} size={26} />
-          )}
+          {censored ? <FaEye size={26} /> : <FaEyeSlash size={26} />}
         </S.ViewButton>
       </S.Header>
 
-      {incomeLoading || accountLoading || expanseLoading || calculating ? (
-        <Loader height="150" width="400" color="#D4E3F5" />
+      {incomeLoading ||
+      accountLoading ||
+      expanseLoading ||
+      creditCardsLoading ||
+      calculating ? (
+        <Loader
+          height="150"
+          width="400"
+          color={theme === "dark" ? "#262626" : "#D4E3F5"}
+        />
       ) : (
-        <S.GraphContainer backgroundColor={backgroundColor}>
+        <S.GraphContainer>
           {censored ? (
-            <FaBan size={40} color={regularColor} />
+            <FaBan size={40} />
           ) : (
             estimates.map((estimate) => (
-              <S.GraphItem
-                key={estimate.id}
-                strongColor={textColor}
-                regularColor={regularColor}
-              >
+              <S.GraphItem key={estimate.id}>
                 <strong>
                   {getMounthAndYear(new Date(estimate.month), true)}
                 </strong>
                 <p>{getCurrencyFormat(estimate.value)}</p>
                 <S.GraphIndicator
                   heightIndicator={estimate.indicator.toString()}
-                  color={graphColor}
                 />
               </S.GraphItem>
             ))

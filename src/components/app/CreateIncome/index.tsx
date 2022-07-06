@@ -4,7 +4,12 @@ import Input from "../../utils/Input";
 import Select from "../../utils/Select";
 import Switch from "react-switch";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import {
+  GREEN_PRIMARY,
+  GREEN_SECONDARY,
+  INCOME_INPUT,
+  MAIN_TEXT,
+} from "../../../styles/global";
 import State, { ICreateIncome, IUpdateIncome } from "../../../store/interfaces";
 import {
   currencyMask,
@@ -47,9 +52,6 @@ export default function CreateIncome({
     "Mensal" | "Parcelada"
   >(recurrence);
   const [received, setReceived] = useState(false);
-
-  const firstBackgroundColor = Colors.GREEN_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.GREEN_SECONDARY_LIGHTER;
 
   const onSubmit: SubmitHandler<IncomeFormData> = (data) => {
     const interationVerified =
@@ -108,8 +110,8 @@ export default function CreateIncome({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Nome"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={INCOME_INPUT}
+            textColor={MAIN_TEXT}
             name="name"
             defaultValue={""}
             control={control}
@@ -117,8 +119,8 @@ export default function CreateIncome({
 
           <Input
             label="Valor"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={INCOME_INPUT}
+            textColor={MAIN_TEXT}
             name="value"
             mask={currencyMask}
             defaultValue={"0"}
@@ -130,8 +132,8 @@ export default function CreateIncome({
             <S.Row>
               <SelectButton
                 type="button"
-                backgroundColor="#E2EDF0"
-                color="#262626"
+                backgroundColor={INCOME_INPUT}
+                textColor={MAIN_TEXT}
                 icon={() => <FaCheck color="#FFF" size={25} />}
                 title="Mensal"
                 checked={recurrenceState === "Mensal"}
@@ -139,16 +141,16 @@ export default function CreateIncome({
               />
               <SelectButton
                 type="button"
-                backgroundColor="#E2EDF0"
-                color="#262626"
+                backgroundColor={INCOME_INPUT}
+                textColor={MAIN_TEXT}
                 icon={() => <FaCheck color="#FFF" size={25} />}
                 title="Parcelada"
                 checked={recurrenceState === "Parcelada"}
                 onClick={() => setRecurrenceState("Parcelada")}
               />
               <Input
-                backgroundColor="#D4E3F5"
-                textColor="#000"
+                backgroundColor={INCOME_INPUT}
+                textColor={MAIN_TEXT}
                 name="iteration"
                 maxLength={2}
                 defaultValue={1}
@@ -164,8 +166,8 @@ export default function CreateIncome({
             <S.Col>
               <DatePicker
                 label="Data de recebimento"
-                backgroundColor="#D4E3F5"
-                textColor="#000"
+                backgroundColor={INCOME_INPUT}
+                textColor={MAIN_TEXT}
                 name="startDate"
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
@@ -202,8 +204,8 @@ export default function CreateIncome({
 
           <Select
             label="Conta de recebimento"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={INCOME_INPUT}
+            textColor={MAIN_TEXT}
             name="receiptDefault"
             control={control}
             options={accounts}
@@ -213,8 +215,8 @@ export default function CreateIncome({
 
           <Select
             label="Categoria"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={INCOME_INPUT}
+            textColor={MAIN_TEXT}
             name="category"
             control={control}
             options={IncomeCategories}
@@ -225,8 +227,8 @@ export default function CreateIncome({
             <Button
               title="Salvar"
               colors={{
-                PRIMARY_BACKGROUND: firstBackgroundColor,
-                SECOND_BACKGROUND: secondBackgroundColor,
+                PRIMARY_BACKGROUND: GREEN_PRIMARY,
+                SECOND_BACKGROUND: GREEN_SECONDARY,
                 TEXT: "#fff",
               }}
               icon={() => <FaSave color="#FFF" size={25} />}

@@ -1,33 +1,25 @@
 import styled, { css } from "styled-components";
+import { BLUE_PRIMARY, MAIN_TEXT, PRIMARY_INPUT } from "../../../styles/global";
 
-interface ContainerProps {
-  backgroundColor: string;
-}
-
-export const Container = styled.button<ContainerProps>`
+export const Container = styled.button`
   width: 11.37rem;
   height: 10rem;
   border-radius: 0.625rem;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${PRIMARY_INPUT};
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-`
+`;
 
-interface TitleProps {
-  color: string;
-}
-
-export const Title = styled.p<TitleProps>`
+export const Title = styled.p`
   font-size: 1.125rem;
-  color: ${(props) => props.color}
-`
+  color: ${MAIN_TEXT};
+`;
 
 interface IconButtonProps {
-  backgroundColor: string;
   selected?: boolean;
 }
 
@@ -39,12 +31,12 @@ export const IconButton = styled.div<IconButtonProps>`
   justify-content: center;
   align-items: center;
   font-size: 0;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${BLUE_PRIMARY};
   opacity: 0.5;
 
-  ${(props) => props.selected &&
+  ${(props) =>
+    props.selected &&
     css`
       opacity: 1;
-    `
-  }
-`
+    `}
+`;

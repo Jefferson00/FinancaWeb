@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, useState } from "react";
 import { IconBaseProps } from "react-icons";
 import { Control, Controller } from "react-hook-form";
-
+import theme from "styled-theming";
 import * as S from "./styles";
 
 interface OptionsProps {
@@ -12,8 +12,8 @@ interface OptionsProps {
 
 interface InputProps extends InputHTMLAttributes<HTMLSelectElement> {
   name: string;
-  backgroundColor: string;
-  textColor: string;
+  backgroundColor: string | theme.ThemeSet;
+  textColor: string | theme.ThemeSet;
   label?: string;
   defaultValue: string | number;
   control: Control<any>;
@@ -44,11 +44,11 @@ export default function Select({
         <>
           {label && (
             <S.LabelContainer>
-              <S.Label color={!!fieldState.error ? "#CC3728" : textColor}>
+              <S.Label textColor={!!fieldState.error ? "#CC3728" : textColor}>
                 {label}
               </S.Label>
               {!!fieldState.error && (
-                <S.Alert color="red">{fieldState.error?.message}</S.Alert>
+                <S.Alert textColor="red">{fieldState.error?.message}</S.Alert>
               )}
             </S.LabelContainer>
           )}
@@ -59,7 +59,7 @@ export default function Select({
             isErrored={!!fieldState.error}
           >
             <S.InputSelect
-              color={textColor}
+              textColor={textColor}
               onChange={field.onChange}
               value={field.value}
               name={name}

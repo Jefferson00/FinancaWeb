@@ -1,4 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
+import { BACKGROUND, MAIN_TEXT } from "../../../styles/global";
+import theme from "styled-theming";
 
 interface ContainerProps {
   visible: boolean;
@@ -73,7 +75,7 @@ export const Container = styled.div<ContainerProps>`
 
 export const Content = styled.div<ContentProps>`
   min-width: 50vw;
-  background-color: #fff;
+  background-color: ${BACKGROUND};
   min-height: 50vh;
 
   position: relative;
@@ -121,6 +123,8 @@ export const CloseButton = styled.button`
   position: absolute;
   top: 0.5rem;
   right: 1rem;
+
+  color: ${MAIN_TEXT};
 `;
 
 export const ModalContent = styled.div`
@@ -159,13 +163,13 @@ export const ButtonRowContainer = styled.div`
 `;
 
 interface ButtonProps {
-  background: string;
-  color: string;
+  background: string | theme.ThemeSet;
+  textColor: string | theme.ThemeSet;
 }
 
 export const Button = styled.button<ButtonProps>`
   background: ${(props) => props.background};
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
 
   width: 7rem;
   padding: 0.5rem;

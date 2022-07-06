@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
 
-import { Colors } from "../../../styles/global";
+import { GREEN_PRIMARY, RED_PRIMARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash } from "react-icons/fa";
 import { getCategoryIcon } from "../../../utils/getCategoryIcon";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
@@ -15,17 +15,14 @@ import Loader from "../../utils/Loader";
 export default function Transactions() {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
+  const { theme } = useSelector((state: State) => state.themes);
   const { lastTransactions, loading } = useSelector(
     (state: State) => state.transactions
   );
 
   const [censored, setCensored] = useState(false);
 
-  const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const itemBackground = Colors.BLUE_SOFT_LIGHTER;
-  const strongColor = Colors.MAIN_TEXT_LIGHTER;
-  const expanseColor = Colors.RED_PRIMARY_LIGHTER;
-  const incomeColor = Colors.GREEN_PRIMARY_LIGHTER;
+  const iconsColor = theme === "dark" ? "#2673CE" : "#4876AC";
 
   useEffect(() => {
     const censoredStatusStoraged = localStorage.getItem(
@@ -50,20 +47,20 @@ export default function Transactions() {
   return (
     <S.Container>
       <S.Header>
-        <S.Title color={titleColor}>Últimas Transações</S.Title>
+        <S.Title>Últimas Transações</S.Title>
 
         <S.ViewButton onClick={handleToggleCensored}>
           {censored ? (
-            <FaEye color={titleColor} size={26} />
+            <FaEye color={iconsColor} size={26} />
           ) : (
-            <FaEyeSlash color={titleColor} size={26} />
+            <FaEyeSlash color={iconsColor} size={26} />
           )}
         </S.ViewButton>
       </S.Header>
 
       {censored ? (
         <S.CensoredContainer>
-          <FaBan size={40} color={titleColor} />
+          <FaBan size={40} color={iconsColor} />
         </S.CensoredContainer>
       ) : loading ? (
         <Loader
@@ -84,16 +81,11 @@ export default function Transactions() {
         <S.TransactionsList>
           {lastTransactions.map((transaction) => {
             return (
-              <S.TransactionItem
-                backgroundColor={itemBackground}
-                textOpacity={0.8}
-                key={transaction.id}
-              >
-                {getCategoryIcon(transaction.category, titleColor, 20)}
+              <S.TransactionItem textOpacity={0.8} key={transaction.id}>
+                {getCategoryIcon(transaction.category, iconsColor, 20)}
                 <S.TextContainer
-                  strongColor={strongColor}
                   regularColor={
-                    transaction.type === "Expanse" ? expanseColor : incomeColor
+                    transaction.type === "Expanse" ? RED_PRIMARY : GREEN_PRIMARY
                   }
                 >
                   <strong>{transaction.title}</strong>
@@ -107,7 +99,7 @@ export default function Transactions() {
             );
           })}
           {!loading && lastTransactions.length === 0 && (
-            <S.EmptyItem backgroundColor={itemBackground}>
+            <S.EmptyItem>
               <p>Nenhuma transação por enquanto</p>
             </S.EmptyItem>
           )}

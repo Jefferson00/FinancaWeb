@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import { Colors, GREEN_PRIMARY, GREEN_SECONDARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import ItemView from "../../utils/ItemView";
 import Button from "../../utils/Button";
@@ -68,8 +68,6 @@ const IncomeList = () => {
 
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
   const textColor = Colors.MAIN_TEXT_LIGHTER;
-  const primaryGreen = Colors.GREEN_PRIMARY_LIGHTER;
-  const secondaryGreen = Colors.GREEN_SECONDARY_LIGHTER;
 
   const { control, handleSubmit, setValue } = useForm<IncomeFormData>({
     resolver: yupResolver(schema),
@@ -222,8 +220,8 @@ const IncomeList = () => {
           title="Nova receita"
           icon={() => <FaPlus color="#FFF" size={25} />}
           colors={{
-            PRIMARY_BACKGROUND: primaryGreen,
-            SECOND_BACKGROUND: secondaryGreen,
+            PRIMARY_BACKGROUND: GREEN_PRIMARY,
+            SECOND_BACKGROUND: GREEN_SECONDARY,
             TEXT: "#fff",
           }}
           onClick={() => setModalVisibility(true)}

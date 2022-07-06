@@ -1,13 +1,16 @@
 import styled, { css } from "styled-components";
+import theme from "styled-theming";
 
-interface ContainerProps {
-  linearGradient: {
-    first: string;
-    second: string;
-  };
-}
+export const FIRST_COLOR = theme("theme", {
+  light: "#F9C33C",
+  dark: "#D3B362",
+});
+export const SECOND_COLOR = theme("theme", {
+  light: "#FF981E",
+  dark: "#D2944B",
+});
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
   height: 37rem;
   width: 20.56rem;
   display: flex;
@@ -16,15 +19,11 @@ export const Container = styled.div<ContainerProps>`
   border-radius: 10px;
   padding: 2.125rem 1.93rem;
 
-  ${(props) =>
-    props.linearGradient &&
-    css`
-      background: linear-gradient(
-        129.78deg,
-        ${props.linearGradient.first} 16.76%,
-        ${props.linearGradient.second} 86.35%
-      );
-    `}
+  background: linear-gradient(
+    129.78deg,
+    ${FIRST_COLOR} 16.76%,
+    ${SECOND_COLOR} 86.35%
+  );
 `;
 
 export const Header = styled.div`
@@ -52,7 +51,7 @@ export const Month = styled.p`
  */
 
 interface BalanceTextProps {
-  color: string;
+  textColor: string | theme.ThemeSet;
   opacity?: number;
 }
 
@@ -70,13 +69,13 @@ export const Balance = styled.div`
 export const Title = styled.p<BalanceTextProps>`
   font-size: 1.125rem;
   font-weight: 600;
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
   opacity: ${(props) => (props.opacity ? props.opacity : 1)};
 `;
 export const Value = styled.p<BalanceTextProps>`
   font-size: 0.87rem;
   font-weight: 500;
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
   opacity: ${(props) => (props.opacity ? props.opacity : 1)};
 `;
 

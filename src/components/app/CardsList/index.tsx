@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import { Colors, RED_PRIMARY, RED_SECONDARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import Button from "../../utils/Button";
 import Card from "../Card";
@@ -38,8 +38,6 @@ const CardsList = () => {
     useState(false);
 
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const primaryColor = Colors.RED_PRIMARY_LIGHTER;
-  const secondaryColor = Colors.RED_SECONDARY_LIGHTER;
 
   const { control, handleSubmit, setValue } = useForm<CardFormData>({
     resolver: yupResolver(schema),
@@ -127,8 +125,8 @@ const CardsList = () => {
           title="Novo cartão"
           icon={() => <FaPlus color="#FFF" size={25} />}
           colors={{
-            PRIMARY_BACKGROUND: primaryColor,
-            SECOND_BACKGROUND: secondaryColor,
+            PRIMARY_BACKGROUND: RED_PRIMARY,
+            SECOND_BACKGROUND: RED_SECONDARY,
             TEXT: "#fff",
           }}
           onClick={() => setModalVisibility(true)}

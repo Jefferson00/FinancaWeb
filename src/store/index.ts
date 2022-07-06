@@ -8,6 +8,7 @@ import expansesReducer from "./modules/Expanses";
 import transactionsReducer from "./modules/Transactions";
 import creditCardReducer from "./modules/CreditCards";
 import feedbacksReducer from "./modules/Feedbacks";
+import themeReducer from "./modules/Theme";
 
 export default configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export default configureStore({
     transactions: transactionsReducer,
     creditCards: creditCardReducer,
     feedbacks: feedbacksReducer,
+    themes: themeReducer,
   },
 });

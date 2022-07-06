@@ -1,12 +1,13 @@
 import styled from "styled-components";
+import theme from "styled-theming";
+import { MAIN_TEXT } from "../../../styles/global";
 
 interface ContainerProps {
-  backgroundColor: string;
-  mainColor: string;
-  textColor: string;
+  backgroundColor: string | theme.ThemeSet;
+  mainColor: string | theme.ThemeSet;
 }
 interface ContentProps {
-  mainColor: string;
+  mainColor: string | theme.ThemeSet;
 }
 
 export const Collapse = styled.button<ContainerProps>`
@@ -19,6 +20,8 @@ export const Collapse = styled.button<ContainerProps>`
   padding: 0.5rem 1rem;
 
   transition: all 0.4s;
+
+  color: ${MAIN_TEXT};
 `;
 
 export const CollapseContent = styled.section<ContentProps>`

@@ -1,5 +1,4 @@
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
 import { IconBaseProps } from "react-icons";
 import { ButtonHTMLAttributes } from "react";
 
@@ -15,17 +14,13 @@ export default function MenuItem({
   selected,
   ...rest
 }: MenuItemProps) {
-  const backgroundColor = Colors.BLUE_SOFT_LIGHTER;
-  const iconColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const textColor = Colors.MAIN_TEXT_LIGHTER;
-
   return (
-    <S.Container backgroundColor={backgroundColor} {...rest}>
-      <S.IconButton backgroundColor={iconColor} selected={selected}>
+    <S.Container {...rest}>
+      <S.IconButton selected={selected}>
         <Icon size={53} color="#FFF" />
       </S.IconButton>
 
-      <S.Title color={textColor}>{title}</S.Title>
+      <S.Title>{title}</S.Title>
     </S.Container>
   );
 }

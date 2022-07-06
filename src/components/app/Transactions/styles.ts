@@ -1,17 +1,12 @@
 import styled from "styled-components";
-
-interface TextProps {
-  color: string;
-}
+import { BLUE_PRIMARY, MAIN_TEXT, PRIMARY_INPUT } from "../../../styles/global";
+import theme from "styled-theming";
 
 interface TransactionItemProps {
-  backgroundColor: string;
   textOpacity?: number;
 }
-
 interface TextContainerProps {
-  strongColor: string;
-  regularColor: string;
+  regularColor: string | theme.ThemeSet;
 }
 
 export const Container = styled.div`
@@ -27,8 +22,8 @@ export const Header = styled.header`
 
   padding: 0 0.5rem;
 `;
-export const Title = styled.p<TextProps>`
-  color: ${(props) => props.color};
+export const Title = styled.p`
+  color: ${BLUE_PRIMARY};
   font-weight: 600;
 `;
 
@@ -44,7 +39,7 @@ export const TransactionItem = styled.div<TransactionItemProps>`
   display: flex;
   align-items: center;
   gap: 1.125rem;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${PRIMARY_INPUT};
   border-radius: 10px;
   height: 2.4rem;
 
@@ -66,7 +61,7 @@ export const TextContainer = styled.div<TextContainerProps>`
     font-size: 0.75rem;
     font-weight: 500;
 
-    color: ${(props) => props.strongColor};
+    color: ${MAIN_TEXT};
   }
 
   p {
@@ -91,5 +86,5 @@ export const EmptyItem = styled.div<TransactionItemProps>`
 
   border-radius: 10px;
 
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${PRIMARY_INPUT};
 `;

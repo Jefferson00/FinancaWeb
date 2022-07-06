@@ -2,7 +2,7 @@ import { isBefore } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import State from "../../../store/interfaces";
-import { Colors } from "../../../styles/global";
+import { GREEN_PRIMARY, INCOME_INPUT } from "../../../styles/global";
 import {
   getItemsInThisMonth,
   getItemsOnAccountThisMonth,
@@ -18,8 +18,6 @@ const IncomeResume = () => {
 
   const [totalCurrentIncomes, setTotalCurrentIncomes] = useState(0);
   const [totalEstimateIncomes, setTotalEstimateIncomes] = useState(0);
-  const primaryColor = Colors.GREEN_PRIMARY_LIGHTER;
-  const secondColor = Colors.ORANGE_SECONDARY_LIGHTER;
 
   useEffect(() => {
     const currentMonth = new Date();
@@ -58,8 +56,8 @@ const IncomeResume = () => {
   return (
     <S.Container>
       <BalanceCard
-        primaryColor={primaryColor}
-        secondColor={secondColor}
+        primaryColor={GREEN_PRIMARY}
+        secondColor={INCOME_INPUT}
         type="INCOME"
         balance={{
           currentBalance: totalCurrentIncomes,

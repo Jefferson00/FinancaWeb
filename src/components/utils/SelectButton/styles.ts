@@ -1,8 +1,10 @@
 import styled, { css } from "styled-components";
+import theme from "styled-theming";
+import { MAIN_TEXT, RED_SOFT } from "../../../styles/global";
 
 interface SelectOptionProps {
-  color?: string;
-  backgroundColor?: string;
+  textColor: string | theme.ThemeSet;
+  backgroundColor?: string | theme.ThemeSet;
   border?: string;
   checked?: boolean;
 }
@@ -25,11 +27,15 @@ export const Container = styled.button<SelectOptionProps>`
     props.checked &&
     css`
       border: 1px solid;
-      border-color: ${props.color ? props.color : "#09192D"};
+      border-color: ${props.textColor};
     `}
+
+  svg {
+    color: ${MAIN_TEXT};
+  }
 `;
 export const Option = styled.p<SelectOptionProps>`
-  color: ${(props) => (props.color ? props.color : "#09192D")};
+  color: ${(props) => props.textColor};
   font-size: 1rem;
 
   margin-right: 0.5rem;
@@ -43,7 +49,7 @@ export const HiddenDropDown = styled.div<HiddenDropDownProps>`
   position: absolute;
   width: 100%;
   height: ${(props) => `${props.height}rem`};
-  background: #e9dedf;
+  background: ${RED_SOFT};
   top: 100%;
   z-index: 999;
   left: 0;

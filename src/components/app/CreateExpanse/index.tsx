@@ -4,7 +4,12 @@ import Input from "../../utils/Input";
 import Select from "../../utils/Select";
 import Switch from "react-switch";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import {
+  MAIN_TEXT,
+  RED_PRIMARY,
+  RED_SECONDARY,
+  RED_SOFT,
+} from "../../../styles/global";
 import State, {
   ICreateExpanse,
   IUpdateExpanse,
@@ -60,9 +65,6 @@ export default function CreateExpanse({
     "Mensal" | "Parcelada"
   >(recurrence);
   const [received, setReceived] = useState(false);
-
-  const firstBackgroundColor = Colors.RED_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.RED_SECONDARY_LIGHTER;
 
   const handleDelete = () => {
     if (user && expanseId && expanseOnInvoiceId) {
@@ -129,8 +131,8 @@ export default function CreateExpanse({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Nome"
-            backgroundColor="#E9DEDF"
-            textColor="#000"
+            backgroundColor={RED_SOFT}
+            textColor={MAIN_TEXT}
             name="name"
             defaultValue={""}
             control={control}
@@ -138,8 +140,8 @@ export default function CreateExpanse({
 
           <Input
             label="Valor"
-            backgroundColor="#E9DEDF"
-            textColor="#000"
+            backgroundColor={RED_SOFT}
+            textColor={MAIN_TEXT}
             name="value"
             mask={currencyMask}
             defaultValue={"0"}
@@ -151,8 +153,8 @@ export default function CreateExpanse({
             <S.Row>
               <SelectButton
                 type="button"
-                backgroundColor="#E9DEDF"
-                color="#262626"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 icon={() => <FaCheck color="#FFF" size={25} />}
                 title="Mensal"
                 checked={recurrenceState === "Mensal"}
@@ -160,16 +162,16 @@ export default function CreateExpanse({
               />
               <SelectButton
                 type="button"
-                backgroundColor="#E9DEDF"
-                color="#262626"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 icon={() => <FaCheck color="#FFF" size={25} />}
                 title="Parcelada"
                 checked={recurrenceState === "Parcelada"}
                 onClick={() => setRecurrenceState("Parcelada")}
               />
               <Input
-                backgroundColor="#E9DEDF"
-                textColor="#000"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 name="iteration"
                 maxLength={2}
                 defaultValue={1}
@@ -185,8 +187,8 @@ export default function CreateExpanse({
             <S.Col>
               <DatePicker
                 label="Data de recebimento"
-                backgroundColor="#E9DEDF"
-                textColor="#000"
+                backgroundColor={RED_SOFT}
+                textColor={MAIN_TEXT}
                 name="startDate"
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
@@ -223,8 +225,8 @@ export default function CreateExpanse({
 
           <Select
             label="Conta de recebimento"
-            backgroundColor="#E9DEDF"
-            textColor="#000"
+            backgroundColor={RED_SOFT}
+            textColor={MAIN_TEXT}
             name="receiptDefault"
             control={control}
             options={[...accounts, ...creditCards]}
@@ -234,8 +236,8 @@ export default function CreateExpanse({
 
           <Select
             label="Categoria"
-            backgroundColor="#E9DEDF"
-            textColor="#000"
+            backgroundColor={RED_SOFT}
+            textColor={MAIN_TEXT}
             name="category"
             control={control}
             options={ExpanseCategories}
@@ -246,8 +248,8 @@ export default function CreateExpanse({
             <Button
               title="Salvar"
               colors={{
-                PRIMARY_BACKGROUND: firstBackgroundColor,
-                SECOND_BACKGROUND: secondBackgroundColor,
+                PRIMARY_BACKGROUND: RED_PRIMARY,
+                SECOND_BACKGROUND: RED_SECONDARY,
                 TEXT: "#fff",
               }}
               icon={() => <FaSave color="#FFF" size={25} />}
@@ -259,7 +261,7 @@ export default function CreateExpanse({
                 type="button"
                 onClick={() => setDeleteConfirmationVisible(true)}
               >
-                <FaTrash size={28} color={firstBackgroundColor} />
+                <FaTrash size={28} />
               </S.DeleteButton>
             )}
           </S.ButtonContainer>

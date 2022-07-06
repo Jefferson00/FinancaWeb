@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MAIN_TEXT } from "../../../styles/global";
 
 export const Container = styled.div`
   width: 100%;
@@ -86,7 +87,7 @@ interface TextProps {
 }
 
 export const Label = styled.label<TextProps>`
-  color: ${(props) => props.color};
+  color: ${MAIN_TEXT};
   font-size: 1rem;
   align-self: flex-start;
 

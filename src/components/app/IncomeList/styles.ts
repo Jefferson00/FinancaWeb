@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BLUE_PRIMARY, MAIN_TEXT } from "../../../styles/global";
 
 interface TextProps {
   color: string;
@@ -24,7 +25,7 @@ export const Header = styled.header`
   }
 `;
 export const Title = styled.p<TextProps>`
-  color: ${(props) => props.color};
+  color: ${BLUE_PRIMARY};
   font-weight: 600;
 `;
 export const ViewButton = styled.button``;
@@ -61,7 +62,7 @@ export const ItemsList = styled.div`
 `;
 export const DateText = styled.p<TextProps>`
   margin-top: 0.5rem;
-  color: ${(props) => props.color};
+  color: ${MAIN_TEXT};
 `;
 
 export const ModalContent = styled.div`

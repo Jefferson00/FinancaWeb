@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import { Colors, RED_PRIMARY, RED_SECONDARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import ItemView from "../../utils/ItemView";
 import { getMonthName } from "../../../utils/dateFormats";
@@ -70,8 +70,6 @@ const ExpansesList = () => {
 
   const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
   const textColor = Colors.MAIN_TEXT_LIGHTER;
-  const primaryColor = Colors.RED_PRIMARY_LIGHTER;
-  const secondaryColor = Colors.RED_SECONDARY_LIGHTER;
 
   const { control, handleSubmit, setValue } = useForm<ExpanseFormData>({
     resolver: yupResolver(schema),
@@ -231,8 +229,8 @@ const ExpansesList = () => {
           title="Nova despesa"
           icon={() => <FaPlus color="#FFF" size={25} />}
           colors={{
-            PRIMARY_BACKGROUND: primaryColor,
-            SECOND_BACKGROUND: secondaryColor,
+            PRIMARY_BACKGROUND: RED_PRIMARY,
+            SECOND_BACKGROUND: RED_SECONDARY,
             TEXT: "#fff",
           }}
           onClick={() => setModalVisibility(true)}

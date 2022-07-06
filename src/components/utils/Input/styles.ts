@@ -1,19 +1,20 @@
 import styled, { css } from "styled-components";
+import theme from "styled-theming";
 
 interface ContainerProps {
-  backgroundColor: string;
-  borderColor?: string;
+  backgroundColor: string | theme.ThemeSet;
+  borderColor?: string | theme.ThemeSet;
   disabled?: boolean;
   isFocused?: boolean;
   isErrored?: boolean;
 }
 
 interface TextColor {
-  color: string;
+  textColor: string | theme.ThemeSet;
 }
 
 export const Label = styled.label<TextColor>`
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
   font-size: 1rem;
   align-self: flex-start;
 `;
@@ -28,7 +29,7 @@ export const LabelContainer = styled.div`
 `;
 
 export const Alert = styled.p<TextColor>`
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
   font-size: 0.8rem;
   text-align: left;
 `;
@@ -67,7 +68,7 @@ export const Container = styled.div<ContainerProps>`
 
 export const InputText = styled.input<TextColor>`
   flex: 1;
-  color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
   font-size: 1rem;
   height: 100%;
   width: 100%;

@@ -1,6 +1,7 @@
 import { CreditCardsState } from "./modules/CreditCards";
 import { ExpansesState } from "./modules/Expanses";
 import { FeedbackState } from "./modules/Feedbacks";
+import { ThemeState } from "./modules/Theme";
 import { TransactionsState } from "./modules/Transactions";
 
 export interface IAccount {
@@ -234,4 +235,5 @@ export default interface State {
   transactions: TransactionsState;
   creditCards: CreditCardsState;
   feedbacks: FeedbackState;
+  themes: ThemeState;
 }

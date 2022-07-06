@@ -4,10 +4,11 @@ import State from "../../../store/interfaces";
 import { getMounthAndYear } from "../../../utils/dateFormats";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
+import theme from "styled-theming";
 
 interface BalanceCardProps {
-  primaryColor: string;
-  secondColor: string;
+  primaryColor: string | theme.ThemeSet;
+  secondColor: string | theme.ThemeSet;
   type: "EXPANSE" | "INCOME";
   balance: {
     currentBalance: number;
@@ -42,7 +43,7 @@ const BalanceCard = ({
       </div>
       <div>
         <span>
-          <FaDollarSign size={25} color={primaryColor} />
+          <FaDollarSign size={25} />
         </span>
       </div>
     </S.Container>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import { BLUE_PRIMARY, Colors, RED_PRIMARY } from "../../../styles/global";
 import {
   FaEye,
   FaEyeSlash,
@@ -9,14 +9,17 @@ import {
   FaBan,
   FaDollarSign,
 } from "react-icons/fa";
-import { IExpanses, IIncomes } from "../../../store/interfaces";
+import State, { IExpanses, IIncomes } from "../../../store/interfaces";
 import { getFullDayOfTheMounth } from "../../../utils/dateFormats";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import Loader from "../../utils/Loader";
+import { useSelector } from "react-redux";
 
 interface RemindViewProps {
   type: "LATE" | "NEXTDAYS";
   items?: RemindItemProps[];
   lateItems?: ItemProps[];
+  loading?: boolean;
 }
 
 interface ItemProps extends IIncomes, IExpanses {
@@ -31,12 +34,14 @@ interface RemindItemProps {
 export default function RemindView({
   type,
   items = [],
+  loading = false,
   lateItems = [],
 }: RemindViewProps) {
+  const { theme } = useSelector((state: State) => state.themes);
   const [censored, setCensored] = useState(false);
 
-  const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
-  const redAlert = Colors.RED_PRIMARY_LIGHTER;
+  const titleColor = theme === "dark" ? "#4876AC" : "#2673CE";
+  const redAlert = theme === "dark" ? "#AB5249" : "#CC3728";
 
   useEffect(() => {
     const censoredStatusStoraged = localStorage.getItem(
@@ -61,13 +66,13 @@ export default function RemindView({
         {type === "LATE" && (
           <div>
             <FaExclamationCircle color={redAlert} size={30} />
-            <S.Title color={redAlert}>Atrasados</S.Title>
+            <S.Title textColor={RED_PRIMARY}>Atrasados</S.Title>
           </div>
         )}
         {type === "NEXTDAYS" && (
           <div>
             <FaCalendarAlt color={titleColor} size={30} />
-            <S.Title color={titleColor}>Nos próximos dias</S.Title>
+            <S.Title textColor={BLUE_PRIMARY}>Nos próximos dias</S.Title>
           </div>
         )}
 
@@ -84,7 +89,24 @@ export default function RemindView({
         <S.CensoredContainer>
           <FaBan size={40} color={titleColor} />
         </S.CensoredContainer>
-      ) : (
+      ) : loading ? (
+        <div style={{ marginTop: 16 }}>
+          <Loader
+            height="150"
+            width="400"
+            color="#D4E3F5"
+            rectLength={3}
+            rectProps={{
+              height: "40",
+              rx: "20",
+              ry: "20",
+              y: "0",
+              x: "0",
+              width: "400",
+            }}
+          />
+        </div>
+      ) : lateItems.length > 0 || items.length > 0 ? (
         <S.ItemsList>
           {lateItems.map((item, index) => {
             return (
@@ -140,6 +162,10 @@ export default function RemindView({
             );
           })}
         </S.ItemsList>
+      ) : (
+        <S.Empty>
+          <p>Nada por enquanto</p>
+        </S.Empty>
       )}
     </S.Container>
   );

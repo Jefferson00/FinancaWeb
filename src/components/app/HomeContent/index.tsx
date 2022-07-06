@@ -26,15 +26,23 @@ interface RemindItemProps {
 }
 
 const HomeContent = () => {
-  const { incomes, incomesOnAccount } = useSelector(
-    (state: State) => state.incomes
+  const {
+    incomes,
+    incomesOnAccount,
+    loading: loadingIncomes,
+  } = useSelector((state: State) => state.incomes);
+  const {
+    expanses,
+    expansesOnAccount,
+    loading: loadingExpanses,
+  } = useSelector((state: State) => state.expanses);
+  const { accounts, loading: loadingAccounts } = useSelector(
+    (state: State) => state.accounts
   );
-  const { expanses, expansesOnAccount } = useSelector(
-    (state: State) => state.expanses
-  );
-  const { accounts } = useSelector((state: State) => state.accounts);
   const [nextDaysItems, setNextDaysItems] = useState<RemindItemProps[]>([]);
   const [lateItems, setLateItems] = useState<ItemProps[]>([]);
+  const [loadingLateItems, setLoadingLateItems] = useState(true);
+  const [loadingNextItems, setLoadingNextItems] = useState(true);
 
   const expansesWithoutInvoice = useMemo(() => {
     return expanses.filter((exp) =>
@@ -43,6 +51,7 @@ const HomeContent = () => {
   }, [accounts, expanses]);
 
   const getItemsNextDays = useCallback(() => {
+    setLoadingNextItems(true);
     const incomesInThisMonth = getItemsInThisMonth(incomes, new Date());
     const incomesOnAccountInThisMonth = getItemsOnAccountThisMonth(
       incomesOnAccount,
@@ -91,9 +100,11 @@ const HomeContent = () => {
     const nextDaysWithItems = nextDays.filter((n) => n.items.length > 0);
 
     setNextDaysItems(nextDaysWithItems);
+    setLoadingNextItems(false);
   }, [expanses, expansesOnAccount, incomes, incomesOnAccount]);
 
   const getLateItems = useCallback(() => {
+    setLoadingLateItems(true);
     const incomesInPrevMonths = incomes.filter(
       (i) =>
         isBefore(new Date(i.startDate), new Date()) ||
@@ -188,6 +199,7 @@ const HomeContent = () => {
     }));
 
     setLateItems([...lateIncomes, ...lateExpanses] as ItemProps[]);
+    setLoadingLateItems(false);
   }, [incomes, expansesWithoutInvoice, incomesOnAccount, expansesOnAccount]);
 
   useEffect(() => {
@@ -201,9 +213,27 @@ const HomeContent = () => {
 
       <Transactions />
 
-      <RemindView type="LATE" lateItems={lateItems} />
+      <RemindView
+        type="LATE"
+        lateItems={lateItems}
+        loading={
+          loadingLateItems ||
+          loadingAccounts ||
+          loadingExpanses ||
+          loadingIncomes
+        }
+      />
 
-      <RemindView type="NEXTDAYS" items={nextDaysItems} />
+      <RemindView
+        type="NEXTDAYS"
+        items={nextDaysItems}
+        loading={
+          loadingNextItems ||
+          loadingAccounts ||
+          loadingExpanses ||
+          loadingIncomes
+        }
+      />
     </>
   );
 };
