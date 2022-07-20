@@ -3,10 +3,10 @@ import { getDayOfTheMounth, getMonthName } from "../../../utils/dateFormats";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
 import Switch from "react-switch";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import State, { IExpanseOnInvoice, IExpanses } from "../../../store/interfaces";
-import { format, isSameMonth } from "date-fns";
+import { differenceInCalendarMonths, format, isSameMonth } from "date-fns";
 import Modal from "../../utils/Modal";
 import CreateExpanse from "../CreateExpanse";
 import * as yup from "yup";
@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { ExpanseFormData } from "../../../utils/formDatas";
 import { ExpanseCategories } from "../../../utils/types";
 import Loader from "../../utils/Loader";
+import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 
 const schema = yup.object({
   name: yup
@@ -76,6 +77,32 @@ const ExpandableCard = () => {
   const showAlert = () => {
     return !invoiceSelected?.paid && invoiceSelected.closed;
   };
+
+  const currentPart = useCallback(
+    (endDate: string | null) => {
+      if (endDate) {
+        return differenceInCalendarMonths(new Date(endDate), selectedMonth);
+      } else {
+        return null;
+      }
+    },
+    [selectedMonth]
+  );
+
+  const getRecorrence = useCallback(
+    (expanseId: string) => {
+      const endDate = expanses.find((e) => e.id === expanseId)?.endDate;
+      const iteration = expanses.find((e) => e.id === expanseId)?.iteration;
+
+      if (!endDate || iteration === "Mensal" || !iteration) {
+        return "";
+      } else {
+        const part = currentPart(endDate);
+        return getCurrentIteration(part, iteration);
+      }
+    },
+    [currentPart, expanses]
+  );
 
   useEffect(() => {
     listRef.current?.addEventListener("mouseenter", () => {
@@ -160,7 +187,14 @@ const ExpandableCard = () => {
                       <FaDollarSign size={21} color={cardSelected.color} />
                     </span>
                     <div>
-                      <p>{`${expanse.name} - ${expanse.recurrence}`}</p>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <p>{expanse.name}</p>
+
+                        {getRecorrence(expanse.expanseId) && (
+                          <p>{getRecorrence(expanse.expanseId)}</p>
+                        )}
+                      </div>
+
                       <strong>{getCurrencyFormat(expanse.value)}</strong>
                     </div>
                   </S.Item>

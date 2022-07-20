@@ -15,6 +15,9 @@ import { signUp } from "../store/modules/Auth/fetchActions";
 import { signIn } from "../store/modules/Auth";
 import { addMessage } from "../store/modules/Feedbacks";
 import { checkApiError } from "../utils/checkApiError";
+import Lottie from "lottie-react";
+import splashAnimation from "../assets/splash.json";
+import LogoImg from "../assets/logo.svg";
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
@@ -103,7 +106,31 @@ const RouterWrapper = ({
   }, [auth, dispatch, history, isPrivate]);
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+        }}
+      >
+        <Lottie
+          animationData={splashAnimation}
+          loop
+          autoPlay
+          style={{ width: "100%" }}
+          allowFullScreen
+        />
+        <img
+          src={LogoImg}
+          style={{ position: "absolute", top: "20%" }}
+          alt="logo"
+        />
+      </div>
+    );
   }
 
   if (isPrivate && !isAuthenticated) {
