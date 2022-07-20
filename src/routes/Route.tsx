@@ -57,6 +57,8 @@ const RouterWrapper = ({
           phone: phoneNumber,
         };
 
+        console.log(token);
+
         api.defaults.headers = {
           authorization: `Bearer ${token}`,
         } as CommonHeaderProperties;

@@ -82,10 +82,16 @@ const HomeContent = () => {
       const nextDay = addDays(new Date(), i);
 
       const incomesNextDay = incomesWithoutAccount.filter((income) =>
-        isSameDay(new Date(income.receiptDate), nextDay)
+        isSameDay(
+          new Date().setDate(new Date(income.receiptDate).getDate()),
+          nextDay
+        )
       );
       const expansesNextDay = expansesWithoutAccount.filter((expanse) =>
-        isSameDay(new Date(expanse.receiptDate), nextDay)
+        isSameDay(
+          new Date().setDate(new Date(expanse.receiptDate).getDate()),
+          nextDay
+        )
       );
 
       const incomes = incomesNextDay.map((i) => ({ ...i, type: "INCOME" }));

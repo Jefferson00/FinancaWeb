@@ -138,7 +138,7 @@ const CardsList = () => {
           </S.CensoredContainer>
         ) : loading ? (
           <div style={{ marginTop: 32 }}>
-            <Loader width="390" height="180" color="#D4E3F5" />
+            <Loader width="361px" height="180px" color="#D4E3F5" />
           </div>
         ) : (
           <S.ItemsList ref={listRef}>

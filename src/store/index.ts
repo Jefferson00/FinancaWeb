@@ -23,4 +23,8 @@ export default configureStore({
     feedbacks: feedbacksReducer,
     themes: themeReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });

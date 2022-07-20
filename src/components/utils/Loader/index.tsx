@@ -4,6 +4,7 @@ interface LoaderProps {
   width: string;
   height: string;
   color?: string;
+  viewBox?: string;
   rectLength?: number;
   rectProps?: {
     x: string;
@@ -28,8 +29,9 @@ export default function Loader({
     height,
     width,
   },
+  viewBox = `0 0 ${width} ${height}`,
 }: LoaderProps) {
-  const viewBox = `0 0 ${width} ${height}`;
+  // const viewBox = `0 0 ${width} ${height}`;
   const { rx, ry, x, y } = rectProps;
   const renderRects = () => {
     let rects = [];

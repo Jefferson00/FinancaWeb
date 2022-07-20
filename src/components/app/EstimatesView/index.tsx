@@ -194,8 +194,8 @@ const Estimates = observer(() => {
       creditCardsLoading ||
       calculating ? (
         <Loader
-          height="150"
-          width="400"
+          height="137.92px"
+          width="360.63px"
           color={theme === "dark" ? "#262626" : "#D4E3F5"}
         />
       ) : (

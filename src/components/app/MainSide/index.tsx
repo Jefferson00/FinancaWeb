@@ -350,7 +350,12 @@ const MainSide = () => {
 
           <S.AccountCardList onClick={handleEditAccountOpenModal}>
             {loading ? (
-              <Loader height="200" width="400" color="rgba(255,255,255,0.26)" />
+              <Loader
+                height="119.59px"
+                width="245.83px"
+                color="rgba(255,255,255,0.26)"
+                viewBox="0 0 245.83px 119.59px"
+              />
             ) : (
               accounts.length > 0 && (
                 <Card

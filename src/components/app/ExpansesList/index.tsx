@@ -244,17 +244,17 @@ const ExpansesList = () => {
           <S.ItemsList ref={listRef}>
             {loading ? (
               <Loader
-                height="200"
-                width="400"
+                height="150px"
+                width="360.63px"
                 color="#E9DEDF"
                 rectLength={3}
                 rectProps={{
-                  height: "40",
+                  height: "32",
                   rx: "20",
                   ry: "20",
                   y: "20",
                   x: "0",
-                  width: "390",
+                  width: "360",
                 }}
               />
             ) : (
