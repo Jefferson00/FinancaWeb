@@ -71,6 +71,7 @@ const MainSide = () => {
     loading: expansesLoading,
   } = useSelector((state: State) => state.expanses);
   const { selectedMonth } = useSelector((state: State) => state.dates);
+  const { creditCards } = useSelector((state: State) => state.creditCards);
 
   const [accountSelected, setAccountSelected] = useState(0);
   const [censored, setCensored] = useState(false);
@@ -168,14 +169,16 @@ const MainSide = () => {
             currentBalance,
             incomes,
             expanses,
-            selectedMonth
+            selectedMonth,
+            creditCards
           )
         : getAccountEstimateBalance(
             account,
             Number(lastMonthEstimateBalance),
             incomes,
             expanses,
-            selectedMonth
+            selectedMonth,
+            creditCards
           );
 
       const currentMonthEstimateBalance = localStorage.getItem(
@@ -209,7 +212,7 @@ const MainSide = () => {
     setTotalEstimateBalance(sumTotalEstimateBalance);
     setBalances(accountsBalances);
     setCalculateLoading(false);
-  }, [accounts, expanses, incomes, selectedMonth]);
+  }, [accounts, creditCards, expanses, incomes, selectedMonth]);
 
   useEffect(() => {
     setSecondCalculateLoading(true);

@@ -1,5 +1,11 @@
 import { isSameMonth } from "date-fns";
-import { IAccount, IExpanses, IIncomes } from "../store/interfaces";
+import {
+  IAccount,
+  ICreditCard,
+  IExpanses,
+  IIncomes,
+  IInvoice,
+} from "../store/interfaces";
 import { getItemsInThisMonth } from "./listByDate";
 
 export function getEstimateBalance(
@@ -17,7 +23,8 @@ export const getAccountEstimateBalance = (
   currentBalance: number,
   incomes: IIncomes[],
   expanses: IExpanses[],
-  selectedMonth: Date
+  selectedMonth: Date,
+  creditCards: ICreditCard[]
 ) => {
   const incomesInThisMonth = getItemsInThisMonth(incomes, selectedMonth);
   const expansesInThisMonth = getItemsInThisMonth(expanses, selectedMonth);
@@ -27,6 +34,26 @@ export const getAccountEstimateBalance = (
   const expansesOnAccountInThisMonth = account.expansesOnAccount.filter((exp) =>
     isSameMonth(new Date(exp.month), selectedMonth)
   );
+
+  const invoicesInThisMonth: IInvoice[] = [];
+
+  creditCards.map((card) => {
+    const foundInvoice = card.Invoice.find(
+      (invoice) =>
+        isSameMonth(new Date(invoice.month), selectedMonth) &&
+        invoice.accountId === account.id &&
+        invoice.paid
+    );
+    if (foundInvoice) invoicesInThisMonth.push(foundInvoice);
+  });
+
+  if (invoicesInThisMonth) {
+    invoicesInThisMonth.map((invoice) => {
+      invoice.ExpanseOnInvoice.map((expanse) => {
+        expansesOnAccountInThisMonth.push(expanse as any);
+      });
+    });
+  }
 
   const incomesWithoutAccount = incomesInThisMonth.filter(
     (i) =>
@@ -45,10 +72,15 @@ export const getAccountEstimateBalance = (
   const allIncomesInThisAccount = incomesWithoutAccount.filter(
     (i) => i.receiptDefault === account.id
   );
+  console.log("expansesWithoutAccount", expansesWithoutAccount);
 
   //buscar todas despesas da conta e dos cartões da conta
   const allExpansesInThisAccount = expansesWithoutAccount.filter(
-    (i) => i.receiptDefault === account.id
+    (i) =>
+      i.receiptDefault === account.id ||
+      creditCards.find(
+        (c) => c.receiptDefault === account.id && c.id === i.receiptDefault
+      )
   );
 
   const estimateBalance = getEstimateBalance(
