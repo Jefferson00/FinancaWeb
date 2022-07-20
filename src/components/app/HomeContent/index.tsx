@@ -204,7 +204,12 @@ const HomeContent = () => {
       type: "EXPANSE",
     }));
 
-    setLateItems([...lateIncomes, ...lateExpanses] as ItemProps[]);
+    setLateItems(
+      [...lateIncomes, ...lateExpanses].sort(
+        (a, b) =>
+          new Date(a.receiptDate).getDate() - new Date(b.receiptDate).getDate()
+      ) as ItemProps[]
+    );
     setLoadingLateItems(false);
   }, [incomes, expansesWithoutInvoice, incomesOnAccount, expansesOnAccount]);
 

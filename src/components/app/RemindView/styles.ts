@@ -41,6 +41,25 @@ export const Title = styled.p<TextProps>`
 export const ViewButton = styled.button``;
 
 export const ItemsList = styled.div`
+  max-height: 13rem;
+  overflow: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    background: transparent;
+  }
+
+  &::-moz-scrollbar {
+    width: 4px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    background: #d4e3f5;
+  }
+
   > div {
     display: flex;
     flex-direction: column;
@@ -74,6 +93,8 @@ export const Item = styled.div<ItemProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  margin-bottom: 1rem;
 
   div {
     display: flex;

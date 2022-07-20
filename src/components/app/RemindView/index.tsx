@@ -39,7 +39,7 @@ export default function RemindView({
 }: RemindViewProps) {
   const { theme } = useSelector((state: State) => state.themes);
   const [censored, setCensored] = useState(false);
-
+  const lateDaysState: string[] = [];
   const titleColor = theme === "dark" ? "#4876AC" : "#2673CE";
   const redAlert = theme === "dark" ? "#AB5249" : "#CC3728";
 
@@ -109,11 +109,15 @@ export default function RemindView({
       ) : lateItems.length > 0 || items.length > 0 ? (
         <S.ItemsList>
           {lateItems.map((item, index) => {
+            lateDaysState.push(item.receiptDate);
             return (
               <div key={index}>
-                <S.DateText>
-                  {getFullDayOfTheMounth(new Date(item.receiptDate))}
-                </S.DateText>
+                {lateDaysState.filter((ltd) => ltd === item.receiptDate)
+                  .length <= 1 && (
+                  <S.DateText>
+                    {getFullDayOfTheMounth(new Date(item.receiptDate))}
+                  </S.DateText>
+                )}
                 <S.Item type={item.type}>
                   <div>
                     <FaDollarSign
