@@ -223,6 +223,7 @@ export interface IncomesState {
   incomes: IIncomes[];
   incomesOnAccount: IIncomesOnAccount[];
   loading: boolean;
+  incomeCreated: IIncomes | null;
 }
 
 export default interface State {

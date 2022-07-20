@@ -10,7 +10,11 @@ import {
   INCOME_INPUT,
   MAIN_TEXT,
 } from "../../../styles/global";
-import State, { ICreateIncome, IUpdateIncome } from "../../../store/interfaces";
+import State, {
+  ICreateIncome,
+  ICreateIncomeOnAccount,
+  IUpdateIncome,
+} from "../../../store/interfaces";
 import {
   currencyMask,
   currencyToValue,
@@ -24,6 +28,7 @@ import { addMonths, format, isSameMonth, parse } from "date-fns";
 import DatePicker from "../../utils/DatePicker";
 import {
   createIncome,
+  createIncomeOnAccount,
   updateIncome,
 } from "../../../store/modules/Incomes/fetchActions";
 import { IncomeFormData } from "../../../utils/formDatas";
@@ -47,13 +52,14 @@ export default function CreateIncome({
   const { user } = useSelector((state: State) => state.auth);
   const { selectedMonth } = useSelector((state: State) => state.dates);
   const { accounts } = useSelector((state: State) => state.accounts);
+  const { incomeCreated } = useSelector((state: State) => state.incomes);
 
   const [recurrenceState, setRecurrenceState] = useState<
     "Mensal" | "Parcelada"
   >(recurrence);
   const [received, setReceived] = useState(false);
 
-  const onSubmit: SubmitHandler<IncomeFormData> = (data) => {
+  const onSubmit: SubmitHandler<IncomeFormData> = async (data) => {
     const interationVerified =
       data.iteration === "0" ? 1 : Number(data.iteration);
     const startDateParsed = parse(data.startDate, "yyyy-MM-dd", new Date());
@@ -96,13 +102,37 @@ export default function CreateIncome({
           ? addMonths(startDateParsed, interationVerified - 1)
           : null,
     };
-    dispatch(createIncome(incomeToCreate));
+    await dispatch(createIncome(incomeToCreate));
+
     onFinish();
   };
 
   useEffect(() => {
     setRecurrenceState(recurrence);
   }, [recurrence]);
+
+  useEffect(() => {
+    if (received && incomeCreated) {
+      const findAccount = accounts.find(
+        (acc) => acc.id === incomeCreated.receiptDefault
+      );
+
+      const incomeOnAccountToCreate: ICreateIncomeOnAccount = {
+        userId: user.id,
+        accountId: incomeCreated.receiptDefault,
+        incomeId: incomeCreated.id,
+        month: new Date(),
+        value: incomeCreated.value,
+        name: incomeCreated.name,
+        recurrence: incomeCreated.iteration,
+      };
+
+      if (findAccount) {
+        dispatch(createIncomeOnAccount(incomeOnAccountToCreate, findAccount));
+        setReceived(false);
+      }
+    }
+  }, [incomeCreated, accounts, received, user.id, dispatch]);
 
   return (
     <>

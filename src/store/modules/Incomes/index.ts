@@ -5,12 +5,14 @@ interface IncomesState {
   incomes: IIncomes[];
   incomesOnAccount: IIncomesOnAccount[];
   loading: boolean;
+  incomeCreated: IIncomes | null;
 }
 
 const INITIAL_STATE: IncomesState = {
   incomes: [],
   incomesOnAccount: [],
   loading: true,
+  incomeCreated: null,
 };
 
 export const addIncome = createAction<IIncomes>("ADD_INCOME");
@@ -36,6 +38,7 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     incomes: [...state.incomes, action.payload],
+    incomeCreated: action.payload,
   }),
   [addIncomes.type]: (state, action) => ({
     ...state,
@@ -69,6 +72,7 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     incomesOnAccount: [...action.payload],
+    incomeCreated: null,
   }),
   [removeIncomeOnAccountState.type]: (state, action) => ({
     ...state,

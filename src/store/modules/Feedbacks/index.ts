@@ -19,7 +19,7 @@ export const removeMessage = createAction<string>("REMOVE_MESSAGE");
 export default createReducer(INITIAL_STATE, {
   [addMessage.type]: (state, action) => ({
     ...state,
-    messages: [...state.messages, action.payload],
+    messages: [action.payload],
   }),
   [removeMessage.type]: (state, action) => ({
     ...state,

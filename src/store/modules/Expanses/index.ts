@@ -5,12 +5,14 @@ export interface ExpansesState {
   expanses: IExpanses[];
   expansesOnAccount: IExpansesOnAccount[];
   loading: boolean;
+  expanseCreated: IExpanses | null;
 }
 
 const INITIAL_STATE: ExpansesState = {
   expanses: [],
   expansesOnAccount: [],
   loading: true,
+  expanseCreated: null,
 };
 
 export const changeLoadingState = createAction<boolean>(
@@ -42,6 +44,7 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     expanses: [...state.expanses, action.payload],
+    expanseCreated: action.payload,
   }),
   [addExpanses.type]: (state, action) => ({
     ...state,
@@ -52,6 +55,7 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     expansesOnAccount: [...state.expansesOnAccount, action.payload],
+    expanseCreated: null,
   }),
   [addExpansesOnAccount.type]: (state, action) => ({
     ...state,

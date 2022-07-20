@@ -12,6 +12,7 @@ import {
 } from "../../../styles/global";
 import State, {
   ICreateExpanse,
+  ICreateExpanseOnAccount,
   IUpdateExpanse,
 } from "../../../store/interfaces";
 import {
@@ -28,6 +29,7 @@ import DatePicker from "../../utils/DatePicker";
 import { ExpanseFormData } from "../../../utils/formDatas";
 import {
   createExpanse,
+  createExpanseOnAccount,
   deleteExpanseOnInvoice,
   updateExpanse,
 } from "../../../store/modules/Expanses/fetchActions";
@@ -57,6 +59,7 @@ export default function CreateExpanse({
   const { selectedMonth } = useSelector((state: State) => state.dates);
   const { accounts } = useSelector((state: State) => state.accounts);
   const { creditCards } = useSelector((state: State) => state.creditCards);
+  const { expanseCreated } = useSelector((state: State) => state.expanses);
 
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
@@ -124,6 +127,29 @@ export default function CreateExpanse({
   useEffect(() => {
     setRecurrenceState(recurrence);
   }, [recurrence]);
+
+  useEffect(() => {
+    if (received && expanseCreated) {
+      const findAccount = accounts.find(
+        (acc) => acc.id === expanseCreated.receiptDefault
+      );
+
+      const expanseOnAccountToCreate: ICreateExpanseOnAccount = {
+        userId: user.id,
+        accountId: expanseCreated.receiptDefault,
+        expanseId: expanseCreated.id,
+        month: new Date(),
+        value: expanseCreated.value,
+        name: expanseCreated.name,
+        recurrence: expanseCreated.iteration,
+      };
+
+      if (findAccount) {
+        dispatch(createExpanseOnAccount(expanseOnAccountToCreate, findAccount));
+        setReceived(false);
+      }
+    }
+  }, [expanseCreated, accounts, received, user.id, dispatch]);
 
   return (
     <>
@@ -202,7 +228,7 @@ export default function CreateExpanse({
                     color="#000"
                     style={{ width: "100%", textAlign: "right" }}
                   >
-                    Recebido
+                    Pago
                   </S.Label>
 
                   <Switch
