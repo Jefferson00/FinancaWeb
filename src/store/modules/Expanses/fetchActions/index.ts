@@ -1,4 +1,5 @@
 import {
+  addCreatedExpanse,
   addExpanse,
   addExpanseOnAccount,
   addExpanses,
@@ -59,13 +60,14 @@ export const listExpansesOnAccount = (userId: string) => {
   };
 };
 
-export const createExpanse = (expanse: ICreateExpanse) => {
+export const createExpanse = (expanse: ICreateExpanse, received?: boolean) => {
   return (dispatch: any) => {
     dispatch(changeLoadingState(true));
     api
       .post(`expanses`, expanse)
       .then((res) => {
         dispatch(addExpanse(res.data));
+        if (received) dispatch(addCreatedExpanse(res.data));
         dispatch(
           addMessage({
             type: "success",

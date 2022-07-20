@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ExpanseCategories } from "../../../utils/types";
-import { format } from "date-fns";
+import { differenceInCalendarMonths, format } from "date-fns";
 import Loader from "../../utils/Loader";
 import Modal from "../../utils/Modal";
 import CreateExpanse from "../CreateExpanse";
@@ -27,6 +27,7 @@ import {
   deleteExpanse,
   deleteExpanseOnAccount,
 } from "../../../store/modules/Expanses/fetchActions";
+import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 
 const schema = yup.object({
   name: yup
@@ -154,6 +155,13 @@ const ExpansesList = () => {
           acc.id === expanseSelected.receiptDefault
       );
 
+      const currentPart = expanseSelected.endDate
+        ? differenceInCalendarMonths(
+            new Date(expanseSelected.endDate),
+            new Date()
+          )
+        : null;
+
       const expanseOnAccountToCreate: ICreateExpanseOnAccount = {
         userId: user.id,
         accountId: accountIdSelected || expanseSelected.receiptDefault,
@@ -161,7 +169,10 @@ const ExpansesList = () => {
         month: new Date(),
         value: expanseSelected.value,
         name: expanseSelected.name,
-        recurrence: expanseSelected.iteration,
+        recurrence:
+          expanseSelected.iteration === "mensal"
+            ? "mensal"
+            : getCurrentIteration(currentPart, expanseSelected.iteration),
       };
 
       if (findAccount) {

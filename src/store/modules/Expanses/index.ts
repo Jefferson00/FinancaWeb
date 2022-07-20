@@ -19,6 +19,7 @@ export const changeLoadingState = createAction<boolean>(
   "CHANGE_EXPANSES_LOADING_STATE"
 );
 export const addExpanse = createAction<IExpanses>("ADD_EXPANSE");
+export const addCreatedExpanse = createAction<IExpanses>("ADD_CREATED_EXPANSE");
 export const addExpanses = createAction<IExpanses[]>("ADD_EXPANSES");
 export const updateExpanseState = createAction<IExpanses>(
   "UPDATE_EXPANSE_STATE"
@@ -44,6 +45,9 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     expanses: [...state.expanses, action.payload],
+  }),
+  [addCreatedExpanse.type]: (state, action) => ({
+    ...state,
     expanseCreated: action.payload,
   }),
   [addExpanses.type]: (state, action) => ({
@@ -61,6 +65,7 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     expansesOnAccount: [...action.payload],
+    expanseCreated: null,
   }),
   [updateExpanseState.type]: (state, action) => {
     const itemIndex = state.expanses.findIndex(

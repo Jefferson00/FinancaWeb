@@ -7,6 +7,7 @@ import {
   addIncomeOnAccount,
   removeIncomeState,
   removeIncomeOnAccountState,
+  addCreatedIncome,
 } from "..";
 import api from "../../../../config/api";
 import { checkApiError } from "../../../../utils/checkApiError";
@@ -57,13 +58,14 @@ export const listIncomesOnAccount = (userId: string) => {
   };
 };
 
-export const createIncome = (income: ICreateIncome) => {
+export const createIncome = (income: ICreateIncome, received?: boolean) => {
   return (dispatch: any) => {
     dispatch(changeLoadingState(true));
     api
       .post(`incomes`, income)
       .then((res) => {
         dispatch(addIncome(res.data));
+        if (received) dispatch(addCreatedIncome(res.data));
         dispatch(
           addMessage({
             type: "success",

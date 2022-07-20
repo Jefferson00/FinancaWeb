@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { format } from "date-fns";
+import { differenceInCalendarMonths, format } from "date-fns";
 import { IncomeCategories } from "../../../utils/types";
 import { IncomeFormData } from "../../../utils/formDatas";
 import {
@@ -27,6 +27,7 @@ import {
   deleteIncomeOnAccount,
 } from "../../../store/modules/Incomes/fetchActions";
 import Loader from "../../utils/Loader";
+import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 
 const schema = yup.object({
   name: yup
@@ -152,6 +153,13 @@ const IncomeList = () => {
           acc.id === incomeSelected.receiptDefault
       );
 
+      const currentPart = incomeSelected.endDate
+        ? differenceInCalendarMonths(
+            new Date(incomeSelected.endDate),
+            new Date()
+          )
+        : null;
+
       const incomeOnAccountToCreate: ICreateIncomeOnAccount = {
         userId: user.id,
         accountId: accountIdSelected || incomeSelected.receiptDefault,
@@ -159,7 +167,10 @@ const IncomeList = () => {
         month: new Date(),
         value: incomeSelected.value,
         name: incomeSelected.name,
-        recurrence: incomeSelected.iteration,
+        recurrence:
+          incomeSelected.iteration === "mensal"
+            ? "mensal"
+            : getCurrentIteration(currentPart, incomeSelected.iteration),
       };
 
       if (findAccount) {

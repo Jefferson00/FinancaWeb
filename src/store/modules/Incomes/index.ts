@@ -16,6 +16,7 @@ const INITIAL_STATE: IncomesState = {
 };
 
 export const addIncome = createAction<IIncomes>("ADD_INCOME");
+export const addCreatedIncome = createAction<IIncomes>("ADD_CREATED_INCOME");
 export const addIncomes = createAction<IIncomes[]>("ADD_INCOMES");
 export const updateIncomeState = createAction<IIncomes>("UPDATE_INCOME_STATE");
 export const removeIncomeState = createAction<string>("REMOVE_INCOME_STATE");
@@ -38,6 +39,9 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     incomes: [...state.incomes, action.payload],
+  }),
+  [addCreatedIncome.type]: (state, action) => ({
+    ...state,
     incomeCreated: action.payload,
   }),
   [addIncomes.type]: (state, action) => ({
@@ -67,6 +71,7 @@ export default createReducer(INITIAL_STATE, {
     ...state,
     loading: false,
     incomesOnAccount: [...state.incomesOnAccount, action.payload],
+    incomeCreated: null,
   }),
   [addIncomesOnAccount.type]: (state, action) => ({
     ...state,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as S from "./styles";
 import { GREEN_SOFT, RED_SOFT } from "../../../styles/global";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -6,10 +6,12 @@ import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
 import State, { IIncomes, IIncomesOnAccount } from "../../../store/interfaces";
 import { getDayOfTheMounth } from "../../../utils/dateFormats";
+import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 import { reduceString } from "../../../utils/reduceString";
 import { useSelector } from "react-redux";
 import useCollapse from "react-collapsed";
 import { getCategoryIcon } from "../../../utils/getCategoryIcon";
+import { differenceInCalendarMonths } from "date-fns";
 
 interface ItemType extends IIncomes, IIncomesOnAccount {}
 
@@ -32,6 +34,7 @@ export default function ItemView({
 }: ItemViewProps) {
   const { theme } = useSelector((state: State) => state.themes);
   const { accounts } = useSelector((state: State) => state.accounts);
+  const { selectedMonth } = useSelector((state: State) => state.dates);
   const { getCollapseProps, getToggleProps } = useCollapse({
     expandStyles: {
       opacity: 0,
@@ -54,6 +57,14 @@ export default function ItemView({
 
   const [receivedMessage, setReceivedMessage] = useState("");
 
+  const currentPart = useMemo(() => {
+    if (item.endDate) {
+      return differenceInCalendarMonths(new Date(item.endDate), selectedMonth);
+    } else {
+      return null;
+    }
+  }, [item, selectedMonth]);
+
   useEffect(() => {
     setReceivedMessage("");
     if (!!item?.paymentDate) {
@@ -74,8 +85,13 @@ export default function ItemView({
       <S.CollapseContent mainColor={mainColor} {...getToggleProps()}>
         <div>
           {getCategoryIcon(item.category, mainColor, 24)}
-
-          <strong>{item.name}</strong>
+          <strong>{item.name}</strong>{" "}
+          {item.iteration && item.iteration !== "mensal" && (
+            <strong>{getCurrentIteration(currentPart, item.iteration)}</strong>
+          )}
+          {item.recurrence && item.recurrence !== "mensal" && (
+            <strong>{item.recurrence}</strong>
+          )}
         </div>
 
         <p>{getCurrencyFormat(item.value)}</p>

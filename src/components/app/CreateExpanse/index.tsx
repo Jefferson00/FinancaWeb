@@ -120,7 +120,7 @@ export default function CreateExpanse({
           ? addMonths(startDateParsed, interationVerified - 1)
           : null,
     };
-    dispatch(createExpanse(expanseToCreate));
+    dispatch(createExpanse(expanseToCreate, received));
     onFinish();
   };
 
@@ -257,7 +257,7 @@ export default function CreateExpanse({
             control={control}
             options={[...accounts, ...creditCards]}
             optionValueType="id"
-            defaultValue={accounts[0].id}
+            defaultValue={accounts[0]?.id}
           />
 
           <Select

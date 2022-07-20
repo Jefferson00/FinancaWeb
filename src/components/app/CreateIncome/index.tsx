@@ -102,7 +102,7 @@ export default function CreateIncome({
           ? addMonths(startDateParsed, interationVerified - 1)
           : null,
     };
-    await dispatch(createIncome(incomeToCreate));
+    await dispatch(createIncome(incomeToCreate, received));
 
     onFinish();
   };
