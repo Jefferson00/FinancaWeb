@@ -1,21 +1,59 @@
-import Header from '../../components/Header';
-import MainSide from '../../components/MainSide';
-import MenuItem from '../../components/MenuItem';
-import { observer } from 'mobx-react-lite';
+import Header from "../../components/app/Header";
+import MainSide from "../../components/app/MainSide";
+import MenuItem from "../../components/utils/MenuItem";
 
-import { MdArrowUpward, MdArrowDownward, MdCreditCard, MdHome } from 'react-icons/md';
+import {
+  MdArrowUpward,
+  MdArrowDownward,
+  MdCreditCard,
+  MdHome,
+} from "react-icons/md";
 
-import * as S from './styles';
+import * as S from "./styles";
 
-import { useStores } from '../../store';
-import HomeContent from '../../components/HomeContent';
-import IncomeView from '../../components/IncomeView';
-import ExpansesView from '../../components/ExpansesView';
-import CardsView from '../../components/CardsView';
+import HomeContent from "../../components/app/HomeContent";
+import IncomeView from "../../components/app/IncomeView";
+import ExpansesView from "../../components/app/ExpansesView";
+import CardsView from "../../components/app/CardsView";
+import { useDispatch, useSelector } from "react-redux";
+import { changeMenu } from "../../store/modules/Menus";
+import State from "../../store/interfaces";
+import { addMessage } from "../../store/modules/Feedbacks";
+import EnvironmentMessage from "../../components/app/EnvironmentMessage";
 
-const Home = observer(() => {
-  const { menuStore } = useStores();
-  const { selectItem, menu } = menuStore;
+const Home = () => {
+  const dispatch = useDispatch<any>();
+  const menu = useSelector((state: State) => state.menus);
+  const { accounts, loading: loadingAccounts } = useSelector(
+    (state: State) => state.accounts
+  );
+  const { loading: loadingIncomes } = useSelector(
+    (state: State) => state.incomes
+  );
+  const { loading: loadingExpanses } = useSelector(
+    (state: State) => state.expanses
+  );
+  const { loading: loadingCreditCards } = useSelector(
+    (state: State) => state.creditCards
+  );
+
+  const noAccountFound = () => {
+    return !loadingAccounts && accounts.length === 0;
+  };
+
+  const handleChangeMenu = (menu: string) => {
+    if (noAccountFound()) {
+      dispatch(
+        addMessage({
+          type: "warning",
+          message:
+            "Você precisa cadastrar uma conta para poder usar essa funcionalidade",
+        })
+      );
+      return;
+    }
+    dispatch(changeMenu(menu));
+  };
 
   return (
     <div>
@@ -28,42 +66,45 @@ const Home = observer(() => {
           <MenuItem
             icon={MdHome}
             title="Inicio"
-            selected={menu.item === 'Home'}
-            onClick={() => selectItem('Home')}
+            selected={menu === "Home"}
+            onClick={() => handleChangeMenu("Home")}
           />
           <MenuItem
-            onClick={() => selectItem('Entradas')}
+            onClick={() => handleChangeMenu("Entradas")}
             icon={MdArrowUpward}
-            selected={menu.item === 'Entradas'}
+            selected={menu === "Entradas"}
             title="Entradas"
+            disabled={loadingAccounts || loadingIncomes}
           />
           <MenuItem
             icon={MdArrowDownward}
             title="Despesas"
-            selected={menu.item === 'Despesas'}
-            onClick={() => selectItem('Despesas')}
+            selected={menu === "Despesas"}
+            onClick={() => handleChangeMenu("Despesas")}
+            disabled={loadingAccounts || loadingExpanses}
           />
           <MenuItem
             icon={MdCreditCard}
             title="Cartões"
-            selected={menu.item === 'Cartões'}
-            onClick={() => selectItem('Cartões')}
+            selected={menu === "Cartões"}
+            onClick={() => handleChangeMenu("Cartões")}
+            disabled={loadingAccounts || loadingExpanses || loadingCreditCards}
           />
-
         </S.MenuList>
 
-        <S.Content>
-          {menu.item === 'Home' && <HomeContent />}
+        <S.Content reverse={menu === "Entradas" || menu === "Despesas"}>
+          {menu === "Home" && <HomeContent />}
 
-          {menu.item === 'Entradas' && <IncomeView />}
+          {menu === "Entradas" && <IncomeView />}
 
-          {menu.item === 'Despesas' && <ExpansesView />}
+          {menu === "Despesas" && <ExpansesView />}
 
-          {menu.item === 'Cartões' && <CardsView />}
+          {menu === "Cartões" && <CardsView />}
         </S.Content>
       </S.Container>
+      {process.env.REACT_APP_ENV !== "production" && <EnvironmentMessage />}
     </div>
-  )
-});
+  );
+};
 
-export default Home
+export default Home;
