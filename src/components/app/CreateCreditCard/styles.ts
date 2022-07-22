@@ -1,10 +1,14 @@
 import styled from "styled-components";
-import { MAIN_TEXT } from "../../../styles/global";
+import { MAIN_TEXT, sizes } from "../../../styles/global";
 
 export const Container = styled.div`
   width: 100%;
 
   padding: 2rem 3rem;
+
+  @media (max-width: ${sizes.mobileL}) {
+    padding: 2rem 1rem;
+  }
 `;
 
 export const DeleteButton = styled.button`

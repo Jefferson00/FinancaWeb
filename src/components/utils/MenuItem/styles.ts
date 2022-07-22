@@ -1,5 +1,10 @@
 import styled, { css } from "styled-components";
-import { BLUE_PRIMARY, MAIN_TEXT, PRIMARY_INPUT } from "../../../styles/global";
+import {
+  BLUE_PRIMARY,
+  MAIN_TEXT,
+  PRIMARY_INPUT,
+  sizes,
+} from "../../../styles/global";
 
 export const Container = styled.button`
   width: 11.37rem;
@@ -12,6 +17,15 @@ export const Container = styled.button`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+
+  @media (max-width: ${sizes.mobileL}) {
+    width: 5rem;
+    height: 5rem;
+
+    p {
+      display: none !important;
+    }
+  }
 `;
 
 export const Title = styled.p`
@@ -33,6 +47,11 @@ export const IconButton = styled.div<IconButtonProps>`
   font-size: 0;
   background-color: ${BLUE_PRIMARY};
   opacity: 0.5;
+
+  @media (max-width: ${sizes.mobileL}) {
+    height: 3rem;
+    width: 3rem;
+  }
 
   ${(props) =>
     props.selected &&

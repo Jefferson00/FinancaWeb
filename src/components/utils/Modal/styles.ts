@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import { BACKGROUND, MAIN_TEXT } from "../../../styles/global";
+import { BACKGROUND, MAIN_TEXT, sizes } from "../../../styles/global";
 import theme from "styled-theming";
 
 interface ContainerProps {
@@ -82,6 +82,10 @@ export const Content = styled.div<ContentProps>`
 
   overflow: auto;
 
+  @media (max-width: ${sizes.mobileM}) {
+    padding: 0 2rem;
+  }
+
   ${(props) =>
     props.animation &&
     !props.closeAnimation &&
@@ -119,12 +123,21 @@ export const Content = styled.div<ContentProps>`
     `}
 `;
 
-export const CloseButton = styled.button`
+interface CloseButtonProps {
+  fixed?: boolean;
+}
+
+export const CloseButton = styled.button<CloseButtonProps>`
   position: absolute;
   top: 0.5rem;
   right: 1rem;
 
   color: ${MAIN_TEXT};
+
+  @media (max-width: ${sizes.mobileM}) {
+    position: ${(props) => (props.fixed ? "fixed" : "absolute")};
+    z-index: 99;
+  }
 `;
 
 export const ModalContent = styled.div`

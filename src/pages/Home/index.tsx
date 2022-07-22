@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeMenu } from "../../store/modules/Menus";
 import State from "../../store/interfaces";
 import { addMessage } from "../../store/modules/Feedbacks";
+import EnvironmentMessage from "../../components/app/EnvironmentMessage";
 
 const Home = () => {
   const dispatch = useDispatch<any>();
@@ -91,7 +92,7 @@ const Home = () => {
           />
         </S.MenuList>
 
-        <S.Content>
+        <S.Content reverse={menu === "Entradas" || menu === "Despesas"}>
           {menu === "Home" && <HomeContent />}
 
           {menu === "Entradas" && <IncomeView />}
@@ -101,6 +102,7 @@ const Home = () => {
           {menu === "Cartões" && <CardsView />}
         </S.Content>
       </S.Container>
+      {process.env.REACT_APP_ENV !== "production" && <EnvironmentMessage />}
     </div>
   );
 };

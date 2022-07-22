@@ -308,7 +308,11 @@ const ExpansesList = () => {
           </S.ItemsList>
         )}
       </S.Container>
-      <Modal visible={modalVisibility} onCancel={handleCloseModal}>
+      <Modal
+        visible={modalVisibility}
+        onCancel={handleCloseModal}
+        closeButtonFixed
+      >
         <CreateExpanse
           control={control}
           expanseId={expanseSelected?.id}

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Switch from "react-switch";
 import theme from "styled-theming";
+import { sizes } from "../../styles/global";
 
 export const BACKGROUND_COLOR = theme("theme", {
   light: "rgba(212, 227, 245, 0.6)",
@@ -32,6 +33,15 @@ export const Container = styled.div`
   gap: 1rem;
 
   z-index: 999;
+
+  @media (max-width: ${sizes.mobileL}) {
+    flex-direction: column;
+    max-height: 80vh;
+    overflow: hidden;
+    overflow-y: auto;
+    width: 90%;
+    padding: 1rem;
+  }
 `;
 
 export const AvatarContainer = styled.section`

@@ -18,6 +18,7 @@ interface ModalProps {
   okButtonTitle?: string;
   confirmationOptions?: any[];
   optionValue?: any;
+  closeButtonFixed?: boolean;
 }
 
 export default function Modal({
@@ -34,6 +35,7 @@ export default function Modal({
   okButtonTitle = "Sim",
   confirmationOptions = [],
   optionValue,
+  closeButtonFixed = false,
 }: ModalProps) {
   const [closeAnimation, setCloseAnimation] = useState(false);
 
@@ -63,7 +65,7 @@ export default function Modal({
         closeAnimation={closeAnimation}
         onClick={(e) => e.stopPropagation()}
       >
-        <S.CloseButton onClick={handleClose}>
+        <S.CloseButton onClick={handleClose} fixed={closeButtonFixed}>
           <FiX size={24} />
         </S.CloseButton>
         {type === "Delete" && (

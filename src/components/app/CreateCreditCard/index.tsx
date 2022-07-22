@@ -8,6 +8,7 @@ import {
   BLUE_SECONDARY,
   MAIN_TEXT,
   RED_SOFT,
+  sizes,
 } from "../../../styles/global";
 import State, {
   ICreateCreditCard,
@@ -30,6 +31,7 @@ import {
   createCreditCard,
   updateCreditCard,
 } from "../../../store/modules/CreditCards/fetchActions";
+import { useMedia } from "../../../utils/media";
 
 interface CreateCreditCardProps {
   control: Control<CardFormData>;
@@ -47,6 +49,7 @@ export default function CreateCreditCard({
   onFinish,
 }: CreateCreditCardProps) {
   const dispatch = useDispatch<any>();
+  const mobileL = useMedia(`(max-width: ${sizes.mobileL})`);
   const { user } = useSelector((state: State) => state.auth);
   const { accounts } = useSelector((state: State) => state.accounts);
 
@@ -102,8 +105,8 @@ export default function CreateCreditCard({
             control={control}
           />
 
-          <S.Row>
-            <S.Col>
+          {mobileL ? (
+            <>
               <Input
                 label="Limite"
                 backgroundColor={RED_SOFT}
@@ -113,39 +116,35 @@ export default function CreateCreditCard({
                 defaultValue={"0"}
                 control={control}
               />
-            </S.Col>
 
-            <S.Col>
-              <S.Label color="#000">Cor</S.Label>
-              <SelectButton
-                type="button"
-                backgroundColor={RED_SOFT}
-                textColor={MAIN_TEXT}
-                icon={() => <MdColorLens size={25} />}
-                title="Cor"
-                onClick={() => setOpenDropDown((prevState) => !prevState)}
-                openDropDown={openDropDown}
-                dropDownContent={
-                  <S.ListColors>
-                    {ColorsList.map((color) => (
-                      <button
-                        type="button"
-                        key={color.id}
-                        onClick={() => setColorState(color.color)}
-                      >
-                        <S.Dot color={color.color} />
-                      </button>
-                    ))}
-                  </S.ListColors>
-                }
-              >
-                <S.Dot color={colorState} />
-              </SelectButton>
-            </S.Col>
-          </S.Row>
+              <S.Col>
+                <S.Label color="#000">Cor</S.Label>
+                <SelectButton
+                  type="button"
+                  backgroundColor={RED_SOFT}
+                  textColor={MAIN_TEXT}
+                  icon={() => <MdColorLens size={25} />}
+                  title="Cor"
+                  onClick={() => setOpenDropDown((prevState) => !prevState)}
+                  openDropDown={openDropDown}
+                  dropDownContent={
+                    <S.ListColors>
+                      {ColorsList.map((color) => (
+                        <button
+                          type="button"
+                          key={color.id}
+                          onClick={() => setColorState(color.color)}
+                        >
+                          <S.Dot color={color.color} />
+                        </button>
+                      ))}
+                    </S.ListColors>
+                  }
+                >
+                  <S.Dot color={colorState} />
+                </SelectButton>
+              </S.Col>
 
-          <S.Row>
-            <S.Col>
               <DatePicker
                 label="Data de pagamento"
                 backgroundColor={RED_SOFT}
@@ -154,9 +153,7 @@ export default function CreateCreditCard({
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
               />
-            </S.Col>
 
-            <S.Col>
               <DatePicker
                 label="Fechamento da fatura"
                 backgroundColor={RED_SOFT}
@@ -165,8 +162,76 @@ export default function CreateCreditCard({
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
               />
-            </S.Col>
-          </S.Row>
+            </>
+          ) : (
+            <>
+              <S.Row>
+                <S.Col>
+                  <Input
+                    label="Limite"
+                    backgroundColor={RED_SOFT}
+                    textColor={MAIN_TEXT}
+                    name="limit"
+                    mask={currencyMask}
+                    defaultValue={"0"}
+                    control={control}
+                  />
+                </S.Col>
+
+                <S.Col>
+                  <S.Label color="#000">Cor</S.Label>
+                  <SelectButton
+                    type="button"
+                    backgroundColor={RED_SOFT}
+                    textColor={MAIN_TEXT}
+                    icon={() => <MdColorLens size={25} />}
+                    title="Cor"
+                    onClick={() => setOpenDropDown((prevState) => !prevState)}
+                    openDropDown={openDropDown}
+                    dropDownContent={
+                      <S.ListColors>
+                        {ColorsList.map((color) => (
+                          <button
+                            type="button"
+                            key={color.id}
+                            onClick={() => setColorState(color.color)}
+                          >
+                            <S.Dot color={color.color} />
+                          </button>
+                        ))}
+                      </S.ListColors>
+                    }
+                  >
+                    <S.Dot color={colorState} />
+                  </SelectButton>
+                </S.Col>
+              </S.Row>
+
+              <S.Row>
+                <S.Col>
+                  <DatePicker
+                    label="Data de pagamento"
+                    backgroundColor={RED_SOFT}
+                    textColor={MAIN_TEXT}
+                    name="paymentDate"
+                    defaultValue={format(new Date(), "yyyy-MM-dd")}
+                    control={control}
+                  />
+                </S.Col>
+
+                <S.Col>
+                  <DatePicker
+                    label="Fechamento da fatura"
+                    backgroundColor={RED_SOFT}
+                    textColor={MAIN_TEXT}
+                    name="invoiceClosing"
+                    defaultValue={format(new Date(), "yyyy-MM-dd")}
+                    control={control}
+                  />
+                </S.Col>
+              </S.Row>
+            </>
+          )}
 
           <Select
             label="Conta de recebimento"

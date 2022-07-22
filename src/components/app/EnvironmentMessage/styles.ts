@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { PRIMARY_INPUT } from "../../../styles/global";
+import { PRIMARY_INPUT, sizes } from "../../../styles/global";
 
 export const Container = styled.div`
   border-radius: 20px;
@@ -26,5 +26,16 @@ export const Container = styled.div`
 
   p {
     font-size: 0.75rem;
+  }
+
+  @media (max-width: ${sizes.mobileL}) {
+    position: fixed;
+    bottom: 8rem;
+    opacity: 0.2;
+    width: 100%;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 `;

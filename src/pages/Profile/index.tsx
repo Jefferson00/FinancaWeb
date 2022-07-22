@@ -19,6 +19,7 @@ import {
 } from "../../styles/global";
 import { updateProfile } from "../../store/modules/Auth/fetchActions";
 import { toggleThemeState } from "../../store/modules/Theme";
+import EnvironmentMessage from "../../components/app/EnvironmentMessage";
 
 const schema = yup.object({
   name: yup
@@ -153,6 +154,7 @@ export default function Profile() {
       </S.Container>
 
       <S.Background />
+      {process.env.REACT_APP_ENV !== "production" && <EnvironmentMessage />}
     </div>
   );
 }

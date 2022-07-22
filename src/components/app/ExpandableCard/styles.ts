@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { sizes } from "../../../styles/global";
 
 interface ContainerProps {
   background: string;
@@ -78,6 +79,10 @@ export const Container = styled.div<ContainerProps>`
         }
       }
     }
+  }
+
+  @media (max-width: ${sizes.mobileL}) {
+    margin-bottom: 4rem;
   }
 `;
 export const InvoiceExpanses = styled.div`

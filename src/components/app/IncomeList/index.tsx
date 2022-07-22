@@ -300,7 +300,11 @@ const IncomeList = () => {
         )}
       </S.Container>
 
-      <Modal visible={modalVisibility} onCancel={handleCloseModal}>
+      <Modal
+        visible={modalVisibility}
+        onCancel={handleCloseModal}
+        closeButtonFixed
+      >
         <CreateIncome
           control={control}
           incomeId={incomeSelected?.id}

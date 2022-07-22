@@ -161,7 +161,11 @@ const CardsList = () => {
         )}
       </S.Container>
 
-      <Modal visible={modalVisibility} onCancel={handleCloseModal}>
+      <Modal
+        visible={modalVisibility}
+        onCancel={handleCloseModal}
+        closeButtonFixed
+      >
         <CreateCreditCard
           control={control}
           creditCardId={cardSelected?.id}

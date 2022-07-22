@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BLUE_PRIMARY, MAIN_TEXT } from "../../../styles/global";
+import { BLUE_PRIMARY, MAIN_TEXT, sizes } from "../../../styles/global";
 
 interface TextProps {
   color: string;
@@ -10,6 +10,10 @@ export const Container = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 24.5rem;
+
+  @media (max-width: ${sizes.mobileL}) {
+    padding-bottom: 4rem;
+  }
 `;
 export const Header = styled.header`
   display: flex;

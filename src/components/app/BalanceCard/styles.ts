@@ -25,9 +25,8 @@ export const Container = styled.div<ContainerProps>`
     `}
 
   div {
-    flex: 1;
-
     &:last-child {
+      flex: 1;
       display: flex;
       justify-content: flex-end;
 

@@ -205,6 +205,7 @@ export default function CreateExpanse({
                 prefix="x"
                 type="number"
                 control={control}
+                style={{ width: "1rem" }}
               />
             </S.Row>
           </S.Col>
