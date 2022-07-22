@@ -6,6 +6,7 @@ import { GlobalStyle } from "./styles/global";
 import store from "./store";
 import ToastComponent from "./components/utils/Toast";
 import ThemeStateProvider from "./providers/theme";
+import EnvironmentMessage from "./components/app/EnvironmentMessage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <GlobalStyle />
         <Routes />
         <ToastComponent />
+        {process.env.REACT_APP_ENV !== "production" && <EnvironmentMessage />}
       </ThemeStateProvider>
     </Provider>
   );
