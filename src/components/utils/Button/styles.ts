@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import theme from "styled-theming";
+import { animated } from "react-spring";
 
 interface MainContainer {
   backgroundColor: string | theme.ThemeSet;
@@ -14,7 +15,7 @@ interface TextColor {
   colorText: string | theme.ThemeSet;
 }
 
-export const Container = styled.button`
+export const Container = styled(animated.button)`
   height: 3.5rem;
   width: 100%;
   display: flex;
