@@ -86,10 +86,10 @@ export default function ItemView({
         <div>
           {getCategoryIcon(item.category, mainColor, 24)}
           <strong>{item.name}</strong>{" "}
-          {item.iteration && item.iteration !== "mensal" && (
+          {item.iteration && item.iteration.toLowerCase() !== "mensal" && (
             <strong>{getCurrentIteration(currentPart, item.iteration)}</strong>
           )}
-          {item.recurrence && item.recurrence !== "mensal" && (
+          {item.recurrence && item.recurrence.toLowerCase() !== "mensal" && (
             <strong>{item.recurrence}</strong>
           )}
         </div>
