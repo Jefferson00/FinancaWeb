@@ -82,6 +82,21 @@ export const Content = styled.div<ContentProps>`
 
   overflow: auto;
 
+  &::-webkit-scrollbar {
+    width: 4px;
+    background: transparent;
+  }
+
+  &::-moz-scrollbar {
+    width: 4px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    background: #d4e3f5;
+  }
+
   @media (max-width: ${sizes.mobileM}) {
     padding: 0 2rem;
   }
@@ -178,6 +193,7 @@ export const ButtonRowContainer = styled.div`
 interface ButtonProps {
   background: string | theme.ThemeSet;
   textColor: string | theme.ThemeSet;
+  borderColor?: string | theme.ThemeSet;
 }
 
 export const Button = styled.button<ButtonProps>`
@@ -190,6 +206,12 @@ export const Button = styled.button<ButtonProps>`
   border-radius: 10px;
 
   transition: all 0.3s;
+
+  ${(props) =>
+    props.borderColor &&
+    css`
+      border: 1px solid ${props.borderColor};
+    `}
 
   &:hover {
     filter: brightness(0.8);
