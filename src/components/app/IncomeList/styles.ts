@@ -38,6 +38,7 @@ export const CensoredContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 16rem;
 `;
 export const ItemsList = styled.div`
   max-height: 288px;

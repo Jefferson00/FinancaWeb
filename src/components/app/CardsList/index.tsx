@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import * as S from "./styles";
-import { Colors, RED_PRIMARY, RED_SECONDARY } from "../../../styles/global";
+import { RED_PRIMARY, RED_SECONDARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import Button from "../../utils/Button";
 import Card from "../Card";
@@ -27,6 +27,7 @@ const schema = yup.object({
 const CardsList = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
+  const { theme } = useSelector((state: State) => state.themes);
   const { creditCards, loading } = useSelector(
     (state: State) => state.creditCards
   );
@@ -37,7 +38,7 @@ const CardsList = () => {
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
 
-  const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
+  const titleColor = theme === "dark" ? "#4876AC" : "#2673CE";
 
   const { control, handleSubmit, setValue } = useForm<CardFormData>({
     resolver: yupResolver(schema),

@@ -73,6 +73,7 @@ export const CensoredContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 7rem;
 `;
 
 interface ItemProps {

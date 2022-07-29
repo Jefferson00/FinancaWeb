@@ -22,7 +22,7 @@ export default function Transactions() {
 
   const [censored, setCensored] = useState(false);
 
-  const iconsColor = theme === "dark" ? "#2673CE" : "#4876AC";
+  const iconsColor = theme === "dark" ? "#4876AC" : "#2673CE";
 
   useEffect(() => {
     const censoredStatusStoraged = localStorage.getItem(
