@@ -87,9 +87,44 @@ export const InputSelect = styled.select<TextColor>`
   padding: 0.3rem 1rem;
 
   outline: none;
+
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      ${(props) => props.textColor} 50%
+    ),
+    linear-gradient(135deg, ${(props) => props.textColor} 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position: calc(100% - 20px) calc(1em + 6px),
+    calc(100% - 15px) calc(1em + 6px), 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 3.5em;
+  background-repeat: no-repeat;
+
   &:focus-visible,
   :focus {
+    background-image: linear-gradient(
+        45deg,
+        ${(props) => props.textColor} 50%,
+        transparent 50%
+      ),
+      linear-gradient(
+        135deg,
+        transparent 50%,
+        ${(props) => props.textColor} 50%
+      );
+    background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em,
+      calc(100% - 3.5em) 0.5em;
+    background-size: 5px 5px, 5px 5px, 1px 1.5em;
+    background-repeat: no-repeat;
+
     border: none;
-    outline: none;
+    outline: 0;
   }
 `;

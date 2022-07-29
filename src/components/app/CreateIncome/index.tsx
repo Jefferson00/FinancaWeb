@@ -9,6 +9,7 @@ import {
   GREEN_SECONDARY,
   INCOME_INPUT,
   MAIN_TEXT,
+  sizes,
 } from "../../../styles/global";
 import State, {
   ICreateIncome,
@@ -32,6 +33,7 @@ import {
   updateIncome,
 } from "../../../store/modules/Incomes/fetchActions";
 import { IncomeFormData } from "../../../utils/formDatas";
+import { useMedia } from "../../../utils/media";
 
 interface CreateIncomeProps {
   control: Control<IncomeFormData>;
@@ -49,10 +51,13 @@ export default function CreateIncome({
   handleSubmit,
 }: CreateIncomeProps) {
   const dispatch = useDispatch<any>();
+  const mobileL = useMedia(`(max-width: ${sizes.mobileL})`);
+
   const { user } = useSelector((state: State) => state.auth);
   const { selectedMonth } = useSelector((state: State) => state.dates);
   const { accounts } = useSelector((state: State) => state.accounts);
   const { incomeCreated } = useSelector((state: State) => state.incomes);
+  const { theme } = useSelector((state: State) => state.themes);
 
   const [recurrenceState, setRecurrenceState] = useState<
     "Mensal" | "Parcelada"
@@ -188,7 +193,7 @@ export default function CreateIncome({
                 prefix="x"
                 type="number"
                 control={control}
-                style={{ width: "1rem" }}
+                style={{ width: mobileL ? "1.5rem" : "auto" }}
               />
             </S.Row>
           </S.Col>
@@ -220,7 +225,7 @@ export default function CreateIncome({
                     onChange={() => setReceived(!received)}
                     checkedIcon={false}
                     uncheckedIcon={false}
-                    offColor="#d2d2d2"
+                    offColor={theme === "dark" ? "#262626" : "#d2d2d2"}
                     onColor="#76B4B8"
                     onHandleColor="#1A8289"
                     offHandleColor="#76B4B8"

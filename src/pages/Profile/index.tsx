@@ -98,8 +98,8 @@ export default function Profile() {
               </S.IconContainer>
             }
             offColor="#FF981E"
-            onColor="#ffffff"
-            onHandleColor="#ffffff"
+            onColor="#262626"
+            onHandleColor="#262626"
             offHandleColor="#FF981E"
             height={40}
             width={70}

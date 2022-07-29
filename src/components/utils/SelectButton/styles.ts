@@ -28,11 +28,11 @@ export const Container = styled.button<SelectOptionProps>`
     css`
       border: 1px solid;
       border-color: ${props.textColor};
-    `}
 
-  svg {
-    color: ${MAIN_TEXT};
-  }
+      svg {
+        fill: ${MAIN_TEXT};
+      }
+    `}
 `;
 export const Option = styled.p<SelectOptionProps>`
   color: ${(props) => props.textColor};

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {
   BLUE_PRIMARY,
   GREEN_PRIMARY,
+  MAIN_TEXT,
   RED_PRIMARY,
 } from "../../../styles/global";
 import * as S from "./styles";
@@ -267,7 +268,7 @@ const MainSide = () => {
             <S.Balance>
               <S.Title textColor={BLUE_PRIMARY}>Saldo atual</S.Title>
               {censored ? (
-                <S.Value textColor="#000">***********</S.Value>
+                <S.Value textColor={MAIN_TEXT}>***********</S.Value>
               ) : loading ||
                 incomesLoading ||
                 expansesLoading ||
@@ -278,7 +279,7 @@ const MainSide = () => {
                   color="rgba(255,255,255,0.26)"
                 />
               ) : (
-                <S.Value textColor="#000">
+                <S.Value textColor={MAIN_TEXT}>
                   {getCurrencyFormat(totalCurrentBalance)}
                 </S.Value>
               )}
@@ -288,7 +289,7 @@ const MainSide = () => {
                 Saldo previsto
               </S.Title>
               {censored ? (
-                <S.Value textColor="#000" opacity={0.5}>
+                <S.Value textColor={MAIN_TEXT} opacity={0.5}>
                   ***********
                 </S.Value>
               ) : loading ||
@@ -301,7 +302,7 @@ const MainSide = () => {
                   color="rgba(255,255,255,0.26)"
                 />
               ) : (
-                <S.Value textColor="#000" opacity={0.5}>
+                <S.Value textColor={MAIN_TEXT} opacity={0.5}>
                   {getCurrencyFormat(totalEstimateBalance)}
                 </S.Value>
               )}

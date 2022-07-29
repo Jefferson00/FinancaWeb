@@ -12,6 +12,7 @@ import { app } from "../../../config/firebase";
 export default function ToastComponent() {
   const dispatch = useDispatch<any>();
   const { messages } = useSelector((state: State) => state.feedbacks);
+  const { theme } = useSelector((state: State) => state.themes);
 
   const config: ToastOptions = useMemo(() => {
     return {
@@ -76,5 +77,5 @@ export default function ToastComponent() {
       feedback(message);
     });
   }, [feedback, messages]);
-  return <ToastContainer />;
+  return <ToastContainer theme={theme} />;
 }
