@@ -3,6 +3,7 @@ import * as S from "./styles";
 import { MdAccountBalance, MdAccountBalanceWallet } from "react-icons/md";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import { IAccount } from "../../../store/interfaces";
+import { HTMLAttributes } from "react";
 
 interface IBalances {
   accountId: string;
@@ -10,15 +11,15 @@ interface IBalances {
   estimateBalance: number;
 }
 
-interface CardProps {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   account: IAccount;
   balances: IBalances;
   censored?: boolean;
 }
 
-const Card = ({ account, censored, balances }: CardProps) => {
+const Card = ({ account, censored, balances, ...rest }: CardProps) => {
   return (
-    <S.Container>
+    <S.Container {...rest}>
       <S.Header>
         <S.Title>{account.name}</S.Title>
         {account.type === "Carteira" && (

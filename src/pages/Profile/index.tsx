@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserFormData } from "../../utils/formDatas";
-import { useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../components/utils/Button";
 import { FaMoon, FaSave, FaSun } from "react-icons/fa";
 import {
@@ -20,6 +20,9 @@ import {
 import { updateProfile } from "../../store/modules/Auth/fetchActions";
 import { toggleThemeState } from "../../store/modules/Theme";
 import EnvironmentMessage from "../../components/app/EnvironmentMessage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { storage } from "../../config/firebase";
+import { toast } from "react-toastify";
 
 const schema = yup.object({
   name: yup
@@ -46,6 +49,9 @@ export default function Profile() {
   const { user } = useSelector((state: State) => state.auth);
   const { theme } = useSelector((state: State) => state.themes);
 
+  const [avatarToUpload, setAvatarToUpload] = useState<File | null>(null);
+  const [avatarState, setAvatarState] = useState<string | null>(null);
+
   const firstBackgroundColor = BLUE_PRIMARY;
   const secondBackgroundColor = BLUE_SECONDARY;
 
@@ -53,12 +59,22 @@ export default function Profile() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<UserFormData> = (data) => {
+  const onSubmit: SubmitHandler<UserFormData> = async (data) => {
+    const loading = toast.loading("Atualizando perfil...", {
+      position: "top-center",
+    });
     const userInput = {
       ...data,
       phone: data.phone ? `+55${data.phone}` : null,
     };
+    if (avatarToUpload) {
+      const avatarUploaded = await uploadImage(user.id, avatarToUpload);
+      Object.assign(userInput, {
+        avatar: avatarUploaded,
+      });
+    }
     dispatch(updateProfile(userInput, user.id));
+    toast.dismiss(loading);
   };
 
   const toggleTheme = () => {
@@ -73,14 +89,55 @@ export default function Profile() {
     setValue("name", user.name);
     setValue("email", user.email);
     setValue("phone", user.phone);
-  }, [setValue, user.email, user.name, user.phone]);
+    setAvatarState(user.avatar);
+  }, [setValue, user.avatar, user.email, user.name, user.phone]);
+
+  const uploadImage = async (path: string, file: File) => {
+    const storageRef = ref(
+      storage,
+      `users/${path}/${file.name}-${new Date().getMilliseconds()}`
+    );
+
+    const res = await uploadBytes(storageRef, file);
+
+    const urlUploaded = await getDownloadURL(res.ref);
+
+    return urlUploaded;
+  };
+
+  const handleChangeAvatartate = ({
+    target,
+  }: ChangeEvent<HTMLInputElement>) => {
+    if (target.files) {
+      if (
+        target.files[0].type === "image/jpeg" ||
+        target.files[0].type === "image/png" ||
+        target.files[0].type === "image/jpge" ||
+        target.files[0].type === "image/svg"
+      ) {
+        setAvatarState(URL.createObjectURL(target.files[0]));
+        setAvatarToUpload(target.files[0]);
+      } else {
+      }
+    }
+  };
 
   return (
     <div>
       <Header expanded />
       <S.Container>
         <S.AvatarContainer>
-          <S.Avatar src={user?.avatar ? user?.avatar : DefaultAvatar} />
+          <S.AvatarLabel htmlFor="avatar">
+            <S.Avatar src={avatarState ? avatarState : DefaultAvatar} />
+            <S.UploadTip />
+          </S.AvatarLabel>
+          <input
+            type="file"
+            id="avatar"
+            name="avatar"
+            hidden
+            onChange={handleChangeAvatartate}
+          />
 
           <S.ThemeSwitch
             checked={theme === "dark"}
