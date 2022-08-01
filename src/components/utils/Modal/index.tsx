@@ -112,9 +112,9 @@ export default function Modal({
             <S.ButtonRowContainer>
               <S.Button
                 background="transparent"
-                style={{ border: `1px solid ${cancelButtonColor}` }}
                 textColor={cancelButtonColor}
                 onClick={handleClose}
+                borderColor={cancelButtonColor}
               >
                 {cancelButtonTitle}
               </S.Button>

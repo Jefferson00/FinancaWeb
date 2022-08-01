@@ -3,11 +3,11 @@ import theme from "styled-theming";
 
 export const FIRST_COLOR = theme("theme", {
   light: "#F9C33C",
-  dark: "#D3B362",
+  dark: "#353535",
 });
 export const SECOND_COLOR = theme("theme", {
   light: "#FF981E",
-  dark: "#D2944B",
+  dark: "#131313",
 });
 
 export const Container = styled.div`

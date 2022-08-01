@@ -30,6 +30,17 @@ const Header = ({ expanded = false }: HeaderProps) => {
     await firebaseAuth.signOut();
   };
 
+  const verifyUserAvatar = () => {
+    console.log(user);
+    if (user?.avatarUrl) {
+      return user?.avatarUrl;
+    } else if (user?.avatar) {
+      return user?.avatar;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <S.Container backgroundColor={backgroundColor} expanded={expanded}>
       <Link to="/">
@@ -43,7 +54,9 @@ const Header = ({ expanded = false }: HeaderProps) => {
         </S.Welcome>
 
         <Link to="/profile">
-          <S.Avatar src={user?.avatar ? user?.avatar : DefaultAvatar} />
+          <S.Avatar
+            src={verifyUserAvatar() ? verifyUserAvatar() : DefaultAvatar}
+          />
         </Link>
 
         {user && (

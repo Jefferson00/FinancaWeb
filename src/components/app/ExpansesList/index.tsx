@@ -42,6 +42,7 @@ interface Expanse extends IExpanses, IExpansesOnAccount {}
 const ExpansesList = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
+  const { theme } = useSelector((state: State) => state.themes);
   const { accounts } = useSelector((state: State) => state.accounts);
   const { expanses, expansesOnAccount, loading } = useSelector(
     (state: State) => state.expanses
@@ -69,7 +70,7 @@ const ExpansesList = () => {
 
   const listRef = useRef<HTMLDivElement>(null);
 
-  const titleColor = Colors.BLUE_PRIMARY_LIGHTER;
+  const titleColor = theme === "dark" ? "#4876AC" : "#2673CE";
   const textColor = Colors.MAIN_TEXT_LIGHTER;
 
   const { control, handleSubmit, setValue } = useForm<ExpanseFormData>({

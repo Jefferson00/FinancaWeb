@@ -9,6 +9,7 @@ import {
   RED_PRIMARY,
   RED_SECONDARY,
   RED_SOFT,
+  sizes,
 } from "../../../styles/global";
 import State, {
   ICreateExpanse,
@@ -34,6 +35,7 @@ import {
   updateExpanse,
 } from "../../../store/modules/Expanses/fetchActions";
 import Modal from "../../utils/Modal";
+import { useMedia } from "../../../utils/media";
 
 interface CreateIncomeProps {
   control: Control<ExpanseFormData>;
@@ -55,11 +57,13 @@ export default function CreateExpanse({
   handleSubmit,
 }: CreateIncomeProps) {
   const dispatch = useDispatch<any>();
+  const mobileL = useMedia(`(max-width: ${sizes.mobileL})`);
   const { user } = useSelector((state: State) => state.auth);
   const { selectedMonth } = useSelector((state: State) => state.dates);
   const { accounts } = useSelector((state: State) => state.accounts);
   const { creditCards } = useSelector((state: State) => state.creditCards);
   const { expanseCreated } = useSelector((state: State) => state.expanses);
+  const { theme } = useSelector((state: State) => state.themes);
 
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
@@ -205,7 +209,7 @@ export default function CreateExpanse({
                 prefix="x"
                 type="number"
                 control={control}
-                style={{ width: "1rem" }}
+                style={{ width: mobileL ? "1.5rem" : "auto" }}
               />
             </S.Row>
           </S.Col>
@@ -237,10 +241,10 @@ export default function CreateExpanse({
                     onChange={() => setReceived(!received)}
                     checkedIcon={false}
                     uncheckedIcon={false}
-                    offColor="#d2d2d2"
-                    onColor="#76B4B8"
-                    onHandleColor="#1A8289"
-                    offHandleColor="#76B4B8"
+                    offColor={theme === "dark" ? "#262626" : "#d2d2d2"}
+                    onColor={theme === "dark" ? "#D46559" : "#E9DEDF"}
+                    onHandleColor={theme === "dark" ? "#AB5249" : "#cc3728"}
+                    offHandleColor={theme === "dark" ? "#D46559" : "#E9DEDF"}
                     height={13}
                     width={31}
                     handleDiameter={20}

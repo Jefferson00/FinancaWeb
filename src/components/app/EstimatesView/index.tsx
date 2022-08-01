@@ -4,7 +4,6 @@ import * as S from "./styles";
 
 import { FaEye, FaEyeSlash, FaBan } from "react-icons/fa";
 import { getMounthAndYear } from "../../../utils/dateFormats";
-import { observer } from "mobx-react-lite";
 import { useSelector } from "react-redux";
 import State, { IInvoice } from "../../../store/interfaces";
 import { getItemsInThisMonth } from "../../../utils/listByDate";
@@ -19,7 +18,7 @@ interface IEstimate {
   indicator: number;
 }
 
-const Estimates = observer(() => {
+const Estimates = () => {
   const { theme } = useSelector((state: State) => state.themes);
   const { accounts, loading: accountLoading } = useSelector(
     (state: State) => state.accounts
@@ -219,6 +218,6 @@ const Estimates = observer(() => {
       )}
     </S.Container>
   );
-});
+};
 
 export default Estimates;

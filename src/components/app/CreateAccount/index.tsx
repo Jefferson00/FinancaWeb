@@ -3,7 +3,13 @@ import Button from "../../utils/Button";
 import Input from "../../utils/Input";
 import Select from "../../utils/Select";
 import * as S from "./styles";
-import { Colors } from "../../../styles/global";
+import {
+  Colors,
+  MAIN_TEXT,
+  ORANGE_PRIMARY,
+  ORANGE_SECONDARY,
+  PRIMARY_INPUT,
+} from "../../../styles/global";
 import State, {
   ICreateAccount,
   IUpdateAccount,
@@ -50,8 +56,6 @@ export default function CreateAccount({
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
 
-  const firstBackgroundColor = Colors.ORANGE_PRIMARY_LIGHTER;
-  const secondBackgroundColor = Colors.ORANGE_SECONDARY_LIGHTER;
   const deleteColor = Colors.RED_PRIMARY_LIGHTER;
 
   const canDelete = () => {
@@ -98,8 +102,8 @@ export default function CreateAccount({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Nome"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={PRIMARY_INPUT}
+            textColor={MAIN_TEXT}
             name="name"
             defaultValue={""}
             control={control}
@@ -107,8 +111,8 @@ export default function CreateAccount({
 
           <Select
             label="Tipo de conta"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={PRIMARY_INPUT}
+            textColor={MAIN_TEXT}
             name="type"
             control={control}
             options={accountTypes}
@@ -117,8 +121,8 @@ export default function CreateAccount({
 
           <Input
             label="Saldo Inicial"
-            backgroundColor="#D4E3F5"
-            textColor="#000"
+            backgroundColor={PRIMARY_INPUT}
+            textColor={MAIN_TEXT}
             name="initialValue"
             mask={currencyMask}
             defaultValue={"0"}
@@ -130,8 +134,8 @@ export default function CreateAccount({
             <Button
               title="Salvar"
               colors={{
-                PRIMARY_BACKGROUND: firstBackgroundColor,
-                SECOND_BACKGROUND: secondBackgroundColor,
+                PRIMARY_BACKGROUND: ORANGE_PRIMARY,
+                SECOND_BACKGROUND: ORANGE_SECONDARY,
                 TEXT: "#fff",
               }}
               icon={() => <FaSave color="#FFF" size={25} />}

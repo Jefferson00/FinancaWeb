@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Switch from "react-switch";
 import theme from "styled-theming";
 import { sizes } from "../../styles/global";
+import UploadIcon from "../../assets/icons/upload.svg";
 
 export const BACKGROUND_COLOR = theme("theme", {
   light: "rgba(212, 227, 245, 0.6)",
@@ -73,10 +74,50 @@ export const ButtonContainer = styled.div`
   margin-top: 2rem;
 `;
 
+export const AvatarLabel = styled.label`
+  width: 10.43rem;
+  height: 10.43rem;
+  border-radius: 50%;
+
+  position: relative;
+`;
+
 export const Avatar = styled.img`
   width: 10.43rem;
   height: 10.43rem;
   border-radius: 50%;
+`;
+
+export const UploadTip = styled.span`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background-color: ${CONTAINER_BACKGROUND_COLOR};
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: all 0.4s;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:after {
+    content: "";
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    background-size: cover;
+    background-position: center center;
+    background-image: url(${UploadIcon});
+  }
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const ThemeSwitch = styled(Switch)``;
