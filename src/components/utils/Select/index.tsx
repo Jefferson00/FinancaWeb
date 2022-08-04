@@ -8,6 +8,7 @@ interface OptionsProps {
   id?: string;
   name: string;
   icon?: string;
+  limit?: number;
 }
 
 interface InputProps extends InputHTMLAttributes<HTMLSelectElement> {
@@ -67,12 +68,12 @@ export default function Select({
               onBlur={() => setIsFocused(false)}
               {...rest}
             >
-              {options.map(({ icon, name, id }) => (
+              {options.map(({ icon, name, id, limit }) => (
                 <option
                   value={optionValueType === "name" ? name : id}
                   key={Math.random()}
                 >
-                  {icon} {name}
+                  {icon} {name} {limit && "(Cartão de crédito)"}
                 </option>
               ))}
             </S.InputSelect>
