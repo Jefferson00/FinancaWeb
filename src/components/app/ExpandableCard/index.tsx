@@ -4,7 +4,7 @@ import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
 import Switch from "react-switch";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import State, { IExpanseOnInvoice, IExpanses } from "../../../store/interfaces";
 import { differenceInCalendarMonths, format, isSameMonth } from "date-fns";
 import Modal from "../../utils/Modal";
@@ -18,6 +18,7 @@ import Loader from "../../utils/Loader";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 import Button from "../../utils/Button";
 import { RED_PRIMARY, RED_SECONDARY } from "../../../styles/global";
+import { payInvoice } from "../../../store/modules/CreditCards/fetchActions";
 
 const schema = yup.object({
   name: yup
@@ -28,6 +29,8 @@ const schema = yup.object({
 });
 
 const ExpandableCard = () => {
+  const dispatch = useDispatch<any>();
+  const { user } = useSelector((state: State) => state.auth);
   const {
     cardSelected,
     invoiceSelected,
@@ -40,6 +43,7 @@ const ExpandableCard = () => {
   const { expanses } = useSelector((state: State) => state.expanses);
   const [checked, setChecked] = useState(false);
   const [modalVisibility, setModalVisibility] = useState(false);
+  const [payConfirmationVisible, setPayConfirmationVisible] = useState(false);
   const [expanseSelected, setExpanseSelected] = useState<IExpanses | null>(
     null
   );
@@ -110,6 +114,18 @@ const ExpandableCard = () => {
     setModalVisibility(true);
   };
 
+  const handlePayInvoice = () => {
+    if (user && invoiceSelected && !invoiceSelected.paid) {
+      dispatch(payInvoice(invoiceSelected.id, user.id));
+      setPayConfirmationVisible(false);
+    }
+  };
+
+  const openPayInvoiceConfirmation = () => {
+    setChecked(!checked);
+    setPayConfirmationVisible(true);
+  };
+
   useEffect(() => {
     listRef.current?.addEventListener("mouseenter", () => {
       if (listRef.current) listRef.current.style.overflowY = "scroll";
@@ -133,24 +149,26 @@ const ExpandableCard = () => {
               <p>Fatura atual</p>
               <strong>{getCurrencyFormat(invoiceSelected?.value || 0)}</strong>
             </div>
-            {!invoiceSelected?.paid && invoiceSelected.closed && (
-              <div>
-                <p>Pagar:</p>
-                <Switch
-                  checked={checked}
-                  onChange={() => setChecked(!checked)}
-                  checkedIcon={false}
-                  uncheckedIcon={false}
-                  offColor="#d2d2d2"
-                  onColor="#E59B93"
-                  onHandleColor="#E59B93"
-                  offHandleColor="#E59B93"
-                  height={13}
-                  width={31}
-                  handleDiameter={20}
-                />
-              </div>
-            )}
+            {!invoiceSelected?.paid &&
+              invoiceSelected.closed &&
+              invoiceSelected.value > 0 && (
+                <div>
+                  <p>Pagar:</p>
+                  <Switch
+                    checked={invoiceSelected.paid}
+                    onChange={openPayInvoiceConfirmation}
+                    checkedIcon={false}
+                    uncheckedIcon={false}
+                    offColor="#d2d2d2"
+                    onColor="#E59B93"
+                    onHandleColor="#E59B93"
+                    offHandleColor="#E59B93"
+                    height={13}
+                    width={31}
+                    handleDiameter={20}
+                  />
+                </div>
+              )}
           </main>
 
           <footer>
@@ -161,7 +179,13 @@ const ExpandableCard = () => {
 
             <div>
               <p>Data de pagamento</p>
-              <p>{getDayOfTheMounth(new Date(cardSelected.paymentDate))}</p>
+              <p>
+                {getDayOfTheMounth(
+                  new Date(
+                    invoiceSelected?.paymentDate || cardSelected.paymentDate
+                  )
+                )}
+              </p>
             </div>
           </footer>
         </section>
@@ -222,18 +246,14 @@ const ExpandableCard = () => {
             ))}
 
           {!!paidInvoiceSelected.id && isSameMonth(selectedMonth, new Date()) && (
-            <div>
-              <S.Item>
-                <div>
-                  <p>
-                    Fatura de{" "}
-                    {getMonthName(new Date(paidInvoiceSelected?.month))} paga em{" "}
-                    {getDayOfTheMounth(
-                      new Date(paidInvoiceSelected?.updatedAt)
-                    )}
-                  </p>
-                </div>
-              </S.Item>
+            <div style={{ marginTop: 16 }}>
+              <div>
+                <p>
+                  Fatura de {getMonthName(new Date(paidInvoiceSelected?.month))}{" "}
+                  paga em{" "}
+                  {getDayOfTheMounth(new Date(paidInvoiceSelected?.updatedAt))}
+                </p>
+              </div>
 
               {paidExpanseOnInvoiceDays.map((day) => (
                 <div key={Math.random()}>
@@ -249,7 +269,13 @@ const ExpandableCard = () => {
                         <FaDollarSign size={21} color={cardSelected.color} />
                       </span>
                       <div>
-                        <p>{`${expanse.name} - ${expanse.recurrence}`}</p>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <p>{expanse.name}</p>
+
+                          {getRecorrence(expanse.expanseId) && (
+                            <p>{getRecorrence(expanse.expanseId)}</p>
+                          )}
+                        </div>
                         <strong>{getCurrencyFormat(expanse.value)}</strong>
                       </div>
                     </S.Item>
@@ -278,6 +304,15 @@ const ExpandableCard = () => {
           }
         />
       </Modal>
+
+      <Modal
+        visible={payConfirmationVisible}
+        onCancel={() => setPayConfirmationVisible(false)}
+        overlaid
+        type="Confirmation"
+        title="Tem certeza que deseja pagar essa fatura?"
+        onConfirm={handlePayInvoice}
+      />
     </>
   );
 };

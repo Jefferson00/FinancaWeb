@@ -11,7 +11,7 @@ import State, {
   IExpanses,
   IExpansesOnAccount,
 } from "../../../store/interfaces";
-import { listByDate } from "../../../utils/listByDate";
+import { getInvoicesThisMonth, listByDate } from "../../../utils/listByDate";
 import { ExpanseFormData } from "../../../utils/formDatas";
 import { useForm } from "react-hook-form";
 
@@ -28,6 +28,8 @@ import {
   deleteExpanseOnAccount,
 } from "../../../store/modules/Expanses/fetchActions";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
+import { MdCreditCard } from "react-icons/md";
+import { changeMenu } from "../../../store/modules/Menus";
 
 const schema = yup.object({
   name: yup
@@ -48,6 +50,7 @@ const ExpansesList = () => {
     (state: State) => state.expanses
   );
   const { selectedMonth } = useSelector((state: State) => state.dates);
+  const { creditCards } = useSelector((state: State) => state.creditCards);
 
   const [expansesListState, setExpansesListState] = useState<
     { day: number; items: any[] }[]
@@ -67,6 +70,7 @@ const ExpansesList = () => {
   const [accountIdSelected, setAccountIdSelected] = useState<string | null>(
     null
   );
+  const [hasInvoices, setHasInvoices] = useState(false);
 
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -220,6 +224,13 @@ const ExpansesList = () => {
     setExpansesListState(expansesList);
   }, [accounts, expanses, expansesOnAccount, selectedMonth]);
 
+  useEffect(() => {
+    const invoices = getInvoicesThisMonth(creditCards, selectedMonth);
+    if (invoices.length > 0) {
+      setHasInvoices(true);
+    }
+  }, [creditCards, selectedMonth]);
+
   return (
     <>
       <S.Container>
@@ -270,37 +281,44 @@ const ExpansesList = () => {
                 }}
               />
             ) : (
-              expansesListState.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <S.DateText color={textColor}>
-                      {item.day} de {getMonthName(selectedMonth)}
-                    </S.DateText>
-                    {item?.items?.map((i: any, index: number) => {
-                      return (
-                        <ItemView
-                          key={index}
-                          type={"EXPANSE"}
-                          item={i}
-                          switchValue={!!i.paymentDate}
-                          onEdit={() => handleOpenEditModal(i)}
-                          onDelete={() => handleOpenDeleteModal(i)}
-                          onChangeSwitch={() => {
-                            if (!i?.paymentDate) {
-                              handleOpenConfirmReceiveModal(i);
-                            } else {
-                              handleOpenConfirmUnreceiveModal(i);
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                );
-              })
+              <>
+                {hasInvoices && (
+                  <S.CardButton onClick={() => dispatch(changeMenu("Cartões"))}>
+                    <MdCreditCard size={24} /> Ver faturas de cartão de crédito
+                  </S.CardButton>
+                )}
+                {expansesListState.map((item, index) => {
+                  return (
+                    <div key={index}>
+                      <S.DateText color={textColor}>
+                        {item.day} de {getMonthName(selectedMonth)}
+                      </S.DateText>
+                      {item?.items?.map((i: any, index: number) => {
+                        return (
+                          <ItemView
+                            key={index}
+                            type={"EXPANSE"}
+                            item={i}
+                            switchValue={!!i.paymentDate}
+                            onEdit={() => handleOpenEditModal(i)}
+                            onDelete={() => handleOpenDeleteModal(i)}
+                            onChangeSwitch={() => {
+                              if (!i?.paymentDate) {
+                                handleOpenConfirmReceiveModal(i);
+                              } else {
+                                handleOpenConfirmUnreceiveModal(i);
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </>
             )}
 
-            {!loading && expansesListState.length === 0 && (
+            {!loading && expansesListState.length === 0 && !hasInvoices && (
               <S.Empty>
                 <FaBan />
                 <p>Nenhuma despesa nesse mês</p>

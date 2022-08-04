@@ -37,7 +37,10 @@ import {
 import { isSameMonth } from "date-fns";
 import { getAccountEstimateBalance } from "../../../utils/getAccountBalance";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
-import { getItemsOnAccountThisMonth } from "../../../utils/listByDate";
+import {
+  getItemsOnAccountThisMonth,
+  getPaidInvoicesThisMonth,
+} from "../../../utils/listByDate";
 import { listCreditCards } from "../../../store/modules/CreditCards/fetchActions";
 import Loader from "../../utils/Loader";
 
@@ -226,9 +229,14 @@ const MainSide = () => {
       0
     );
 
+    const paidInvoices = getPaidInvoicesThisMonth(creditCards, selectedMonth);
     const currentExpanses = getItemsOnAccountThisMonth(
       expansesOnAccount,
       selectedMonth
+    );
+    const totalInvoice = paidInvoices.reduce(
+      (a, b) => a + (b["value"] || 0),
+      0
     );
     const totalcurrentExpanses = currentExpanses.reduce(
       (a, b) => a + (b["value"] || 0),
@@ -236,9 +244,9 @@ const MainSide = () => {
     );
 
     setTotalIncomesBalance(totalcurrentIncomes);
-    setTotalExpansesBalance(totalcurrentExpanses);
+    setTotalExpansesBalance(totalcurrentExpanses + totalInvoice);
     setSecondCalculateLoading(false);
-  }, [expansesOnAccount, incomesOnAccount, selectedMonth]);
+  }, [expansesOnAccount, incomesOnAccount, selectedMonth, creditCards]);
 
   return (
     <>

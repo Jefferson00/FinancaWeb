@@ -8,6 +8,8 @@ import {
 import api from "../../../../config/api";
 import { checkApiError } from "../../../../utils/checkApiError";
 import { ICreateCreditCard, IUpdateCreditCard } from "../../../interfaces";
+import { changeLoadingState } from "../../Accounts";
+import { listAccounts } from "../../Accounts/fetchActions";
 import { addMessage } from "../../Feedbacks";
 
 export const listCreditCards = (userId: string) => {
@@ -92,6 +94,37 @@ export const deleteCreditCard = (cardId: string, userId: string) => {
           addMessage({
             type: "success",
             message: "Cartão excluído",
+          })
+        );
+      })
+      .catch((e) => {
+        dispatch(changeCardLoadingState(false));
+        dispatch(
+          addMessage({
+            type: "error",
+            message: checkApiError(e),
+          })
+        );
+      });
+  };
+};
+
+export const payInvoice = (invoiceId: string, userId: string) => {
+  return (dispatch: any) => {
+    dispatch(changeCardLoadingState(true));
+    dispatch(changeLoadingState(true));
+    api
+      .put(`invoices/${invoiceId}`, {
+        paid: true,
+      })
+      .then((res) => {
+        // dispatch(updateCreditCardState(res.data));
+        dispatch(listCreditCards(userId));
+        dispatch(listAccounts(userId));
+        dispatch(
+          addMessage({
+            type: "success",
+            message: "Fatura paga com sucesso!",
           })
         );
       })

@@ -6,6 +6,7 @@ import { RED_PRIMARY, RED_SOFT } from "../../../styles/global";
 import {
   getItemsInThisMonth,
   getItemsOnAccountThisMonth,
+  getPaidInvoicesThisMonth,
 } from "../../../utils/listByDate";
 import BalanceCard from "../BalanceCard";
 import * as S from "./styles";
@@ -15,6 +16,7 @@ const ExpanseResume = () => {
     (state: State) => state.expanses
   );
   const { selectedMonth } = useSelector((state: State) => state.dates);
+  const { creditCards } = useSelector((state: State) => state.creditCards);
 
   const [totalCurrentExpanses, setTotalCurrentExpanses] = useState(0);
   const [totalEstimateExpanses, setTotalEstimateExpanses] = useState(0);
@@ -24,16 +26,23 @@ const ExpanseResume = () => {
     currentMonth.setDate(1);
     currentMonth.setUTCHours(0, 0, 0, 0);
 
+    const paidInvoices = getPaidInvoicesThisMonth(creditCards, selectedMonth);
+
     const currentExpanses = getItemsInThisMonth(expanses, selectedMonth);
     const currentExpansesOnAccount = getItemsOnAccountThisMonth(
       expansesOnAccount,
       selectedMonth
     );
+
+    const totalInvoice = paidInvoices.reduce(
+      (a, b) => a + (b["value"] || 0),
+      0
+    );
     const currentTotal = currentExpansesOnAccount.reduce(
       (a, b) => a + (b["value"] || 0),
       0
     );
-    setTotalCurrentExpanses(currentTotal);
+    setTotalCurrentExpanses(currentTotal + totalInvoice);
 
     if (isBefore(selectedMonth, currentMonth)) {
       setTotalEstimateExpanses(currentTotal);
@@ -51,7 +60,7 @@ const ExpanseResume = () => {
         )
       );
     }
-  }, [expanses, expansesOnAccount, selectedMonth]);
+  }, [expanses, expansesOnAccount, selectedMonth, creditCards]);
 
   return (
     <S.Container>
