@@ -241,7 +241,7 @@ export default function CreateCreditCard({
             control={control}
             options={accounts}
             optionValueType="id"
-            defaultValue={accounts[0].id}
+            defaultValue={accounts[0]?.id}
           />
 
           <S.ButtonContainer>

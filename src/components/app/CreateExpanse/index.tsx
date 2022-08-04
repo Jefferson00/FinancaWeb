@@ -45,6 +45,7 @@ interface CreateIncomeProps {
   fromInvoice?: boolean;
   onFinish: () => void;
   recurrence: "Mensal" | "Parcelada";
+  defaultAccount?: string;
 }
 
 export default function CreateExpanse({
@@ -53,6 +54,7 @@ export default function CreateExpanse({
   expanseOnInvoiceId,
   recurrence,
   fromInvoice = false,
+  defaultAccount,
   onFinish,
   handleSubmit,
 }: CreateIncomeProps) {
@@ -124,7 +126,7 @@ export default function CreateExpanse({
           ? addMonths(startDateParsed, interationVerified - 1)
           : null,
     };
-    dispatch(createExpanse(expanseToCreate, received));
+    dispatch(createExpanse(expanseToCreate, received, fromInvoice));
     onFinish();
   };
 
@@ -227,30 +229,32 @@ export default function CreateExpanse({
             </S.Col>
 
             <S.Col style={{ alignItems: "flex-end" }}>
-              {isSameMonth(new Date(), selectedMonth) && !expanseId && (
-                <>
-                  <S.Label
-                    color="#000"
-                    style={{ width: "100%", textAlign: "right" }}
-                  >
-                    Pago
-                  </S.Label>
+              {isSameMonth(new Date(), selectedMonth) &&
+                !expanseId &&
+                !fromInvoice && (
+                  <>
+                    <S.Label
+                      color="#000"
+                      style={{ width: "100%", textAlign: "right" }}
+                    >
+                      Pago
+                    </S.Label>
 
-                  <Switch
-                    checked={received}
-                    onChange={() => setReceived(!received)}
-                    checkedIcon={false}
-                    uncheckedIcon={false}
-                    offColor={theme === "dark" ? "#262626" : "#d2d2d2"}
-                    onColor={theme === "dark" ? "#D46559" : "#E9DEDF"}
-                    onHandleColor={theme === "dark" ? "#AB5249" : "#cc3728"}
-                    offHandleColor={theme === "dark" ? "#D46559" : "#E9DEDF"}
-                    height={13}
-                    width={31}
-                    handleDiameter={20}
-                  />
-                </>
-              )}
+                    <Switch
+                      checked={received}
+                      onChange={() => setReceived(!received)}
+                      checkedIcon={false}
+                      uncheckedIcon={false}
+                      offColor={theme === "dark" ? "#262626" : "#d2d2d2"}
+                      onColor={theme === "dark" ? "#D46559" : "#E9DEDF"}
+                      onHandleColor={theme === "dark" ? "#AB5249" : "#cc3728"}
+                      offHandleColor={theme === "dark" ? "#D46559" : "#E9DEDF"}
+                      height={13}
+                      width={31}
+                      handleDiameter={20}
+                    />
+                  </>
+                )}
             </S.Col>
           </S.Row>
 
@@ -262,7 +266,7 @@ export default function CreateExpanse({
             control={control}
             options={[...accounts, ...creditCards]}
             optionValueType="id"
-            defaultValue={accounts[0]?.id}
+            defaultValue={defaultAccount || accounts[0]?.id}
           />
 
           <Select
@@ -287,7 +291,7 @@ export default function CreateExpanse({
               type="submit"
             />
 
-            {fromInvoice && (
+            {fromInvoice && expanseId && (
               <S.DeleteButton
                 type="button"
                 onClick={() => setDeleteConfirmationVisible(true)}

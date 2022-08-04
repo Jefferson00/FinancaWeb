@@ -72,7 +72,6 @@ export const getAccountEstimateBalance = (
   const allIncomesInThisAccount = incomesWithoutAccount.filter(
     (i) => i.receiptDefault === account.id
   );
-  console.log("expansesWithoutAccount", expansesWithoutAccount);
 
   //buscar todas despesas da conta e dos cartões da conta
   const allExpansesInThisAccount = expansesWithoutAccount.filter(

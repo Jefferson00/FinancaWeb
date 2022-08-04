@@ -60,14 +60,24 @@ export const listExpansesOnAccount = (userId: string) => {
   };
 };
 
-export const createExpanse = (expanse: ICreateExpanse, received?: boolean) => {
+export const createExpanse = (
+  expanse: ICreateExpanse,
+  received?: boolean,
+  fromInvoice?: boolean
+) => {
   return (dispatch: any) => {
     dispatch(changeLoadingState(true));
+    if (fromInvoice) {
+      dispatch(changeCardLoadingState(true));
+    }
     api
       .post(`expanses`, expanse)
       .then((res) => {
         dispatch(addExpanse(res.data));
         if (received) dispatch(addCreatedExpanse(res.data));
+        if (fromInvoice) {
+          dispatch(listCreditCards(expanse.userId));
+        }
         dispatch(
           addMessage({
             type: "success",

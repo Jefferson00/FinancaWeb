@@ -1,4 +1,4 @@
-import { FaDollarSign, FaInfoCircle } from "react-icons/fa";
+import { FaDollarSign, FaInfoCircle, FaPlus } from "react-icons/fa";
 import { getDayOfTheMounth, getMonthName } from "../../../utils/dateFormats";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
@@ -16,6 +16,8 @@ import { ExpanseFormData } from "../../../utils/formDatas";
 import { ExpanseCategories } from "../../../utils/types";
 import Loader from "../../utils/Loader";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
+import Button from "../../utils/Button";
+import { RED_PRIMARY, RED_SECONDARY } from "../../../styles/global";
 
 const schema = yup.object({
   name: yup
@@ -104,6 +106,10 @@ const ExpandableCard = () => {
     [currentPart, expanses]
   );
 
+  const handleOpenModalCreateNewExpanse = () => {
+    setModalVisibility(true);
+  };
+
   useEffect(() => {
     listRef.current?.addEventListener("mouseenter", () => {
       if (listRef.current) listRef.current.style.overflowY = "scroll";
@@ -161,6 +167,19 @@ const ExpandableCard = () => {
         </section>
 
         <S.InvoiceExpanses>
+          <div style={{ marginBottom: 16 }}>
+            <Button
+              title="Nova despesa"
+              icon={() => <FaPlus color="#FFF" size={25} />}
+              colors={{
+                PRIMARY_BACKGROUND: RED_PRIMARY,
+                SECOND_BACKGROUND: RED_SECONDARY,
+                TEXT: "#fff",
+              }}
+              onClick={() => handleOpenModalCreateNewExpanse()}
+            />
+          </div>
+
           {loading && <Loader height="70" width="320" />}
 
           {!loading && invoiceSelected?.ExpanseOnInvoice?.length === 0 && (
@@ -247,6 +266,7 @@ const ExpandableCard = () => {
           expanseId={expanseSelected?.id}
           handleSubmit={handleSubmit}
           onFinish={handleCloseModal}
+          defaultAccount={cardSelected.id}
           recurrence={
             expanseSelected?.iteration === "Mensal" ? "Mensal" : "Parcelada"
           }
