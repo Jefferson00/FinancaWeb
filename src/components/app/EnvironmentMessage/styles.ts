@@ -14,7 +14,7 @@ export const Container = styled.div`
 
   gap: 0.5rem;
 
-  position: absolute;
+  position: fixed;
   bottom: 1rem;
 
   left: 0;
