@@ -20,6 +20,7 @@ import { changeMenu } from "../../store/modules/Menus";
 import State from "../../store/interfaces";
 import { addMessage } from "../../store/modules/Feedbacks";
 import EnvironmentMessage from "../../components/app/EnvironmentMessage";
+import { useEffect } from "react";
 
 const Home = () => {
   const dispatch = useDispatch<any>();
@@ -42,7 +43,7 @@ const Home = () => {
   };
 
   const handleChangeMenu = (menu: string) => {
-    if (noAccountFound()) {
+    if (noAccountFound() && menu !== "Home") {
       dispatch(
         addMessage({
           type: "warning",
@@ -54,6 +55,12 @@ const Home = () => {
     }
     dispatch(changeMenu(menu));
   };
+
+  useEffect(() => {
+    if (accounts.length === 0 && !loadingAccounts) {
+      dispatch(changeMenu("Home"));
+    }
+  }, [accounts, dispatch, loadingAccounts]);
 
   return (
     <div>

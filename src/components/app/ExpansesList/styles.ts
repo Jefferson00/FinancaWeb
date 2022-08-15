@@ -83,3 +83,24 @@ export const Empty = styled.div`
     font-weight: 700;
   }
 `;
+
+export const CardButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  border-radius: 20px;
+  width: 100%;
+  padding: 0.5rem 1rem;
+
+  margin-top: 1rem;
+  transition: all 0.4s;
+
+  background-color: ${BLUE_PRIMARY};
+  color: #fff;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+`;

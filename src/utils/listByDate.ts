@@ -1,4 +1,5 @@
 import { isAfter, isBefore, isSameMonth } from "date-fns";
+import { ICreditCard, IInvoice } from "../store/interfaces";
 
 export const getItemsInThisMonth = (item: any[], selectedDate: Date) => {
   return item.filter((i) =>
@@ -20,6 +21,37 @@ export const getItemsOnAccountThisMonth = (
   return itemsOnAccount.filter((i) =>
     isSameMonth(new Date(i.month), selectedDate)
   );
+};
+
+export const getPaidInvoicesThisMonth = (
+  creditCards: ICreditCard[],
+  selectedDate: Date
+) => {
+  let paidInvoices: IInvoice[] = [];
+  creditCards.map((card) => {
+    const invoicesInThisMonth = card.Invoice.filter(
+      (invoice) =>
+        isSameMonth(new Date(invoice.month), selectedDate) && invoice.paid
+    );
+
+    paidInvoices = [...paidInvoices, ...invoicesInThisMonth];
+  });
+  return paidInvoices;
+};
+
+export const getInvoicesThisMonth = (
+  creditCards: ICreditCard[],
+  selectedDate: Date
+) => {
+  let invoices: IInvoice[] = [];
+  creditCards.map((card) => {
+    const invoicesInThisMonth = card.Invoice.filter((invoice) =>
+      isSameMonth(new Date(invoice.month), selectedDate)
+    );
+
+    invoices = [...invoices, ...invoicesInThisMonth];
+  });
+  return invoices;
 };
 
 export const getItemsOrderByDay = (items: any[], itemsOrderedByDay: any[]) => {

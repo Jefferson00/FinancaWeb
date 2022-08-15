@@ -7,6 +7,7 @@ import Button from "../../utils/Button";
 import { useDispatch, useSelector } from "react-redux";
 import State, {
   ICreateIncomeOnAccount,
+  IExpansesOnAccount,
   IIncomes,
   IIncomesOnAccount,
 } from "../../../store/interfaces";
@@ -37,7 +38,7 @@ const schema = yup.object({
     .max(25, "deve ter no máximo 25 caracteres"),
 });
 
-interface Income extends IIncomes, IIncomesOnAccount {}
+interface Income extends IIncomes, IIncomesOnAccount, IExpansesOnAccount {}
 
 const IncomeList = () => {
   const dispatch = useDispatch<any>();

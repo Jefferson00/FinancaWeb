@@ -31,7 +31,6 @@ const Header = ({ expanded = false }: HeaderProps) => {
   };
 
   const verifyUserAvatar = () => {
-    console.log(user);
     if (user?.avatarUrl) {
       return user?.avatarUrl;
     } else if (user?.avatar) {

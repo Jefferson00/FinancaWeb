@@ -209,6 +209,7 @@ const Estimates = () => {
                 </strong>
                 <p>{getCurrencyFormat(estimate.value)}</p>
                 <S.GraphIndicator
+                  value={getCurrencyFormat(estimate.value)}
                   heightIndicator={estimate.indicator.toString()}
                 />
               </S.GraphItem>

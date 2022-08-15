@@ -9,6 +9,7 @@ import {
 
 interface GraphIndicatorProps {
   heightIndicator: string;
+  value?: string;
 }
 
 export const Container = styled.div`
@@ -73,4 +74,15 @@ export const GraphIndicator = styled.div<GraphIndicatorProps>`
   background-color: ${ORANGE_SECONDARY};
   height: ${(props) => props.heightIndicator}%;
   border-radius: 10px;
+  position: relative;
+
+  &:hover::after {
+    content: "${(props) => props.value && props.value}";
+    position: absolute;
+    left: -50%;
+    z-index: 2;
+    background: #656565;
+    color: #fff;
+    padding: 0.5rem;
+  }
 `;

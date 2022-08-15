@@ -4,7 +4,11 @@ import { GREEN_SOFT, RED_SOFT } from "../../../styles/global";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
-import State, { IIncomes, IIncomesOnAccount } from "../../../store/interfaces";
+import State, {
+  IExpansesOnAccount,
+  IIncomes,
+  IIncomesOnAccount,
+} from "../../../store/interfaces";
 import { getDayOfTheMounth } from "../../../utils/dateFormats";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 import { reduceString } from "../../../utils/reduceString";
@@ -13,7 +17,7 @@ import useCollapse from "react-collapsed";
 import { getCategoryIcon } from "../../../utils/getCategoryIcon";
 import { differenceInCalendarMonths } from "date-fns";
 
-interface ItemType extends IIncomes, IIncomesOnAccount {}
+interface ItemType extends IIncomes, IIncomesOnAccount, IExpansesOnAccount {}
 
 interface ItemViewProps {
   type: "EXPANSE" | "INCOME";
@@ -60,6 +64,16 @@ export default function ItemView({
   const currentPart = useMemo(() => {
     if (item.endDate) {
       return differenceInCalendarMonths(new Date(item.endDate), selectedMonth);
+    } else if (item.expanse && item.expanse.endDate) {
+      return differenceInCalendarMonths(
+        new Date(item.expanse.endDate),
+        selectedMonth
+      );
+    } else if (item.income && item.income.endDate) {
+      return differenceInCalendarMonths(
+        new Date(item.income.endDate),
+        selectedMonth
+      );
     } else {
       return null;
     }
@@ -81,16 +95,32 @@ export default function ItemView({
   }, [accounts, item, type]);
 
   return (
-    <S.Collapse backgroundColor={backgroundColor} mainColor={mainColor}>
+    <S.Collapse
+      backgroundColor={backgroundColor}
+      mainColor={mainColor}
+      style={{ opacity: item.iteration && 0.8 }}
+    >
       <S.CollapseContent mainColor={mainColor} {...getToggleProps()}>
         <div>
-          {getCategoryIcon(item.category, mainColor, 24)}
+          {getCategoryIcon(
+            item.category || item?.income?.category || item?.expanse?.category,
+            mainColor,
+            24
+          )}
           <strong>{item.name}</strong>{" "}
           {item.iteration && item.iteration.toLowerCase() !== "mensal" && (
             <strong>{getCurrentIteration(currentPart, item.iteration)}</strong>
           )}
-          {item.recurrence && item.recurrence.toLowerCase() !== "mensal" && (
-            <strong>{item.recurrence}</strong>
+          {item.expanse &&
+            item.expanse.iteration.toLowerCase() !== "mensal" && (
+              <strong>
+                {getCurrentIteration(currentPart, item.expanse.iteration)}
+              </strong>
+            )}
+          {item.income && item.income.iteration.toLowerCase() !== "mensal" && (
+            <strong>
+              {getCurrentIteration(currentPart, item.income.iteration)}
+            </strong>
           )}
         </div>
 
