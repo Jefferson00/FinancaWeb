@@ -1,46 +1,70 @@
-# Getting Started with Create React App
+<h3 align="center">
+  <img alt="FinancasApp" title="FinancasApp" src=".github/logo.png" height="100px" width="100px"/>
+</h3>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h2 align="center">
+ Finanças App
+</h2>
 
-## Available Scripts
+<h3 align="center">
+  Aplicação para gerenciamento de finanças pessoais de forma simples
+</h3>
 
-In the project directory, you can run:
+<p align="center">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0-brightgreen">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/Jefferson00/FinancaWeb">
+  <a href="https://www.linkedin.com/in/jefferson-c-silva-aa1b7b1a9/">
+    <img alt="Made by Jefferson" src="https://img.shields.io/badge/made%20by-Jefferson-blue">
+  </a>
+</p>
 
-### `yarn start`
+<p align="center">
+  <img src=".github/preview.png">
+</p>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 💻 Projeto
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Finanças App, é um projeto que tem como objetivo gerenciar as finanças pessoais de uma maneira simples e intuitiva. Nele é possível organizar o saldo de todas as contas de uma pessoa, baseado em todas as despesas, receitas e faturas de cartões. Ainda é possível projetar os saldos previstos para os próximos meses e visualizar as últimas transações realizadas.
 
-### `yarn test`
+Essa é a versão web da aplicação, para o seu desenvolvimento foi utilizado ReactJs, Typescript, Styled Components para estilização e Redux para o gerencimanto de estados.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+O projeto possui sua API própria, desenvolvida com NestJs, tendo o Prisma como ORM e o PostgreSQL como banco de dados.
 
-### `yarn build`
+## 🚀 Tecnologias
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [TypeScript](https://www.typescriptlang.org/)
+- [ReactJS](https://reactjs.org/)
+- [Redux](https://redux.js.org/)
+- [Styled Components](https://www.styled-components.com/)
+- [Firebase](https://firebase.google.com/)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [x] O usuário poderá se cadastrar ou efetuar o login social com o google.
 
-### `yarn eject`
+## ℹ️ How To Use
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Primeiro, tenha o ambiente [backend](https://github.com/Jefferson00/FinanceAPI) configurado.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+# Clone this repository
+$ git clone https://github.com/Jefferson00/FinancaWeb
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# Go into the repository
+$ cd financaweb
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Install dependencies
+$ yarn install
 
-## Learn More
+# Run
+$ yarn dev
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📝 License
+
+<a href="/LICENSE">
+    <img alt="Made by Jefferson" src="https://img.shields.io/badge/licence-MIT-blue">
+ </a>
+
+Made with ♥ by Jefferson C Silva :wave: [Get in touch!](https://www.linkedin.com/in/jefferson-c-silva)
