@@ -34,6 +34,7 @@ export const MenuList = styled.section`
   @media (max-width: ${sizes.mobileL}) {
     gap: 1rem;
     position: fixed;
+    z-index: 99;
     bottom: 0;
     background: ${PRIMARY_INPUT};
     width: 100%;

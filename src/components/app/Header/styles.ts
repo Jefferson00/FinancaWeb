@@ -45,7 +45,11 @@ export const UserContainer = styled.div`
     gap: 1rem;
   }
 `;
-export const Welcome = styled.div``;
+export const Welcome = styled.div`
+  @media (max-width: ${sizes.mobileL}) {
+    display: none;
+  }
+`;
 
 export const Avatar = styled.img`
   width: 3.43rem;
