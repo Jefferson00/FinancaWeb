@@ -21,10 +21,13 @@ import State from "../../store/interfaces";
 import { addMessage } from "../../store/modules/Feedbacks";
 import EnvironmentMessage from "../../components/app/EnvironmentMessage";
 import { useEffect } from "react";
+import { useMedia } from "../../utils/media";
+import { sizes } from "../../styles/global";
 
 const Home = () => {
   const dispatch = useDispatch<any>();
   const menu = useSelector((state: State) => state.menus);
+  const tablet = useMedia(`(max-width: ${sizes.tablet})`);
   const { accounts, loading: loadingAccounts } = useSelector(
     (state: State) => state.accounts
   );
@@ -42,6 +45,15 @@ const Home = () => {
     return !loadingAccounts && accounts.length === 0;
   };
 
+  const scrollToItem = () => {
+    if (window.pageYOffset < 541) {
+      window.scrollTo({
+        top: 541,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const handleChangeMenu = (menu: string) => {
     if (noAccountFound() && menu !== "Home") {
       dispatch(
@@ -53,6 +65,7 @@ const Home = () => {
       );
       return;
     }
+    if (tablet) scrollToItem();
     dispatch(changeMenu(menu));
   };
 
