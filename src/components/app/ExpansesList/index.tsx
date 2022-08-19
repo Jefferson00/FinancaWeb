@@ -171,7 +171,7 @@ const ExpansesList = () => {
         userId: user.id,
         accountId: accountIdSelected || expanseSelected.receiptDefault,
         expanseId: expanseSelected.id,
-        month: new Date(),
+        month: new Date(expanseSelected.receiptDate),
         value: expanseSelected.value,
         name: expanseSelected.name,
         recurrence:

@@ -93,7 +93,6 @@ export const InvoiceExpanses = styled.div`
   > div {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
 
     > p {
       font-size: 0.8rem;
@@ -109,6 +108,8 @@ export const Item = styled.div`
 
   display: flex;
   justify-content: space-between;
+
+  margin: 0.4rem 0;
 
   cursor: pointer;
 
@@ -130,5 +131,19 @@ export const Item = styled.div`
     strong {
       color: #fff;
     }
+  }
+`;
+export const PaidContainer = styled.div`
+  margin-top: 1rem;
+
+  strong,
+  p {
+    color: #fff;
+    opacity: 0.8;
+    font-size: 0.8rem;
+  }
+
+  strong {
+    font-size: 1rem;
   }
 `;

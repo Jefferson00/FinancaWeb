@@ -144,7 +144,7 @@ export default function CreateExpanse({
         userId: user.id,
         accountId: expanseCreated.receiptDefault,
         expanseId: expanseCreated.id,
-        month: new Date(),
+        month: new Date(expanseCreated.receiptDate),
         value: expanseCreated.value,
         name: expanseCreated.name,
         recurrence: expanseCreated.iteration,

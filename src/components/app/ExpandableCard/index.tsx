@@ -246,13 +246,14 @@ const ExpandableCard = () => {
             ))}
 
           {!!paidInvoiceSelected.id && isSameMonth(selectedMonth, new Date()) && (
-            <div style={{ marginTop: 16 }}>
-              <div>
-                <p>
+            <S.PaidContainer>
+              <div style={{ marginBottom: 8 }}>
+                <strong>
                   Fatura de {getMonthName(new Date(paidInvoiceSelected?.month))}{" "}
                   paga em{" "}
-                  {getDayOfTheMounth(new Date(paidInvoiceSelected?.updatedAt))}
-                </p>
+                  {getDayOfTheMounth(new Date(paidInvoiceSelected?.updatedAt))}{" "}
+                  no valor de {getCurrencyFormat(paidInvoiceSelected?.value)}
+                </strong>
               </div>
 
               {paidExpanseOnInvoiceDays.map((day) => (
@@ -282,7 +283,7 @@ const ExpandableCard = () => {
                   ))}
                 </div>
               ))}
-            </div>
+            </S.PaidContainer>
           )}
         </S.InvoiceExpanses>
       </S.Container>
