@@ -167,11 +167,13 @@ const ExpansesList = () => {
           )
         : null;
 
+      const month = new Date(expanseSelected.receiptDate);
+
       const expanseOnAccountToCreate: ICreateExpanseOnAccount = {
         userId: user.id,
         accountId: accountIdSelected || expanseSelected.receiptDefault,
         expanseId: expanseSelected.id,
-        month: new Date(expanseSelected.receiptDate),
+        month: new Date(month.setMonth(new Date().getMonth())),
         value: expanseSelected.value,
         name: expanseSelected.name,
         recurrence:

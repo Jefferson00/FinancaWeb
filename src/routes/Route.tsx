@@ -12,7 +12,7 @@ import { HeadersDefaults } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import State from "../store/interfaces";
 import { signUp } from "../store/modules/Auth/fetchActions";
-import { signIn } from "../store/modules/Auth";
+import { signIn, signOut } from "../store/modules/Auth";
 import { addMessage } from "../store/modules/Feedbacks";
 import { checkApiError } from "../utils/checkApiError";
 import Lottie from "lottie-react";
@@ -66,6 +66,8 @@ const RouterWrapper = ({
           authorization: `Bearer ${token}`,
         } as CommonHeaderProperties;
 
+        localStorage.setItem("@FinancaWeb:token", token);
+
         api
           .get(`users/email/${email}`)
           .then(({ data }) => {
@@ -94,6 +96,8 @@ const RouterWrapper = ({
           .finally(() => setLoading(false));
       } else {
         setLoading(false);
+        localStorage.removeItem("@FinancaWeb:token");
+        dispatch(signOut({}));
         if (isPrivate) {
           history.push("/login");
         }
@@ -104,6 +108,8 @@ const RouterWrapper = ({
       unsubscribe();
     };
   }, [auth, dispatch, history, isPrivate]);
+
+  console.log("isAuthenticated", isAuthenticated);
 
   if (loading) {
     return (
