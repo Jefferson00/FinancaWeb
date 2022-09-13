@@ -20,6 +20,12 @@
   <a href="http://financa-web.vercel.app/">
     <img alt="Deploy" src="https://img.shields.io/badge/deploy-Vercel-blue">
   </a>
+  <a href="https://github.com/Jefferson00/FinanceAPI">
+    <img alt="API" src="https://img.shields.io/badge/backend-NestJS-blue">
+  </a>
+  <a href="https://github.com/Jefferson00/financa-app">
+    <img alt="Mobile" src="https://img.shields.io/badge/mobile-React Native-blue">
+  </a>
 </p>
 
 <p align="center">
@@ -32,7 +38,7 @@
 
 Essa é a versão web da aplicação, para o seu desenvolvimento foi utilizado ReactJs, Typescript, Styled Components para estilização e Redux para o gerencimanto de estados.
 
-O projeto possui sua API própria, desenvolvida com NestJs, tendo o Prisma como ORM e o PostgreSQL como banco de dados.
+O projeto possui sua [API](https://github.com/Jefferson00/FinanceAPI) própria, desenvolvida com NestJs, tendo o Prisma como ORM e o PostgreSQL como banco de dados. E uma versão [mobile](https://github.com/Jefferson00/financa-app), desenvolvido com React Native.
 
 ## 🚀 Tecnologias
 
