@@ -11,7 +11,6 @@ import api from "../config/api";
 import { HeadersDefaults } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import State from "../store/interfaces";
-import { signUp } from "../store/modules/Auth/fetchActions";
 import { signIn, signOut } from "../store/modules/Auth";
 import { addMessage } from "../store/modules/Feedbacks";
 import { checkApiError } from "../utils/checkApiError";
@@ -45,20 +44,13 @@ const RouterWrapper = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const { displayName, photoURL, email, phoneNumber } = user;
+        const { displayName, photoURL, email } = user;
 
         const token = await user.getIdToken();
 
         if (!displayName || !photoURL) {
           throw new Error("Missing information from Google Account.");
         }
-
-        const userInput = {
-          avatar: photoURL,
-          email: email,
-          name: displayName,
-          phone: phoneNumber,
-        };
 
         console.log(token);
 
@@ -72,7 +64,6 @@ const RouterWrapper = ({
           .get(`users/email/${email}`)
           .then(({ data }) => {
             if (!data) {
-              dispatch(signUp(userInput));
               setLoading(false);
             } else {
               dispatch(
