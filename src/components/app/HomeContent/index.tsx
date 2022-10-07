@@ -39,10 +39,14 @@ const HomeContent = () => {
   const { accounts, loading: loadingAccounts } = useSelector(
     (state: State) => state.accounts
   );
+  const { loading: loadingCreditCard } = useSelector(
+    (state: State) => state.creditCards
+  );
   const [nextDaysItems, setNextDaysItems] = useState<RemindItemProps[]>([]);
   const [lateItems, setLateItems] = useState<ItemProps[]>([]);
   const [loadingLateItems, setLoadingLateItems] = useState(true);
   const [loadingNextItems, setLoadingNextItems] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const expansesWithoutInvoice = useMemo(() => {
     return expanses.filter((exp) =>
@@ -110,7 +114,6 @@ const HomeContent = () => {
   }, [expanses, expansesOnAccount, incomes, incomesOnAccount]);
 
   const getLateItems = useCallback(() => {
-    setLoadingLateItems(true);
     const incomesInPrevMonths = incomes.filter(
       (i) =>
         isBefore(new Date(i.startDate), new Date()) ||
@@ -214,9 +217,46 @@ const HomeContent = () => {
   }, [incomes, expansesWithoutInvoice, incomesOnAccount, expansesOnAccount]);
 
   useEffect(() => {
-    getItemsNextDays();
-    getLateItems();
-  }, [getItemsNextDays, getLateItems]);
+    if (!loadingAccounts && !loadingExpanses && !loadingIncomes) {
+      getItemsNextDays();
+    }
+  }, [getItemsNextDays, loadingAccounts, loadingExpanses, loadingIncomes]);
+
+  useEffect(() => {
+    setLoadingLateItems(true);
+    if (
+      !loadingAccounts &&
+      !loadingExpanses &&
+      !loadingIncomes &&
+      !loadingCreditCard
+    ) {
+      getLateItems();
+    }
+  }, [
+    getLateItems,
+    loadingAccounts,
+    loadingExpanses,
+    loadingIncomes,
+    loadingCreditCard,
+  ]);
+
+  useEffect(() => {
+    if (
+      !loadingAccounts &&
+      !loadingExpanses &&
+      !loadingIncomes &&
+      !loadingCreditCard &&
+      !loadingLateItems
+    ) {
+      setLoading(false);
+    }
+  }, [
+    loadingAccounts,
+    loadingCreditCard,
+    loadingExpanses,
+    loadingIncomes,
+    loadingLateItems,
+  ]);
 
   return (
     <>
@@ -224,16 +264,7 @@ const HomeContent = () => {
 
       <Transactions />
 
-      <RemindView
-        type="LATE"
-        lateItems={lateItems}
-        loading={
-          loadingLateItems ||
-          loadingAccounts ||
-          loadingExpanses ||
-          loadingIncomes
-        }
-      />
+      <RemindView type="LATE" lateItems={lateItems} loading={loading} />
 
       <RemindView
         type="NEXTDAYS"
@@ -242,7 +273,8 @@ const HomeContent = () => {
           loadingNextItems ||
           loadingAccounts ||
           loadingExpanses ||
-          loadingIncomes
+          loadingIncomes ||
+          loadingCreditCard
         }
       />
     </>

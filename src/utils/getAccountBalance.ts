@@ -3,7 +3,9 @@ import {
   IAccount,
   ICreditCard,
   IExpanses,
+  IExpansesOnAccount,
   IIncomes,
+  IIncomesOnAccount,
   IInvoice,
 } from "../store/interfaces";
 import { getItemsInThisMonth } from "./listByDate";
@@ -24,7 +26,9 @@ export const getAccountEstimateBalance = (
   incomes: IIncomes[],
   expanses: IExpanses[],
   selectedMonth: Date,
-  creditCards: ICreditCard[]
+  creditCards: ICreditCard[],
+  expansesOnAccount: IExpansesOnAccount[],
+  incomesOnAccount: IIncomesOnAccount[]
 ) => {
   const incomesInThisMonth = getItemsInThisMonth(incomes, selectedMonth);
   const expansesInThisMonth = getItemsInThisMonth(expanses, selectedMonth);
@@ -32,6 +36,12 @@ export const getAccountEstimateBalance = (
     isSameMonth(new Date(i.month), selectedMonth)
   );
   const expansesOnAccountInThisMonth = account.expansesOnAccount.filter((exp) =>
+    isSameMonth(new Date(exp.month), selectedMonth)
+  );
+  const incomesOnAllAccountInThisMonth = incomesOnAccount.filter((i) =>
+    isSameMonth(new Date(i.month), selectedMonth)
+  );
+  const expansesOnAllAccountInThisMonth = expansesOnAccount.filter((exp) =>
     isSameMonth(new Date(exp.month), selectedMonth)
   );
 
@@ -59,12 +69,18 @@ export const getAccountEstimateBalance = (
     (i) =>
       !incomesOnAccountInThisMonth.find(
         (inOnAccount) => inOnAccount.incomeId === i.id
+      ) &&
+      !incomesOnAllAccountInThisMonth.find(
+        (inOnAccount) => inOnAccount.incomeId === i.id
       )
   );
 
   const expansesWithoutAccount = expansesInThisMonth.filter(
     (e) =>
       !expansesOnAccountInThisMonth.find(
+        (exOnAccount) => exOnAccount.expanseId === e.id
+      ) &&
+      !expansesOnAllAccountInThisMonth.find(
         (exOnAccount) => exOnAccount.expanseId === e.id
       )
   );

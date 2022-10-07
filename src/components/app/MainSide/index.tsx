@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   BLUE_PRIMARY,
   GREEN_PRIMARY,
@@ -60,10 +60,24 @@ type FormData = {
   initialValue?: string;
 };
 
+type AccountBalance = {
+  accountId: string;
+  currentBalance: number;
+  estimateBalance: number;
+};
+
+type Balance = {
+  accountId: string;
+  currentBalance: number;
+  estimateBalance: number;
+};
+
 const MainSide = () => {
   const dispatch = useDispatch<any>();
   const { user } = useSelector((state: State) => state.auth);
-  const { accounts, loading } = useSelector((state: State) => state.accounts);
+  const { accounts, loading: accountLoading } = useSelector(
+    (state: State) => state.accounts
+  );
   const {
     incomes,
     incomesOnAccount,
@@ -75,7 +89,9 @@ const MainSide = () => {
     loading: expansesLoading,
   } = useSelector((state: State) => state.expanses);
   const { selectedMonth } = useSelector((state: State) => state.dates);
-  const { creditCards } = useSelector((state: State) => state.creditCards);
+  const { creditCards, loading: creditCardsLoading } = useSelector(
+    (state: State) => state.creditCards
+  );
 
   const [accountSelected, setAccountSelected] = useState(0);
   const [censored, setCensored] = useState(false);
@@ -86,9 +102,7 @@ const MainSide = () => {
   const [totalCurrentBalance, setTotalCurrentBalance] = useState(0);
   const [totalIncomesBalance, setTotalIncomesBalance] = useState(0);
   const [totalExpansesBalance, setTotalExpansesBalance] = useState(0);
-  const [balances, setBalances] = useState<
-    { accountId: string; currentBalance: number; estimateBalance: number }[]
-  >([]);
+  const [balances, setBalances] = useState<Balance[]>([]);
   const [calculateLoading, setCalculateLoading] = useState(true);
   const [secondCalculateLoading, setSecondCalculateLoading] = useState(true);
 
@@ -148,78 +162,79 @@ const MainSide = () => {
     dispatch(changeMonth(newDate.toISOString()));
   };
 
-  useEffect(() => {
-    setCalculateLoading(true);
-    let sumTotalCurrentBalance = 0;
-    let sumTotalEstimateBalance = 0;
-    const accountsBalances: {
-      accountId: string;
-      currentBalance: number;
-      estimateBalance: number;
-    }[] = [];
-    const isTheSameMonth = isSameMonth(new Date(), selectedMonth);
+  const calculateBalance = useCallback(
+    (isTheSameMonth: boolean) => {
+      let sumTotalCurrentBalance = 0;
+      let sumTotalEstimateBalance = 0;
+      const accountsBalances: AccountBalance[] = [];
 
-    // eslint-disable-next-line array-callback-return
-    accounts.map((account) => {
-      const currentBalance = account.balance;
+      // eslint-disable-next-line array-callback-return
+      accounts.map((account) => {
+        const currentBalance = account.balance;
 
-      const lastMonthEstimateBalance = localStorage.getItem(
-        `@FinancaAppBeta:LastMonthEstimateBalance@${account.id}`
-      );
-
-      const estimateBalance = isTheSameMonth
-        ? getAccountEstimateBalance(
-            account,
-            currentBalance,
-            incomes,
-            expanses,
-            selectedMonth,
-            creditCards
-          )
-        : getAccountEstimateBalance(
-            account,
-            Number(lastMonthEstimateBalance),
-            incomes,
-            expanses,
-            selectedMonth,
-            creditCards
-          );
-
-      const currentMonthEstimateBalance = localStorage.getItem(
-        `@FinancaAppBeta:CurrentMonthEstimateBalance@${account.id}@${selectedMonth}`
-      );
-
-      if (!currentMonthEstimateBalance) {
-        localStorage.setItem(
-          `@FinancaAppBeta:CurrentMonthEstimateBalance@${account.id}@${selectedMonth}`,
-          String(estimateBalance)
+        const lastMonthEstimateBalance = localStorage.getItem(
+          `@FinancaAppBeta:LastMonthEstimateBalance@${account.id}`
         );
-      }
 
-      sumTotalCurrentBalance = sumTotalCurrentBalance + currentBalance;
-      sumTotalEstimateBalance =
-        isTheSameMonth || !currentMonthEstimateBalance
-          ? sumTotalEstimateBalance + estimateBalance
-          : sumTotalEstimateBalance + Number(currentMonthEstimateBalance);
+        const currentBalanceToGetEstimateBalance = isTheSameMonth
+          ? currentBalance
+          : Number(lastMonthEstimateBalance);
 
-      accountsBalances.push({
-        accountId: account.id,
-        currentBalance: currentBalance,
-        estimateBalance:
+        const estimateBalance = getAccountEstimateBalance(
+          account,
+          currentBalanceToGetEstimateBalance,
+          incomes,
+          expanses,
+          selectedMonth,
+          creditCards,
+          expansesOnAccount,
+          incomesOnAccount
+        );
+
+        const currentMonthEstimateBalance = localStorage.getItem(
+          `@FinancaAppBeta:CurrentMonthEstimateBalance@${account.id}@${selectedMonth}`
+        );
+
+        if (!currentMonthEstimateBalance) {
+          localStorage.setItem(
+            `@FinancaAppBeta:CurrentMonthEstimateBalance@${account.id}@${selectedMonth}`,
+            String(estimateBalance)
+          );
+        }
+
+        sumTotalCurrentBalance = sumTotalCurrentBalance + currentBalance;
+        sumTotalEstimateBalance =
           isTheSameMonth || !currentMonthEstimateBalance
-            ? estimateBalance
-            : Number(currentMonthEstimateBalance),
+            ? sumTotalEstimateBalance + estimateBalance
+            : sumTotalEstimateBalance + Number(currentMonthEstimateBalance);
+
+        accountsBalances.push({
+          accountId: account.id,
+          currentBalance: currentBalance,
+          estimateBalance:
+            isTheSameMonth || !currentMonthEstimateBalance
+              ? estimateBalance
+              : Number(currentMonthEstimateBalance),
+        });
       });
-    });
 
-    setTotalCurrentBalance(sumTotalCurrentBalance);
-    setTotalEstimateBalance(sumTotalEstimateBalance);
-    setBalances(accountsBalances);
-    setCalculateLoading(false);
-  }, [accounts, creditCards, expanses, incomes, selectedMonth]);
+      setTotalCurrentBalance(sumTotalCurrentBalance);
+      setTotalEstimateBalance(sumTotalEstimateBalance);
+      setBalances(accountsBalances);
+      setCalculateLoading(false);
+    },
+    [
+      accounts,
+      creditCards,
+      expanses,
+      expansesOnAccount,
+      incomes,
+      incomesOnAccount,
+      selectedMonth,
+    ]
+  );
 
-  useEffect(() => {
-    setSecondCalculateLoading(true);
+  const calculateCurrentIncomesAndExpanses = useCallback(() => {
     const currentIncomes = getItemsOnAccountThisMonth(
       incomesOnAccount,
       selectedMonth
@@ -246,7 +261,46 @@ const MainSide = () => {
     setTotalIncomesBalance(totalcurrentIncomes);
     setTotalExpansesBalance(totalcurrentExpanses + totalInvoice);
     setSecondCalculateLoading(false);
-  }, [expansesOnAccount, incomesOnAccount, selectedMonth, creditCards]);
+  }, [creditCards, expansesOnAccount, incomesOnAccount, selectedMonth]);
+
+  useEffect(() => {
+    setCalculateLoading(true);
+
+    if (
+      !incomesLoading &&
+      !expansesLoading &&
+      !creditCardsLoading &&
+      !accountLoading
+    ) {
+      const isTheSameMonth = isSameMonth(new Date(), selectedMonth);
+      calculateBalance(isTheSameMonth);
+    }
+  }, [
+    selectedMonth,
+    calculateBalance,
+    incomesLoading,
+    expansesLoading,
+    creditCardsLoading,
+    accountLoading,
+  ]);
+
+  useEffect(() => {
+    setSecondCalculateLoading(true);
+    if (
+      !incomesLoading &&
+      !expansesLoading &&
+      !creditCardsLoading &&
+      !accountLoading
+    ) {
+      calculateCurrentIncomesAndExpanses();
+    }
+  }, [
+    incomesLoading,
+    expansesLoading,
+    creditCardsLoading,
+    calculateCurrentIncomesAndExpanses,
+    accountLoading,
+  ]);
 
   return (
     <>
@@ -277,9 +331,10 @@ const MainSide = () => {
               <S.Title textColor={BLUE_PRIMARY}>Saldo atual</S.Title>
               {censored ? (
                 <S.Value textColor={MAIN_TEXT}>***********</S.Value>
-              ) : loading ||
+              ) : accountLoading ||
                 incomesLoading ||
                 expansesLoading ||
+                creditCardsLoading ||
                 calculateLoading ? (
                 <Loader
                   height="21"
@@ -300,9 +355,10 @@ const MainSide = () => {
                 <S.Value textColor={MAIN_TEXT} opacity={0.5}>
                   ***********
                 </S.Value>
-              ) : loading ||
+              ) : accountLoading ||
                 incomesLoading ||
                 expansesLoading ||
+                creditCardsLoading ||
                 calculateLoading ? (
                 <Loader
                   height="21"
@@ -322,8 +378,10 @@ const MainSide = () => {
               <S.Title textColor={GREEN_PRIMARY}>Receitas</S.Title>
               {censored ? (
                 <S.Value textColor={GREEN_PRIMARY}>***********</S.Value>
-              ) : incomesLoading ||
+              ) : accountLoading ||
+                incomesLoading ||
                 expansesLoading ||
+                creditCardsLoading ||
                 secondCalculateLoading ? (
                 <Loader
                   height="21"
@@ -340,8 +398,10 @@ const MainSide = () => {
               <S.Title textColor={RED_PRIMARY}>Despesas</S.Title>
               {censored ? (
                 <S.Value textColor={RED_PRIMARY}>***********</S.Value>
-              ) : incomesLoading ||
+              ) : accountLoading ||
+                incomesLoading ||
                 expansesLoading ||
+                creditCardsLoading ||
                 secondCalculateLoading ? (
                 <Loader
                   height="21"
@@ -357,11 +417,14 @@ const MainSide = () => {
           </S.Row>
         </S.Balances>
 
-        <S.AccountContainer>
+        <S.AccountContainer
+          onTouchStart={(e) => console.log(e.targetTouches[0].clientX)}
+          onDragCapture={(e) => console.log(e.clientX)}
+        >
           <h4>Contas</h4>
 
           <S.AccountCardList onClick={handleEditAccountOpenModal}>
-            {loading ? (
+            {accountLoading ? (
               <Loader
                 height="119.59px"
                 width="245.83px"
@@ -378,7 +441,7 @@ const MainSide = () => {
               )
             )}
 
-            {!loading && accounts.length === 0 && (
+            {!accountLoading && accounts.length === 0 && (
               <S.EmptyCard>
                 <p>
                   Cadastre suas contas para começar a gerenciar suas finanças

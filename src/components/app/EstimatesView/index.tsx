@@ -125,57 +125,72 @@ const Estimates = () => {
 
   useEffect(() => {
     setCalculating(true);
-    let count = 0;
-    let currentMonth = new Date();
-    let sumBalanceLastMonth = 0;
-    let estimatesArr: any[] = [];
-    let values: any[] = [];
+    if (
+      !incomeLoading &&
+      !accountLoading &&
+      !expanseLoading &&
+      !creditCardsLoading
+    ) {
+      let count = 0;
+      let currentMonth = new Date();
+      let sumBalanceLastMonth = 0;
+      let estimatesArr: any[] = [];
+      let values: any[] = [];
 
-    accounts.map((account) => {
-      sumBalanceLastMonth = sumBalanceLastMonth + account.balance;
-    });
-
-    let balanceInThisMonth = sumBalanceLastMonth;
-
-    while (count < 5) {
-      const estimateIncomes = calculateEstimateIncomes(currentMonth);
-      const estimateExpanses = calculateEstimateExpanses(currentMonth);
-      balanceInThisMonth =
-        balanceInThisMonth + (estimateIncomes - estimateExpanses);
-      values.push(balanceInThisMonth);
-      estimatesArr.push({
-        id: count,
-        month: currentMonth,
-        value: balanceInThisMonth,
-        indicator: 0,
+      accounts.map((account) => {
+        sumBalanceLastMonth = sumBalanceLastMonth + account.balance;
       });
-      currentMonth = addMonths(currentMonth, 1);
-      count++;
-    }
 
-    const maxValue = Math.max.apply(Math, values);
+      let balanceInThisMonth = sumBalanceLastMonth;
 
-    estimatesArr = estimatesArr.map((e) => {
-      if (e.value === maxValue && maxValue !== 0) {
-        return {
-          ...e,
-          indicator: 100,
-        };
-      }
-      if (e.value === 0) {
-        return {
-          ...e,
+      while (count < 5) {
+        const estimateIncomes = calculateEstimateIncomes(currentMonth);
+        const estimateExpanses = calculateEstimateExpanses(currentMonth);
+        balanceInThisMonth =
+          balanceInThisMonth + (estimateIncomes - estimateExpanses);
+        values.push(balanceInThisMonth);
+        estimatesArr.push({
+          id: count,
+          month: currentMonth,
+          value: balanceInThisMonth,
           indicator: 0,
-        };
+        });
+        currentMonth = addMonths(currentMonth, 1);
+        count++;
       }
-      return {
-        ...e,
-        indicator: Math.round((100 * e.value) / maxValue),
-      };
-    });
-    setEstimates(estimatesArr);
-    setCalculating(false);
-  }, [accounts, calculateEstimateExpanses, calculateEstimateIncomes]);
+
+      const maxValue = Math.max.apply(Math, values);
+
+      estimatesArr = estimatesArr.map((e) => {
+        if (e.value === maxValue && maxValue !== 0) {
+          return {
+            ...e,
+            indicator: 100,
+          };
+        }
+        if (e.value === 0) {
+          return {
+            ...e,
+            indicator: 0,
+          };
+        }
+        return {
+          ...e,
+          indicator: Math.round((100 * e.value) / maxValue),
+        };
+      });
+      setEstimates(estimatesArr);
+      setCalculating(false);
+    }
+  }, [
+    accountLoading,
+    accounts,
+    calculateEstimateExpanses,
+    calculateEstimateIncomes,
+    creditCardsLoading,
+    expanseLoading,
+    incomeLoading,
+  ]);
 
   return (
     <S.Container>
